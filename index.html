@@ -13,6 +13,7 @@
   .meta span{background:#1a1a1a;padding:4px 10px;border-radius:4px}
   .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700}
   .badge.ok{background:#1a4a1a;color:#4ade80}
+  .badge.partial{background:#4a3a1a;color:#fbbf24}
   .badge.fail{background:#4a1a1a;color:#f87171}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:20px}
   .card{background:#141414;border:1px solid #222;border-radius:8px;overflow:hidden}
@@ -27,8 +28,11 @@
   .verdict strong{color:#e0e0e0}
   .fail-card{background:#1a0808;border-color:#3a1010}
   .fail-card .card-body{padding:20px 16px;color:#f87171;font-size:0.85rem;line-height:1.6}
+  .partial-card{background:#1a1408;border-color:#3a2a10}
+  .partial-card .card-body{padding:20px 16px;color:#fbbf24;font-size:0.85rem;line-height:1.6}
   .test-info{background:#1a1a1a;padding:12px 16px;border-radius:6px;margin-bottom:20px;font-size:0.85rem;color:#aaa}
   .test-info strong{color:#4ade80}
+  .code{background:#0d0d0d;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:0.8rem;color:#f87171}
 </style>
 </head>
 <body>
@@ -36,13 +40,13 @@
   <p class="subtitle">Same prompt, same model (MiniMax-M3), same provider. Each CLI ran non-interactively in its own sandbox.</p>
   <div class="meta">
     <span>Date: 2026-07-14</span>
-    <span>Model: MiniMax-M3 (all 5)</span>
-    <span>Provider: api.minimax.io</span>
+    <span>Model: MiniMax-M3 (all CLIs)</span>
+    <span>Provider: api.minimax.io / ollama.com</span>
     <span>Task: React + Vite + TS + Tailwind landing page</span>
     <span>Constraint: npm run build must pass cleanly</span>
   </div>
   <div class="test-info">
-    <strong>Fair test:</strong> All 5 CLIs received the identical PROMPT.md and used the same MiniMax-M3 model via the same MiniMax API endpoint. No model/provider differences.
+    <strong>Fair test:</strong> All CLIs received the identical PROMPT.md and used the same MiniMax-M3 model. 4 CLIs succeeded, 3 failed for different reasons (documented below).
   </div>
 
   <div class="grid">
@@ -54,7 +58,7 @@
       <div class="card-body">
         <img src="screenshots/pi.png" alt="Pi landing page screenshot" loading="lazy" />
       </div>
-      <div class="card-notes">Warm-dark ink (#07060D) + cream bone (#F8F4EA) + amber glow (#FF6B2C). Fraunces serif + Manrope sans + JetBrains Mono. Component-split architecture (Hero/Features/Stats/Footer).</div>
+      <div class="card-notes">Warm-dark ink (#07060D) + cream bone (#F8F4EA) + amber glow (#FF6B2C). Fraunces serif + Manrope + JetBrains Mono. Component-split architecture. ~1.5 min to complete.</div>
     </div>
 
     <div class="card">
@@ -65,7 +69,7 @@
       <div class="card-body">
         <img src="screenshots/claude-code.png" alt="Claude Code landing page screenshot" loading="lazy" />
       </div>
-      <div class="card-notes">Warm bone (#F2EEE7) + signal red (#FF4D2E) + deep ink (#0E0D0C). Fraunces serif (200-900 contrast) + Geist body + JetBrains Mono. Layered radial gradients + SVG noise grain. Asymmetric 7+5 feature grid. Reveal stagger animation.</div>
+      <div class="card-notes">Warm bone (#F2EEE7) + signal red (#FF4D2E) + deep ink (#0E0D0C). Fraunces (200-900 contrast) + Geist + JetBrains Mono. Layered radial gradients + SVG noise grain. Asymmetric 7+5 grid. Reveal stagger animation. ~5 min.</div>
     </div>
 
     <div class="card">
@@ -76,7 +80,7 @@
       <div class="card-body">
         <img src="screenshots/codex.png" alt="Codex landing page screenshot" loading="lazy" />
       </div>
-      <div class="card-notes">Created project in subdirectory nebulatask/. Build clean. Custom SVG icons.</div>
+      <div class="card-notes">Created in subdirectory nebulatask/. Clean build. Custom SVG icons. ~5 min.</div>
     </div>
 
     <div class="card">
@@ -87,7 +91,20 @@
       <div class="card-body">
         <img src="screenshots/opencode.png" alt="OpenCode landing page screenshot" loading="lazy" />
       </div>
-      <div class="card-notes">Cream (#F4EFE6) + ink (#15121B) + coral (#FF6B5B). Fraunces display + Manrope sans + JetBrains Mono. Asymmetric vertical offsets, brutalist offset shadow on feature cards. Stats with ruler lines.</div>
+      <div class="card-notes">Cream (#F4EFE6) + ink (#15121B) + coral (#FF6B5B). Fraunces + Manrope + JetBrains Mono. Asymmetric vertical offsets, brutalist offset shadows. Stats with ruler lines. ~1.5 min.</div>
+    </div>
+
+    <div class="card partial-card">
+      <div class="card-head">
+        <span class="card-title">Aider 0.86.2</span>
+        <span class="badge partial">partial</span>
+      </div>
+      <div class="card-body">
+        <strong>Partial output — no build.</strong><br><br>
+        Aider created base files (package.json, vite.config.ts, tsconfig.json, App.tsx) but the MiniMax-M3 model failed to conform to Aider's whole-file edit format. Files with corrupted names were created (literal <code>}</code>, <code>)</code>, <code>&lt;/html&gt;</code> as filenames). Missing: index.html, main.tsx, index.css, tailwind.config.js.<br><br>
+        <strong>Root cause:</strong> MiniMax-M3 doesn't follow Aider's strict file-editing format (path on first line, content between markers). The model mixes content with format markers. Aider's <code>--edit-format whole</code> didn't help — the model still produced malformed output after 3 reflections.<br><br>
+        Verdict: Aider + MiniMax-M3 is not a viable combination for multi-file project creation.
+      </div>
     </div>
 
     <div class="card fail-card">
@@ -97,19 +114,39 @@
       </div>
       <div class="card-body">
         <strong>No files created.</strong><br><br>
-        The @kilocode/cli 7.4.7 in headless mode emits tool calls as text but never executes them. Tested with --auto, --dangerously-skip-permissions, --pure, with PTY and without. The CLI outputs JSON tool-call fragments like <code>{"name":"read","arguments":{"filePath":"..."}}</code> but does not act on them.<br><br>
-        This is a confirmed CLI bug in headless/non-interactive mode, not a model issue — the same MiniMax-M3 model worked perfectly on all other 4 CLIs.
+        <strong>Root cause identified:</strong> The <code>kilo run</code> command in headless mode loads zero tools (<code>"Available tools: ."</code>). The model receives no file/bash/write tools, so it cannot create files. Tested with:<br>
+        — <code>minimax/MiniMax-M3</code> via MiniMax API: model emits tool-call JSON as text, CLI doesn't execute<br>
+        — <code>ollama-cloud/minimax-m3</code>: same — Ollama Cloud doesn't support function calling<br>
+        — <code>ollama-cloud/kimi-k2.7-code</code>: same — "Available tools: ." (empty)<br>
+        — <code>--pure</code>: disables all tools<br>
+        — <code>--auto</code>, <code>--dangerously-skip-permissions</code>: no effect<br>
+        — <code>--agent ask</code>: agent loads but tools still empty<br><br>
+        <strong>Diagnosis:</strong> <code>kilo run</code> (non-interactive mode) has a bug where it doesn't register tools with the model. The TUI mode works (tools load in interactive sessions), but headless/pipeline mode is broken in v7.4.7.
+      </div>
+    </div>
+
+    <div class="card fail-card">
+      <div class="card-head">
+        <span class="card-title">Gemini CLI 0.50.0</span>
+        <span class="badge fail">incompatible</span>
+      </div>
+      <div class="card-body">
+        <strong>Cannot use with MiniMax-M3.</strong><br><br>
+        Gemini CLI only supports Google Gemini models (requires <code>GEMINI_API_KEY</code> or Google auth). No support for custom OpenAI-compatible or Anthropic-compatible endpoints. Cannot participate in a fair same-model benchmark.<br><br>
+        Installed and tested but excluded from comparison.
       </div>
     </div>
   </div>
 
   <div class="verdict">
     <h2>Verdict (same model — MiniMax-M3)</h2>
-    <p><strong>Pi</strong> — Fastest to complete. Clean component architecture. Warm dark palette with amber accent. Used Fraunces+Manrope+JetBrains Mono.</p>
-    <p><strong>Claude Code</strong> — Most design-forward output. Layered gradients, noise texture, asymmetric grid, reveal animations. Followed design rules from CLAUDE.md. Slowest but most polished.</p>
-    <p><strong>Codex CLI</strong> — Solid output. Created in subdirectory. Clean build. More conventional design.</p>
-    <p><strong>OpenCode</strong> — Clean build, brutalist-influenced design with offset shadows. Cream+ink+coral palette. Fastest to finish with successful build.</p>
-    <p><strong>Kilo Code</strong> — Failed across all attempts. CLI bug in headless mode. Not a fair comparison — excluded.</p>
+    <p><strong>Pi</strong> — Fastest. Clean component architecture. Warm dark + amber. Good tool calling support with MiniMax.</p>
+    <p><strong>Claude Code</strong> — Most design-forward. Layered gradients, noise, asymmetric grid, animations. Slowest but most polished. Follows design system rules.</p>
+    <p><strong>Codex CLI</strong> — Solid output. Clean build. More conventional design. Created in subdirectory.</p>
+    <p><strong>OpenCode</strong> — Fastest with clean build. Brutalist-influenced. Cream + coral. Good MiniMax integration.</p>
+    <p><strong>Aider</strong> — Failed. MiniMax-M3 doesn't conform to Aider's edit format. Created partial files with corrupted names. Not viable for multi-file generation with this model.</p>
+    <p><strong>Kilo Code</strong> — Failed. <code>kilo run</code> headless mode doesn't load tools. CLI bug in v7.4.7. Works in TUI mode but not in pipeline/automation.</p>
+    <p><strong>Gemini CLI</strong> — Incompatible. Only supports Google models, cannot use MiniMax-M3.</p>
   </div>
 </body>
 </html>
