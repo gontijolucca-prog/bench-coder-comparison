@@ -1,201 +1,115 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Coder Comparison — Pi vs Claude Code vs Codex vs OpenCode vs Kilo Code</title>
+<title>AI Coder Benchmark v2 — MiniMax-M3</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    background: #0a0a0a;
-    color: #e5e5e5;
-    line-height: 1.5;
-  }
-  header {
-    padding: 32px 24px 24px;
-    border-bottom: 1px solid #222;
-    max-width: 1600px;
-    margin: 0 auto;
-  }
-  h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-  .sub { color: #888; font-size: 13px; margin-bottom: 12px; }
-  .meta {
-    display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px;
-    color: #aaa; border-top: 1px solid #1a1a1a; padding-top: 12px;
-  }
-  .meta b { color: #fff; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-    gap: 16px;
-    padding: 24px;
-    max-width: 1800px;
-    margin: 0 auto;
-  }
-  .card {
-    background: #141414;
-    border: 1px solid #262626;
-    border-radius: 6px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  .card .label {
-    padding: 14px 16px;
-    background: #1a1a1a;
-    border-bottom: 1px solid #262626;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .card .label h2 {
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .tag {
-    font-size: 11px;
-    color: #888;
-    background: #0a0a0a;
-    padding: 2px 8px;
-    border-radius: 4px;
-    border: 1px solid #333;
-  }
-  .tag.win { color: #4ade80; border-color: #166534; }
-  .tag.fail { color: #f87171; border-color: #7f1d1d; }
-  .card img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  .card .body {
-    height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #0a0a0a;
-    color: #666;
-    font-size: 13px;
-    padding: 32px;
-    text-align: center;
-  }
-  .card .footer {
-    padding: 12px 16px;
-    background: #1a1a1a;
-    border-top: 1px solid #262626;
-    font-size: 11px;
-    color: #888;
-  }
-  .card .footer b { color: #fff; }
-  .verdict {
-    margin: 0 24px 32px;
-    padding: 16px 20px;
-    background: #141414;
-    border: 1px solid #262626;
-    border-radius: 6px;
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 13px;
-  }
-  .verdict h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px; color: #888; }
-  .verdict ul { padding-left: 20px; }
-  .verdict li { margin-bottom: 4px; }
-  .verdict li b { color: #fff; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;padding:24px}
+  h1{font-size:2rem;font-weight:800;margin-bottom:4px}
+  .subtitle{color:#888;font-size:0.9rem;margin-bottom:20px}
+  .meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;font-size:0.8rem;color:#666}
+  .meta span{background:#1a1a1a;padding:4px 10px;border-radius:4px}
+  .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700}
+  .badge.ok{background:#1a4a1a;color:#4ade80}
+  .badge.fail{background:#4a1a1a;color:#f87171}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:20px}
+  .card{background:#141414;border:1px solid #222;border-radius:8px;overflow:hidden}
+  .card-head{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222}
+  .card-title{font-size:1rem;font-weight:700}
+  .card-body{padding:0}
+  .card-body img{width:100%;display:block;border-bottom:1px solid #222}
+  .card-notes{padding:10px 16px;font-size:0.8rem;color:#999;line-height:1.5}
+  .verdict{margin-top:32px;padding:20px;background:#111;border-radius:8px;border:1px solid #222}
+  .verdict h2{font-size:1.1rem;margin-bottom:12px}
+  .verdict p{font-size:0.85rem;color:#aaa;margin-bottom:6px}
+  .verdict strong{color:#e0e0e0}
+  .fail-card{background:#1a0808;border-color:#3a1010}
+  .fail-card .card-body{padding:20px 16px;color:#f87171;font-size:0.85rem;line-height:1.6}
+  .test-info{background:#1a1a1a;padding:12px 16px;border-radius:6px;margin-bottom:20px;font-size:0.85rem;color:#aaa}
+  .test-info strong{color:#4ade80}
 </style>
 </head>
 <body>
-
-<header>
-  <h1>AI Coder Benchmark — NebulaTask Landing Page</h1>
-  <div class="sub">Same prompt, identical target directory. Each CLI ran non-interactively in its own sandbox.</div>
+  <h1>AI Coder Benchmark v2 — NebulaTask Landing Page</h1>
+  <p class="subtitle">Same prompt, same model (MiniMax-M3), same provider. Each CLI ran non-interactively in its own sandbox.</p>
   <div class="meta">
-    <span>Date: <b>2026-07-14</b></span>
-    <span>Task: <b>React + Vite + TS + Tailwind landing page</b></span>
-    <span>Constraint: <b>npm run build must pass cleanly</b></span>
-    <span>Prompt: <a href="https://github.com/gontijolucca-prog/bench-coder-comparison/blob/main/PROMPT.md" style="color:#60a5fa">PROMPT.md</a></span>
+    <span>Date: 2026-07-14</span>
+    <span>Model: MiniMax-M3 (all 5)</span>
+    <span>Provider: api.minimax.io</span>
+    <span>Task: React + Vite + TS + Tailwind landing page</span>
+    <span>Constraint: npm run build must pass cleanly</span>
   </div>
-</header>
-
-<div class="grid">
-
-  <div class="card">
-    <div class="label">
-      <h2>Pi · 0.80.6</h2>
-      <span class="tag win">built</span>
-    </div>
-    <img src="screenshots/pi.png" alt="Pi output" />
-    <div class="footer">
-      <b>Notes:</b> Earliest to finish (~5 min). Deep purple/indigo gradient, teal accents. Polished SaaS feel.
-    </div>
+  <div class="test-info">
+    <strong>Fair test:</strong> All 5 CLIs received the identical PROMPT.md and used the same MiniMax-M3 model via the same MiniMax API endpoint. No model/provider differences.
   </div>
 
-  <div class="card">
-    <div class="label">
-      <h2>Claude Code · 2.1.209</h2>
-      <span class="tag win">built</span>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Pi 0.80.6</span>
+        <span class="badge ok">built</span>
+      </div>
+      <div class="card-body">
+        <img src="screenshots/pi.png" alt="Pi landing page screenshot" loading="lazy" />
+      </div>
+      <div class="card-notes">Warm-dark ink (#07060D) + cream bone (#F8F4EA) + amber glow (#FF6B2C). Fraunces serif + Manrope sans + JetBrains Mono. Component-split architecture (Hero/Features/Stats/Footer).</div>
     </div>
-    <img src="screenshots/claude-code.png" alt="Claude Code output" />
-    <div class="footer">
-      <b>Notes:</b> Warm cream/beige, vermilion orange serif italics. Editorial style. Model: GLM-5.2 via z.ai.
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="label">
-      <h2>Codex CLI · 0.144.4</h2>
-      <span class="tag win">built</span>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Claude Code 2.1.209</span>
+        <span class="badge ok">built</span>
+      </div>
+      <div class="card-body">
+        <img src="screenshots/claude-code.png" alt="Claude Code landing page screenshot" loading="lazy" />
+      </div>
+      <div class="card-notes">Warm bone (#F2EEE7) + signal red (#FF4D2E) + deep ink (#0E0D0C). Fraunces serif (200-900 contrast) + Geist body + JetBrains Mono. Layered radial gradients + SVG noise grain. Asymmetric 7+5 feature grid. Reveal stagger animation.</div>
     </div>
-    <img src="screenshots/codex.png" alt="Codex output" />
-    <div class="footer">
-      <b>Notes:</b> Near-black navy, purple-to-teal gradient. Includes product mockup in hero.
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="label">
-      <h2>OpenCode · 1.17.20</h2>
-      <span class="tag win">built</span>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Codex CLI 0.144.4</span>
+        <span class="badge ok">built</span>
+      </div>
+      <div class="card-body">
+        <img src="screenshots/codex.png" alt="Codex landing page screenshot" loading="lazy" />
+      </div>
+      <div class="card-notes">Created project in subdirectory nebulatask/. Build clean. Custom SVG icons.</div>
     </div>
-    <img src="screenshots/opencode.png" alt="OpenCode output" />
-    <div class="footer">
-      <b>Notes:</b> Charcoal (#0d0d0d) + orange accent (#ff6b35). Model: minimax/MiniMax-M2 (fallback after opencode-go quota).
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="label">
-      <h2>Kilo Code · 7.4.7</h2>
-      <span class="tag fail">no output</span>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">OpenCode 1.17.20</span>
+        <span class="badge ok">built</span>
+      </div>
+      <div class="card-body">
+        <img src="screenshots/opencode.png" alt="OpenCode landing page screenshot" loading="lazy" />
+      </div>
+      <div class="card-notes">Cream (#F4EFE6) + ink (#15121B) + coral (#FF6B5B). Fraunces display + Manrope sans + JetBrains Mono. Asymmetric vertical offsets, brutalist offset shadow on feature cards. Stats with ruler lines.</div>
     </div>
-    <div class="body">
-      <div>
-        <b style="color:#f87171">No files created</b><br><br>
-        Tested with 5 models: kimi-k2.7-code, glm-5.2, minimax-m3, deepseek-v4-flash.<br>
-        Tried --pure, --format json, --print-logs.<br>
-        CLI consumes CPU but never writes to disk in --auto mode.<br>
-        Likely a bug in this CLI version against this sandbox setup.
+
+    <div class="card fail-card">
+      <div class="card-head">
+        <span class="card-title">Kilo Code 7.4.7</span>
+        <span class="badge fail">no output</span>
+      </div>
+      <div class="card-body">
+        <strong>No files created.</strong><br><br>
+        The @kilocode/cli 7.4.7 in headless mode emits tool calls as text but never executes them. Tested with --auto, --dangerously-skip-permissions, --pure, with PTY and without. The CLI outputs JSON tool-call fragments like <code>{"name":"read","arguments":{"filePath":"..."}}</code> but does not act on them.<br><br>
+        This is a confirmed CLI bug in headless/non-interactive mode, not a model issue — the same MiniMax-M3 model worked perfectly on all other 4 CLIs.
       </div>
     </div>
-    <div class="footer">
-      <b>Notes:</b> All processes exited cleanly without producing any source files. Excluded from design comparison.
-    </div>
   </div>
 
-</div>
-
-<div class="verdict">
-  <h3>Verdict</h3>
-  <ul>
-    <li><b>Pi</b> — Fastest, clean output. Best for quick tasks with simple infra.</li>
-    <li><b>Claude Code</b> — Slowest but most distinctive design output (editorial serif style). Best when design taste matters.</li>
-    <li><b>Codex CLI</b> — Solid output. Mid-pack on both speed and design.</li>
-    <li><b>OpenCode</b> — Clean output, charcoal + orange palette. Hit quota on default provider; fallback to minimax worked.</li>
-    <li><b>Kilo Code</b> — Failed in this run across 5 model attempts. CLI bug, not model issue.</li>
-  </ul>
-</div>
-
+  <div class="verdict">
+    <h2>Verdict (same model — MiniMax-M3)</h2>
+    <p><strong>Pi</strong> — Fastest to complete. Clean component architecture. Warm dark palette with amber accent. Used Fraunces+Manrope+JetBrains Mono.</p>
+    <p><strong>Claude Code</strong> — Most design-forward output. Layered gradients, noise texture, asymmetric grid, reveal animations. Followed design rules from CLAUDE.md. Slowest but most polished.</p>
+    <p><strong>Codex CLI</strong> — Solid output. Created in subdirectory. Clean build. More conventional design.</p>
+    <p><strong>OpenCode</strong> — Clean build, brutalist-influenced design with offset shadows. Cream+ink+coral palette. Fastest to finish with successful build.</p>
+    <p><strong>Kilo Code</strong> — Failed across all attempts. CLI bug in headless mode. Not a fair comparison — excluded.</p>
+  </div>
 </body>
 </html>
