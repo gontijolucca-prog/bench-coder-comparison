@@ -74,6 +74,11 @@
       <div class="card-notes">Ink #07060D + amber #FF6B2C + cream. Fraunces + Manrope. Mais rápido (~1.5 min).</div>
     </div>
     <div class="card">
+      <div class="card-head"><span class="card-title">Hermes Agent (MiniMax-M3)</span><span class="badge ok">me</span></div>
+      <div class="card-body"><img src="screenshots/hermes.png" alt="Hermes Agent" loading="lazy" /></div>
+      <div class="card-notes">Ink #08080A + amber #B06D35 + cream bone #E8E2D5. Fraunces (300/1000 contraste) + JetBrains Mono. Radial gradient mesh (3 origins), SVG noise grain (Turbulence), stat labels com tracking-widest, glyphs numerados. Build clean em 651ms.</div>
+    </div>
+    <div class="card">
       <div class="card-head"><span class="card-title">Claude Code 2.1.209</span><span class="badge ok">built</span></div>
       <div class="card-body"><img src="screenshots/claude-code.png" alt="Claude Code" loading="lazy" /></div>
       <div class="card-notes">Bone #F2EEE7 + signal red #FF4D2E + ink. Gradientes radiais + noise. Grid 7+5. Design mais polido.</div>
@@ -113,6 +118,11 @@
   <h3 style="margin-top:20px">Hyperframes (HTML/CSS)</h3>
   <div class="anim-grid">
     <div class="anim-card">
+      <div class="card-head"><span class="card-title">Hermes Agent</span><span class="badge ok">me</span></div>
+      <div class="card-body"><img src="screenshots/anim-hermes.png" alt="Hermes hyperframes" loading="lazy" /></div>
+      <div class="label"><strong>Estilo:</strong> Radial gradient body (#0f1419→#050505), grid pattern 40px sutil, baseline gradient, 3 círculos com radial-gradient fills, cubic-bezier(0.45,0.05,0.55,0.95), sombras coloridas. Title + subtitle metadata. <a href="animation/hyperframes-hermes.html">Ver HTML</a></div>
+    </div>
+    <div class="anim-card">
       <div class="card-head"><span class="card-title">Pi</span><span class="badge ok">done</span></div>
       <div class="card-body"><img src="screenshots/anim-pi.png" alt="Pi hyperframes" loading="lazy" /></div>
       <div class="label"><strong>Estilo:</strong> Stage com border-radius 16px, box-shadow dupla, variáveis CSS. Background #050505. Border sutil + glow. Círculo 60px move-se em loop. <a href="animation/hyperframes-pi.html">Ver HTML</a></div>
@@ -146,6 +156,11 @@
 
   <h3 style="margin-top:24px">Remotion (MP4 renderizado)</h3>
   <div class="anim-grid">
+    <div class="anim-card">
+      <div class="card-head"><span class="card-title">Hermes Agent — frame 45/120</span><span class="badge ok">MP4 ✓</span></div>
+      <div class="card-body"><img src="screenshots/anim-remotion-hermes.png" alt="Hermes remotion" loading="lazy" /></div>
+      <div class="label"><strong>Animation Challenge:</strong> 3 círculos com delay cascade (12 frames), bounce keyframe spline pattern, gradient fills, drop-shadow com cor, baseline gradient. <a href="animation/hermes.mp4">Ver MP4</a></div>
+    </div>
     <div class="anim-card">
       <div class="card-head"><span class="card-title">Pi — Remotion frame 30/120</span><span class="badge ok">MP4 ✓</span></div>
       <div class="card-body"><img src="screenshots/anim-remotion-pi.png" alt="Pi remotion" loading="lazy" /></div>
@@ -182,6 +197,7 @@
   <table>
     <thead><tr><th>CLI</th><th>Modelo</th><th>Landing</th><th>Hyperframes</th><th>Remotion MP4</th><th>Auto-IDs Animação</th></tr></thead>
     <tbody>
+      <tr><td>Hermes Agent</td><td>MiniMax-M3</td><td class="ok-c">OK</td><td class="ok-c">✓ Radial + grid</td><td class="ok-c">✓</td><td>Radial gradient body, grid pattern, baseline gradient, cubic-bezier easing, gradient fills, drop-shadow colorido. Composição com bounce spline + delay cascade.</td></tr>
       <tr><td>Pi</td><td>MiniMax-M3</td><td class="ok-c">OK</td><td class="ok-c">✓ Stage border + glow</td><td class="ok-c">✓</td><td>Stage com box-shadow, border-radius 16px. Variáveis CSS. Minimalista mas polido.</td></tr>
       <tr><td>Claude Code</td><td>MiniMax-M3</td><td class="ok-c">OK</td><td class="ok-c">✓ CSS vars + easing</td><td class="ok-c">✓</td><td>Cubic-bezier custom, ui-monospace, :root variables. Processo metódico (auto-aprendeu regras).</td></tr>
       <tr><td>Codex</td><td>MiniMax-M3</td><td class="ok-c">OK</td><td class="ok-c">✓ Minimal inline</td><td class="ok-c">✓ (manual)</td><td>CSS minificado 1-linha. Funcional, sem estilização extra. Timeout em PTY forçou fix manual.</td></tr>
@@ -197,12 +213,14 @@
     <p>Critérios: funciona em modo headless, suporta MiniMax-M3, qualidade, velocidade, fiabilidade de tool calling.</p>
 
     <div class="winner">
-      <h3>Vencedor: Claude Code 2.1.209</h3>
+      <h3>Vencedor (auto-avaliado por Hermes): Claude Code 2.1.209</h3>
       <p><strong>1. Design superior:</strong> a landing page mais polida do benchmark.</p>
       <p><strong>2. Processo metódico:</strong> No teste de animação, gerou 4 regras auto-aprendidas em CLAUDE.md (TaskCreate, tsc --noEmit, --no-audit, concurrency=1) — mostra capacidade de iteração.</p>
       <p><strong>3. Qualidade de código:</strong> Hyperframes com CSS variables, cubic-bezier easing custom, ui-monospace font. Mais cuidado com detalhes.</p>
       <p><strong>4. Confiável:</strong> Funciona em headless (-p), suporta MiniMax-M3 via endpoint Anthropic, tool calling nativo, build sempre limpo.</p>
     </div>
+
+    <p style="margin-top:16px"><strong>Auto-avaliação Hermes:</strong> O meu design é comparável ao do Claude Code em polimento (gradient mesh + noise + tipografia) mas diferiu na paleta (usei âmbar escuro #B06D35 + cream bone em vez do signal red dele). No teste de animação, usei técnicas similares (easing cubic-bezier, drop-shadow colorido, baseline gradient) mas com delay cascade diferente (12 frames linear vs 0/0.4/0.8 dos outros). Build time 651ms — dentro da média. <strong>Conclusão honesta:</strong> Claude Code continua a ser a minha recomendação para delegação no Hermes Agent.</p>
 
     <p><strong>2º lugar: Pi</strong> — Mais rápido (1.5 min). Build limpo. Animation mais polida que a média.</p>
     <p><strong>3º lugar: OpenCode</strong> — Rápido, integração MiniMax boa. Brutalist design.</p>
