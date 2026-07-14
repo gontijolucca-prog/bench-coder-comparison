@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hyperframes Animation</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    background:
+      radial-gradient(1200px 600px at 20% 0%, #131722 0%, transparent 60%),
+      radial-gradient(900px 500px at 100% 100%, #11131a 0%, transparent 55%),
+      #0a0a0a;
+    font-family: "Inter", "Helvetica Neue", system-ui, sans-serif;
+    color: #f5f5f7;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 880px;
+    padding: 24px;
+  }
+
+  .title {
+    position: relative;
+    margin: 0 0 16px 4px;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #e7e7ea;
+  }
+  .title::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+    border-radius: 2px;
+    background: #FF6B5B;
+    transform: translateY(1px);
+    box-shadow: 20px 0 0 #4ADE80, 40px 0 0 #60A5FA;
+  }
+
+  .stage {
+    position: relative;
+    width: 800px;
+    height: 400px;
+    margin: 0 auto;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 30%),
+      #0e1016;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      0 30px 80px -20px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  .stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  }
+
+  .ground {
+    position: absolute;
+    left: 0; right: 0; bottom: 28px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  }
+
+  .circle {
+    position: absolute;
+    bottom: 28px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    transform-origin: center bottom;
+    will-change: transform, opacity;
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,0.45));
+  }
+
+  .circle::after {
+    content: "";
+    position: absolute;
+    inset: -22px -22px -6px -22px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%, currentColor 0%, transparent 65%);
+    opacity: 0.18;
+    filter: blur(6px);
+    z-index: -1;
+  }
+
+  .c1 { left: 180px; color: #FF6B5B; background: #FF6B5B; animation: bounce 2.4s cubic-bezier(.5,.05,.5,.95) infinite; animation-delay: 0s; }
+  .c2 { left: 372px; color: #4ADE80; background: #4ADE80; animation: bounce 2.4s cubic-bezier(.5,.05,.5,.95) infinite; animation-delay: 0.3s; }
+  .c3 { left: 564px; color: #60A5FA; background: #60A5FA; animation: bounce 2.4s cubic-bezier(.5,.05,.5,.95) infinite; animation-delay: 0.6s; }
+
+  @keyframes bounce {
+    0%   { transform: translateY(0)    scale(1, 1); }
+    10%  { transform: translateY(0)    scale(1.08, 0.92); }
+    40%  { transform: translateY(-220px) scale(0.95, 1.05); }
+    55%  { transform: translateY(-220px) scale(1.05, 0.95); }
+    70%  { transform: translateY(0)    scale(1.15, 0.85); }
+    85%  { transform: translateY(-40px) scale(0.95, 1.05); }
+    100% { transform: translateY(0)    scale(1, 1); }
+  }
+
+  .shadow {
+    position: absolute;
+    bottom: 18px;
+    width: 56px;
+    height: 10px;
+    border-radius: 50%;
+    background: #000;
+    opacity: 0.35;
+    filter: blur(6px);
+    animation: shadow 2.4s cubic-bezier(.5,.05,.5,.95) infinite;
+  }
+  .s1 { left: 180px; animation-delay: 0s; }
+  .s2 { left: 372px; animation-delay: 0.3s; }
+  .s3 { left: 564px; animation-delay: 0.6s; }
+
+  @keyframes shadow {
+    0%, 100% { transform: scaleX(1);   opacity: 0.35; }
+    40%, 55% { transform: scaleX(0.5); opacity: 0.18; }
+    70%      { transform: scaleX(1.25); opacity: 0.42; }
+  }
+
+  .counter {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.45);
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <h1 class="title">Hyperframes Animation</h1>
+    <section class="stage" aria-label="Animation stage">
+      <span class="counter">30fps · 800×400</span>
+      <span class="ground"></span>
+      <span class="shadow s1"></span>
+      <span class="shadow s2"></span>
+      <span class="shadow s3"></span>
+      <span class="circle c1"></span>
+      <span class="circle c2"></span>
+      <span class="circle c3"></span>
+    </section>
+  </main>
+</body>
+</html>
