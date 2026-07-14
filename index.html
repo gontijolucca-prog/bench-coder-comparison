@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Coder Comparison — Pi vs Claude Code vs Codex</title>
+<title>Coder Comparison — Pi vs Claude Code vs Codex vs OpenCode vs Kilo Code</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -19,19 +19,13 @@
     max-width: 1600px;
     margin: 0 auto;
   }
-  h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
   .sub { color: #888; font-size: 13px; margin-bottom: 12px; }
   .meta {
     display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px;
     color: #aaa; border-top: 1px solid #1a1a1a; padding-top: 12px;
   }
   .meta b { color: #fff; }
-  .meta .miss { color: #666; }
-
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
@@ -79,6 +73,17 @@
     background: #fff;
     display: block;
   }
+  .card .body {
+    height: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+    color: #666;
+    font-size: 13px;
+    padding: 32px;
+    text-align: center;
+  }
   .card .footer {
     padding: 12px 16px;
     background: #1a1a1a;
@@ -86,11 +91,7 @@
     font-size: 11px;
     color: #888;
   }
-  .card .footer a {
-    color: #60a5fa;
-    text-decoration: none;
-  }
-  .card .footer a:hover { text-decoration: underline; }
+  .card .footer b { color: #fff; }
   .verdict {
     margin: 0 24px 32px;
     padding: 16px 20px;
@@ -126,61 +127,63 @@
   <div class="card">
     <div class="label">
       <h2>Pi · 0.80.6</h2>
-      <span class="tag win">✓ built</span>
+      <span class="tag win">built</span>
     </div>
     <iframe src="pi/index.html"></iframe>
     <div class="footer">
-      <b>Notes:</b> Earliest to finish (≈5 min). Deep purple/indigo gradient, teal accents. Polished SaaS feel. Dist size ~kB.
+      <b>Notes:</b> Earliest to finish (~5 min). Deep purple/indigo gradient, teal accents. Polished SaaS feel.
     </div>
   </div>
 
   <div class="card">
     <div class="label">
       <h2>Claude Code · 2.1.209</h2>
-      <span class="tag win">✓ built</span>
+      <span class="tag win">built</span>
     </div>
     <iframe src="claude-code/index.html"></iframe>
     <div class="footer">
-      <b>Notes:</b> Warm cream/beige, vermilion orange serif italics. Editorial style — most distinctive identity.
+      <b>Notes:</b> Warm cream/beige, vermilion orange serif italics. Editorial style. Model: GLM-5.2 via z.ai.
     </div>
   </div>
 
   <div class="card">
     <div class="label">
       <h2>Codex CLI · 0.144.4</h2>
-      <span class="tag win">✓ built</span>
+      <span class="tag win">built</span>
     </div>
     <iframe src="codex/index.html"></iframe>
     <div class="footer">
-      <b>Notes:</b> Near-black navy, purple-to-teal gradient. Includes product mockup in hero. Requires manual npm install on resume (network cache quirk).
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="label">
-      <h2>Kilo Code · 7.4.7</h2>
-      <span class="tag fail">✗ no output</span>
-    </div>
-    <div style="height:900px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;color:#666;font-size:13px;padding:32px;text-align:center;">
-      Process ran for 5+ minutes with no files created in the target directory.<br>
-      Likely auth/model config issue. Excluded from comparison.
-    </div>
-    <div class="footer">
-      <b>Notes:</b> @kilocode/cli installed but `kilo run --auto "..."` produced zero output files.
+      <b>Notes:</b> Near-black navy, purple-to-teal gradient. Includes product mockup in hero.
     </div>
   </div>
 
   <div class="card">
     <div class="label">
       <h2>OpenCode · 1.17.20</h2>
-      <span class="tag fail">✗ no output</span>
+      <span class="tag win">built</span>
     </div>
-    <div style="height:900px;display:flex;align-items:center;justify-content:center;background:#0a0a0a;color:#666;font-size:13px;padding:32px;text-align:center;">
-      Hung on first LLM call after 5+ minutes.<br>
-      Deepseek-v4-flash model via opencode-go proxy.
+    <iframe src="opencode/index.html"></iframe>
+    <div class="footer">
+      <b>Notes:</b> Charcoal (#0d0d0d) + orange accent (#ff6b35). Model: minimax/MiniMax-M2 (fallback after opencode-go quota).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">
+      <h2>Kilo Code · 7.4.7</h2>
+      <span class="tag fail">no output</span>
+    </div>
+    <div class="body">
+      <div>
+        <b style="color:#f87171">No files created</b><br><br>
+        Tested with 5 models: kimi-k2.7-code, glm-5.2, minimax-m3, deepseek-v4-flash.<br>
+        Tried --pure, --format json, --print-logs.<br>
+        CLI consumes CPU but never writes to disk in --auto mode.<br>
+        Likely a bug in this CLI version against this sandbox setup.
+      </div>
     </div>
     <div class="footer">
-      <b>Notes:</b> Process idle at "build · deepseek-v4-flash" loading state. No files written.
+      <b>Notes:</b> All processes exited cleanly without producing any source files. Excluded from design comparison.
     </div>
   </div>
 
@@ -191,9 +194,9 @@
   <ul>
     <li><b>Pi</b> — Fastest, clean output. Best for quick tasks with simple infra.</li>
     <li><b>Claude Code</b> — Slowest but most distinctive design output (editorial serif style). Best when design taste matters.</li>
-    <li><b>Codex CLI</b> — Solid output, but stalled mid-run; needed manual intervention to complete build. Mid-pack on both speed and design.</li>
-    <li><b>Kilo Code</b> — Failed in this run (no files). Needs more debugging before comparison.</li>
-    <li><b>OpenCode</b> — Failed in this run (hung). Same model family as Claude Code proxy — suggests infra issue, not model.</li>
+    <li><b>Codex CLI</b> — Solid output. Mid-pack on both speed and design.</li>
+    <li><b>OpenCode</b> — Clean output, charcoal + orange palette. Hit quota on default provider; fallback to minimax worked.</li>
+    <li><b>Kilo Code</b> — Failed in this run across 5 model attempts. CLI bug, not model issue.</li>
   </ul>
 </div>
 
