@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Animation Challenge — Hyperframes Reference</title>
+<style>
+  body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; background: #0a0a0a; overflow: hidden; }
+  .stage { position: relative; width: 800px; height: 400px; }
+  .circle { position: absolute; width: 60px; height: 60px; border-radius: 50%; top: 170px; left: 0; }
+  .c1 { background: #FF6B5B; animation: bounce-right 3s ease-in-out infinite; }
+  .c2 { background: #4ADE80; animation: bounce-right 3s ease-in-out infinite 0.5s; }
+  .c3 { background: #60A5FA; animation: bounce-right 3s ease-in-out infinite 1s; }
+  .label { position: absolute; top: 0; left: 50%; transform: translateX(-50%); color: #fff; font-family: -apple-system,sans-serif; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; }
+  @keyframes bounce-right {
+    0% { left: 0; transform: scale(1); }
+    25% { left: 370px; transform: scale(1.5); }
+    50% { left: 740px; transform: scale(1); }
+    75% { left: 370px; transform: scale(0.5); }
+    100% { left: 0; transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="label">Hyperframes — Animation Challenge</div>
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+  </div>
+</body>
+</html>
