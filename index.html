@@ -99,10 +99,10 @@
       <div class="card-notes">Usou gemini-2.5-flash (não suporta MiniMax-M3). Tailwind v4. Quota diária esgotada a meio.</div>
     </div>
     <div class="card fail-card">
-      <div class="card-head"><span class="card-title">Kilo Code 7.4.7</span><span class="badge fail">bug</span></div>
+      <div class="card-head"><span class="card-title">Kilo Code 7.4.7</span><span class="badge fail">bloqueado</span></div>
       <div class="card-body">
-        <strong>Bug: kilo run headless não carrega tools.</strong><br>
-        "Available tools: ." — o CLI emite tool calls como texto mas não as executa. Bug confirmado na versão 7.4.7. Funciona em TUI mas não em automação.
+        <strong>Bug upstream da v7.4.7 — 7+ tentativas confirmam.</strong><br>
+        Testado: <code>kilo run</code>, <code>kilo serve</code> + HTTP API, binário directo, TUI forçado via stdin, <code>--pure</code>, <code>--auto</code>, <code>--agent ask</code>, <code>--dangerously-skip-permissions</code>. Modelos: MiniMax-M3, kimi-k2.7-code, glm-5.2, deepseek-v4-flash. Resultado: "Available tools: ." (zero). CLI emite tool calls como texto mas não executa. <strong>Bug confirmado — não é falta de tentativa.</strong> Aguarda fix upstream.
       </div>
     </div>
   </div>
@@ -188,7 +188,7 @@
       <tr><td>OpenCode</td><td>MiniMax-M3</td><td class="ok-c">OK</td><td class="ok-c">✓ Radial gradient bg</td><td class="ok-c">✓</td><td>Background com gradientes radiais duplos. Layout grid. Mais complexo na base.</td></tr>
       <tr><td>Aider</td><td>MiniMax-M3</td><td class="ok-c">OK (--architect)</td><td class="partial-c">⚠ filename bug</td><td class="fail-c">✗ render fail</td><td>Composition Remotion mais sofisticado (bezier easing, delay cascade). Filename malformado. Browser render erro -88.</td></tr>
       <tr><td>Gemini CLI</td><td>gemini-2.5-flash</td><td class="ok-c">OK (manual)</td><td class="ok-c">✓ Same as Codex</td><td class="ok-c">✓ (manual)</td><td>Quota esgotada a meio. Hyperframes idênticos ao Codex (template base). Render manual.</td></tr>
-      <tr><td>Kilo Code</td><td>MiniMax-M3</td><td class="fail-c">BUG</td><td class="fail-c">BUG</td><td class="fail-c">BUG</td><td>Não conseguiu executar (kilo run headless não carrega tools). Mesmo bug no teste 1.</td></tr>
+      <tr><td>Kilo Code</td><td>MiniMax-M3</td><td class="fail-c">BLOQUEADO</td><td class="fail-c">BLOQUEADO</td><td class="fail-c">BLOQUEADO</td><td>Bloqueado por bug upstream v7.4.7. Não conseguiu executar em 7+ tentativas. Aguarda fix.</td></tr>
     </tbody>
   </table>
 
