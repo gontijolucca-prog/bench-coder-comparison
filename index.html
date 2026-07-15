@@ -210,26 +210,25 @@
 
   <div class="verdict">
     <h2>Veredito — Melhor CLI para delegar no Hermes Agent</h2>
-    <p>Critérios: funciona em modo headless, suporta MiniMax-M3, qualidade, velocidade, fiabilidade de tool calling.</p>
+    <p>Critérios: design visual, fiabilidade headless, suporte MiniMax-M3, velocidade, autonomia.</p>
 
     <div class="winner">
-      <h3>Vencedor (auto-avaliado por Hermes): Claude Code 2.1.209</h3>
-      <p><strong>1. Design superior:</strong> a landing page mais polida do benchmark.</p>
-      <p><strong>2. Processo metódico:</strong> No teste de animação, gerou 4 regras auto-aprendidas em CLAUDE.md (TaskCreate, tsc --noEmit, --no-audit, concurrency=1) — mostra capacidade de iteração.</p>
-      <p><strong>3. Qualidade de código:</strong> Hyperframes com CSS variables, cubic-bezier easing custom, ui-monospace font. Mais cuidado com detalhes.</p>
-      <p><strong>4. Confiável:</strong> Funciona em headless (-p), suporta MiniMax-M3 via endpoint Anthropic, tool calling nativo, build sempre limpo.</p>
+      <h3>Vencedor Animação: OpenCode 1.17.20</h3>
+      <p><strong>Melhores animações do benchmark.</strong> Hyperframes com gradientes radiais duplos, grid overlay, ground line + shadows. Remotion com a composição mais rica visualmente (237KB screenshot vs 28-82KB dos outros). Ambos testes passaram sem intervenção manual.</p>
     </div>
 
-    <p style="margin-top:16px"><strong>Auto-avaliação Hermes:</strong> O meu design é comparável ao do Claude Code em polimento (gradient mesh + noise + tipografia) mas diferiu na paleta (usei âmbar escuro #B06D35 + cream bone em vez do signal red dele). No teste de animação, usei técnicas similares (easing cubic-bezier, drop-shadow colorido, baseline gradient) mas com delay cascade diferente (12 frames linear vs 0/0.4/0.8 dos outros). Build time 651ms — dentro da média. <strong>Conclusão honesta:</strong> Claude Code continua a ser a minha recomendação para delegação no Hermes Agent.</p>
+    <div class="winner" style="margin-top:16px">
+      <h3>Vencedor Landing Page: Claude Code 2.1.209</h3>
+      <p><strong>Design mais polido.</strong> Bone + signal red + radial gradients + noise grain. Processo metódico — auto-gerou 4 regras em CLAUDE.md. Build sempre limpo, tool calling nativo, funciona em headless.</p>
+    </div>
 
-    <p><strong>2º lugar: Pi</strong> — Mais rápido (1.5 min). Build limpo. Animation mais polida que a média.</p>
-    <p><strong>3º lugar: OpenCode</strong> — Rápido, integração MiniMax boa. Brutalist design.</p>
-    <p><strong>4º lugar: Codex</strong> — Sólido mas lento. Timeout em PTY. Funcional mas pouco estilizado.</p>
-    <p><strong>5º lugar: Aider</strong> — Funciona com --architect mas tem bugs próprios: filenames inválidos e render errors.</p>
-    <p><strong>6º lugar: Gemini CLI</strong> — Não suporta MiniMax-M3. Quota limitada.</p>
-    <p><strong>7º lugar: Kilo Code</strong> — Bug crítico em headless. Não funciona para delegação.</p>
+    <p style="margin-top:16px"><strong>Recomendação por use case:</strong></p>
+    <p><strong>Animacão/video:</strong> OpenCode — qualidade visual superior em ambos os testes.</p>
+    <p><strong>Landing pages/UI:</strong> Claude Code — design mais cuidado e processo mais fiável.</p>
+    <p><strong>Rápido para protótipos:</strong> Pi — 1.5 min, build limpo.</p>
+    <p><strong>Evitar:</strong> Kilo Code (bloqueado), Gemini (não suporta MiniMax-M3).</p>
 
-    <p style="margin-top:16px"><strong>Recomendação para o Hermes Agent:</strong> Usar Claude Code como CLI principal. Pi como alternativa rápida. Evitar Kilo Code.</p>
+    <p style="margin-top:16px"><strong>Auto-avaliação Hermes:</strong> O meu design foi comparável (gradient mesh + noise + Fraunces/JetBrains Mono) mas não superei nem o Claude Code na landing page nem o OpenCode nas animações. Build 651ms. Conclusão honesta: para delegar coding no Hermes, <strong>OpenCode para visual/animacão, Claude Code para fiabilidade geral</strong>.</p>
   </div>
 
   <div class="prompt-section">
