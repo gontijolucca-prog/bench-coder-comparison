@@ -1,0 +1,50 @@
+[
+  {
+    "slide": 1,
+    "headline": "A ciência por trás de 25 minutos.",
+    "body": "EMS de corpo inteiro, num estúdio premium, com acompanhamento presencial.",
+    "visual_prompt": "Editorial photograph of a TechBody studio session: client wearing a dark form-fitting full-body EMS suit, trainer adjusting settings on a tablet, warm copper-toned studio lighting, premium atmosphere, slight motion blur to suggest contraction, dark charcoal background.",
+    "text_overlay": "A ciência por trás do EMS",
+    "pagination": "1/6"
+  },
+  {
+    "slide": 2,
+    "headline": "Impulsos eléctricos recrutam fibras musculares em simultâneo.",
+    "body": "O WB-EMS estimula vários grupos musculares ao mesmo tempo, sem cargas externas elevadas.",
+    "visual_prompt": "Close-up technical shot of EMS electrode zones on a dark fabric suit during a session, subtle blue glow indicating electrical activation across multiple muscle groups, shallow depth of field, cinematic studio lighting.",
+    "text_overlay": "Como funciona o WB-EMS",
+    "pagination": "2/6"
+  },
+  {
+    "slide": 3,
+    "headline": "Recrutamento de fibras musculares.",
+    "body": "Treino convencional: ~30–40%. EMS de corpo inteiro: até ~85–90%.",
+    "visual_prompt": "Pure typographic composition on dark charcoal background, two large monospace numbers in copper orange and muted white side by side, comparison style with subtle divider line, accent color reserved for the EMS value.",
+    "text_overlay": "30–40% vs 85–90%",
+    "pagination": "3/6"
+  },
+  {
+    "slide": 4,
+    "headline": "Corpo inteiro em apenas 25 minutos.",
+    "body": "Sessões curtas, baixa carga articular, com treinador certificado a acompanhar cada movimento.",
+    "visual_prompt": "Wide editorial shot of a TechBody studio, two clients in dark EMS suits during session with trainers present, warm copper accent lighting, premium dark studio environment, focused atmosphere.",
+    "text_overlay": "25 min · Corpo inteiro",
+    "pagination": "4/6"
+  },
+  {
+    "slide": 5,
+    "headline": "1 a 3 sessões por semana. Equipamento alemão certificado.",
+    "body": "Frequência recomendada pela evidência. Tecnologia com certificação médica, fabricada na Alemanha.",
+    "visual_prompt": "Detail shot of EMS equipment: form-fitting dark suit with visible electrode placement zones, clean and modern engineering aesthetic, macro photography with studio lighting, premium materials visible.",
+    "text_overlay": "1 a 3 sessões por semana",
+    "pagination": "5/6"
+  },
+  {
+    "slide": 6,
+    "headline": "Marca a tua sessão experimental.",
+    "body": "Vinte e cinco minutos no estúdio para perceber o método. Sem compromisso.",
+    "visual_prompt": "TechBody studio entrance with warm copper light spilling out into a darker corridor, inviting atmosphere, EMS equipment subtly visible in the background, action-oriented composition with leading lines.",
+    "text_overlay": "Marca a tua sessão experimental",
+    "pagination": "6/6"
+  }
+]

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benchmark Content Machine — TechBody Ciência EMS</title>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --border: #222;
+  --text: #e8e8e8;
+  --muted: #888;
+  --accent: #d4773b;
+  --green: #4ade80;
+  --red: #f87171;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  padding: 24px;
+}
+h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+h2 { font-size: 1.2rem; font-weight: 600; margin: 32px 0 16px; color: var(--accent); }
+.subtitle { color: var(--muted); margin-bottom: 32px; font-size: 0.9rem; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-header h3 { font-size: 1.1rem; font-weight: 700; }
+.badge {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.badge-pass { background: rgba(74,222,128,0.15); color: var(--green); }
+.badge-fail { background: rgba(248,113,113,0.15); color: var(--red); }
+.slide {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.slide:last-child { border-bottom: none; }
+.slide-num {
+  display: inline-block;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 24px;
+  margin-right: 8px;
+}
+.slide-headline { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+.slide-body { color: var(--muted); font-size: 0.85rem; margin-bottom: 8px; }
+.slide-overlay {
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.slide-visual {
+  font-size: 0.75rem;
+  color: #555;
+  font-family: monospace;
+  background: #0a0a0a;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #1a1a1a;
+}
+.checks {
+  padding: 16px 20px;
+  background: #0d0d0d;
+  border-top: 1px solid var(--border);
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+.check-icon { font-size: 1rem; }
+.check-pass { color: var(--green); }
+.check-fail { color: var(--red); }
+.check-label { color: var(--muted); }
+.prompt-section {
+  margin-top: 40px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.prompt-section pre {
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-family: monospace;
+  margin-top: 12px;
+}
+.model-info {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+</style>
+</head>
+<body>
+
+<h1>Benchmark Content Machine</h1>
+<p class="subtitle">Carrossel TechBody — Tema: Ciência EMS · 6 slides · pt_PT · B2C</p>
+
+<div class="grid">
+
+<!-- CLAUDE CODE -->
+<div class="card">
+  <div class="card-header">
+    <div>
+      <h3>Claude Code</h3>
+      <div class="model-info">MiniMax-M3 via endpoint Anthropic</div>
+    </div>
+    <span class="badge badge-fail">❌ CTA falhou</span>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">1</span>O que acontece dentro do corpo durante uma sessão EMS?</div>
+    <div class="slide-body">No estúdio TechBody, impulsos elétricos controlados acompanham o movimento orientado. A ciência começa pelo estúdio.</div>
+    <div class="slide-overlay">CIÊNCIA DO EMS · O QUE ACONTECE NUMA SESSÃO?</div>
+    <div class="slide-visual">Editorial close-up of a person in a premium EMS studio wearing a sleek black training suit...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">2</span>Um impulso. Vários grupos musculares. Ao mesmo tempo.</div>
+    <div class="slide-body">O EMS pode ativar vários grupos musculares em simultâneo: pernas, glúteos, costas, peito e zona abdominal.</div>
+    <div class="slide-overlay">ATIVAÇÃO SIMULTÂNEA DE VÁRIOS GRUPOS MUSCULARES</div>
+    <div class="slide-visual">Anatomical editorial silhouette in a premium EMS training studio, several muscle groups highlighted...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">3</span>Mais fibras musculares podem ser recrutadas.</div>
+    <div class="slide-body">No treino convencional, o recrutamento ronda 30–40%. Com EMS, pode chegar até cerca de 85–90%.</div>
+    <div class="slide-overlay">RECRUTAMENTO DE FIBRAS · TREINO CONVENCIONAL ~30–40% · EMS ATÉ ~85–90%</div>
+    <div class="slide-visual">Minimal scientific editorial comparison of two abstract muscle fiber fields...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">4</span>Intensidade concentrada em 20–25 minutos.</div>
+    <div class="slide-body">Uma sessão WB-EMS típica dura cerca de 20–25 minutos. A frequência habitual varia entre 1 e 3 sessões por semana.</div>
+    <div class="slide-overlay">WB-EMS 20–25 MINUTOS · FREQUÊNCIA 1–3 SESSÕES POR SEMANA</div>
+    <div class="slide-visual">Premium EMS studio scene with a minimalist illuminated timer reading 20–25 minutos...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">5</span>Tecnologia pensada para treinar com menor impacto articular.</div>
+    <div class="slide-body">A ativação muscular acontece com baixo impacto nas articulações. O equipamento é certificado para uso médico, fabricado na Alemanha.</div>
+    <div class="slide-overlay">BAIXO IMPACTO ARTICULAR · EQUIPAMENTO CERTIFICADO PARA USO MÉDICO · FABRICADO NA ALEMANHA</div>
+    <div class="slide-visual">Editorial product detail of a premium black EMS suit and control unit in a dark studio...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">6</span>A ciência sente-se no movimento.</div>
+    <div class="slide-body">A sessão EMS adapta-se ao objetivo definido no estúdio TechBody.</div>
+    <div class="slide-overlay" style="color:var(--red)">MARCA A TUA SESSÃO EXPERIMENTAL ← CTA esperado</div>
+    <div class="slide-visual">Confident person finishing a premium EMS training session in a refined dark charcoal studio...</div>
+  </div>
+  <div class="checks">
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Voz impessoal</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Estatística em destaque (30–40% vs 85–90%)</span></div>
+    <div class="check check-fail"><span class="check-icon">❌</span><span class="check-label">CTA incorrecto — "A ciência sente-se no movimento" em vez de "Marca a tua sessão experimental"</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Hook ≤12 palavras (8)</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Paginação 1/6 → 6/6</span></div>
+  </div>
+</div>
+
+<!-- CODEX -->
+<div class="card">
+  <div class="card-header">
+    <div>
+      <h3>Codex</h3>
+      <div class="model-info">MiniMax-M3 (minimax.io)</div>
+    </div>
+    <span class="badge badge-pass">✅ Tudo OK</span>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">1</span>20 minutos de treino valem o mesmo que horas no ginásio.</div>
+    <div class="slide-body">A ciência por trás do EMS muda a forma como o corpo responde a cada sessão no estúdio.</div>
+    <div class="slide-overlay">20 minutos que reconfiguram o treino.</div>
+    <div class="slide-visual">Editorial photo on dark charcoal background #1a1a1a, a person wearing a black WB-EMS training suit...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">2</span>O recrutamento muscular é o ponto de partida.</div>
+    <div class="slide-body">No treino convencional, apenas cerca de 30 a 40% das fibras musculares disponíveis é realmente ativado em cada repetição.</div>
+    <div class="slide-overlay">Apenas parte das fibras musculares trabalha num treino normal.</div>
+    <div class="slide-visual">Abstract macro photograph on black charcoal background, muscle fibers illuminated like glowing strands of copper wire...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">3</span>EMS pode elevar o recrutamento até 85 a 90%.</div>
+    <div class="slide-body">Os impulsos elétricos atingem simultaneamente fibras profundas e superficiais, desafiando o corpo de forma muito mais completa.</div>
+    <div class="slide-overlay">Até 85 a 90% das fibras despertam ao mesmo tempo.</div>
+    <div class="slide-visual">Editorial studio still on dark charcoal, cross-section style illustration of a human silhouette covered in glowing orange voltage nodes...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">4</span>Sessões curtas, frequência inteligente.</div>
+    <div class="slide-body">Cada sessão de WB-EMS dura cerca de 20 a 25 minutos, recomendada 1 a 3 vezes por semana para resultados consistentes.</div>
+    <div class="slide-overlay">20 a 25 minutos. 1 a 3 vezes por semana.</div>
+    <div class="slide-visual">Minimal editorial composition on dark charcoal background, a single matte black stopwatch with copper-orange LED digits...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">5</span>Ativação total com baixo impacto articular.</div>
+    <div class="slide-body">Vários grupos musculares trabalham em conjunto, sem carga sobre as articulações. Equipamento certificado médico, fabricado na Alemanha.</div>
+    <div class="slide-overlay">Corpo inteiro, articulações protegidas.</div>
+    <div class="slide-visual">Editorial still on dark charcoal background, transparent anatomical silhouette of a torso and legs overlaid with warm orange light...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">6</span>Marca a tua sessão experimental.</div>
+    <div class="slide-body">Aproximar a ciência da prática começa por uma primeira sessão no estúdio TechBody, com acompanhamento personalizado.</div>
+    <div class="slide-overlay">Marca a tua sessão experimental.</div>
+    <div class="slide-visual">Editorial portrait on dark charcoal background, athlete in WB-EMS suit standing in a confident ready stance...</div>
+  </div>
+  <div class="checks">
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Voz impessoal</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Estatística em destaque (30–40% vs 85–90%)</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">CTA correcto: "Marca a tua sessão experimental"</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Hook ≤12 palavras (10)</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Paginação 1/6 → 6/6</span></div>
+  </div>
+</div>
+
+<!-- OPENCODE -->
+<div class="card">
+  <div class="card-header">
+    <div>
+      <h3>OpenCode</h3>
+      <div class="model-info">MiniMax-M3 (minimax.io) · --pure</div>
+    </div>
+    <span class="badge badge-pass">✅ Tudo OK</span>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">1</span>A ciência por trás de 25 minutos.</div>
+    <div class="slide-body">EMS de corpo inteiro, num estúdio premium, com acompanhamento presencial.</div>
+    <div class="slide-overlay">A ciência por trás do EMS</div>
+    <div class="slide-visual">Editorial photograph of a TechBody studio session: client wearing a dark form-fitting EMS suit...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">2</span>Impulsos eléctricos recrutam fibras musculares em simultâneo.</div>
+    <div class="slide-body">O WB-EMS estimula vários grupos musculares ao mesmo tempo, sem cargas externas elevadas.</div>
+    <div class="slide-overlay">Como funciona o WB-EMS</div>
+    <div class="slide-visual">Close-up technical shot of EMS electrode zones on a dark fabric suit during a session...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">3</span>Recrutamento de fibras musculares.</div>
+    <div class="slide-body">Treino convencional: ~30–40%. EMS de corpo inteiro: até ~85–90%.</div>
+    <div class="slide-overlay">30–40% vs 85–90%</div>
+    <div class="slide-visual">Pure typographic composition on dark charcoal background, two large monospace numbers facing each other...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">4</span>Corpo inteiro em apenas 25 minutos.</div>
+    <div class="slide-body">Sessões curtas, baixa carga articular, com treinador certificado a acompanhar cada movimento.</div>
+    <div class="slide-overlay">25 min · Corpo inteiro</div>
+    <div class="slide-visual">Wide editorial shot of a TechBody studio, two clients in dark EMS suits during simultaneous training...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">5</span>1 a 3 sessões por semana. Equipamento alemão certificado.</div>
+    <div class="slide-body">Frequência recomendada pela evidência. Tecnologia com certificação médica, fabricada na Alemanha.</div>
+    <div class="slide-overlay">1 a 3 sessões por semana</div>
+    <div class="slide-visual">Detail shot of EMS equipment: form-fitting dark suit with visible electrode placement zones...</div>
+  </div>
+  <div class="slide">
+    <div class="slide-headline"><span class="slide-num">6</span>Marca a tua sessão experimental.</div>
+    <div class="slide-body">Vinte e cinco minutos no estúdio para perceber o método. Sem compromisso.</div>
+    <div class="slide-overlay">Marca a tua sessão experimental</div>
+    <div class="slide-visual">TechBody studio entrance with warm copper light spilling out into a darker corridor...</div>
+  </div>
+  <div class="checks">
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Voz impessoal</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Estatística em destaque (30–40% vs 85–90%)</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">CTA correcto: "Marca a tua sessão experimental"</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Hook ≤12 palavras (6)</span></div>
+    <div class="check check-pass"><span class="check-icon">✅</span><span class="check-label">Paginação 1/6 → 6/6</span></div>
+  </div>
+</div>
+
+</div>
+
+<div class="prompt-section">
+  <h2>Prompt utilizada (idêntica para os 3)</h2>
+  <pre># Tarefa: Gerar carrossel Instagram para TechBody
+
+## Especificações
+- Marca: TechBody (@techbody_pt)
+- Tipo: carrossel
+- Tema: ciencia_ems (Ciência do EMS)
+- Audiência: b2c
+- Número de slides: 6
+- Idioma: pt_PT (Portugal)
+
+## Regras obrigatórias
+1. Voz impessoal: sem "eu", "me", "mim", "comigo", "aprendi", "fiz"
+2. Sem títulos honoríficos (Dr., doutor)
+3. Sem emojis
+4. Sem estrangeirismos (exceto: EMS, WB-EMS, TechBody, TechBody U)
+5. Claims científicos permitidos:
+   - Recrutamento fibras: ~30-40% treino convencional vs até ~85-90% EMS
+   - Sessão WB-EMS típica: ~20-25 minutos
+   - Frequência: 1 a 3 sessões por semana
+   - Ativação simultânea de múltiplos grupos musculares
+   - Baixo impacto articular
+   - Equipamento certificado médico, fabricado na Alemanha
+6. Claims proibidas: citar autores/datas/DOIs específicos, inventar percentagens, prometer resultados garantidos
+7. Sem "Symbiont" (brand legado banido)
+8. Sem menção a preços
+9. CTA do último slide: "Marca a tua sessão experimental"
+
+## Estrutura dos slides
+- Slide 1: Hook (máx 12 palavras) + referência ao estúdio/sessão
+- Slides 2-5: Desenvolvimento com progressão lógica
+  - Pelo menos 1 slide com número/percentagem/estatística em destaque
+- Slide 6: CTA ("Marca a tua sessão experimental")
+
+## Formato de output
+JSON array válido com: slide, headline, body, visual_prompt, text_overlay, pagination</pre>
+</div>
+
+</body>
+</html>
