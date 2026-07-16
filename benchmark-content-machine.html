@@ -8,6 +8,7 @@
 :root {
   --bg: #0a0a0a; --surface: #141414; --border: #222; --text: #e8e8e8;
   --muted: #888; --accent: #d4773b; --green: #4ade80; --red: #f87171; --yellow: #fbbf24;
+  --tb-bg: #1a1a1a; --tb-accent: #d4773b; --tb-text: #ffffff;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', sans-serif; line-height: 1.6; padding: 24px; }
@@ -18,100 +19,248 @@ h2 { font-size: 1.3rem; font-weight: 700; margin: 40px 0 16px; color: var(--acce
 @media (max-width: 900px) { .summary { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px) { .summary { grid-template-columns: 1fr; } }
 .summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-.summary-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
-.summary-card .model { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; }
-.summary-card .score { font-size: 1.5rem; font-weight: 800; }
+.summary-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+.summary-card .model { font-size: 0.7rem; color: var(--muted); margin-bottom: 8px; }
+.summary-card .score { font-size: 1.4rem; font-weight: 800; }
 .score-pass { color: var(--green); }
 .score-warn { color: var(--yellow); }
-.summary-card .detail { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
-.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-@media (max-width: 1200px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.card-header { padding: 12px 16px; border-bottom: 1px solid var(--border); }
-.card-header h3 { font-size: 1rem; font-weight: 700; }
-.card-header .model { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
-.item { padding: 12px 16px; border-bottom: 1px solid var(--border); }
-.item:last-child { border-bottom: none; }
-.item-num { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #000; font-size: 0.7rem; font-weight: 700; text-align: center; line-height: 22px; margin-right: 6px; }
-.item-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; }
-.item-body { color: var(--muted); font-size: 0.8rem; margin-bottom: 4px; }
-.item-overlay { font-size: 0.75rem; color: var(--accent); margin-bottom: 4px; }
-.item-visual { font-size: 0.7rem; color: #555; font-family: monospace; background: #0a0a0a; padding: 6px 8px; border-radius: 4px; border: 1px solid #1a1a1a; }
-.checks { padding: 12px 16px; background: #0d0d0d; border-top: 1px solid var(--border); }
-.check { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; margin-bottom: 3px; }
-.check-pass { color: var(--green); }
-.check-fail { color: var(--red); }
-.check-warn { color: var(--yellow); }
-.prompt-section { margin-top: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
-.prompt-section pre { white-space: pre-wrap; font-size: 0.78rem; color: var(--muted); font-family: monospace; margin-top: 12px; }
-.badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; font-weight: 600; display: inline-block; margin-left: 6px; }
+.summary-card .detail { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+.badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; font-weight: 600; display: inline-block; margin-left: 4px; }
 .badge-pass { background: rgba(74,222,128,0.15); color: var(--green); }
 .badge-warn { background: rgba(251,191,36,0.15); color: var(--yellow); }
+
+/* Tabs */
+.tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.tab { padding: 8px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--muted); transition: all 0.2s; }
+.tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+.tab:hover { border-color: var(--accent); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Carousel slides */
+.cli-section { margin-bottom: 40px; }
+.cli-section h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+.slides-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+.slide-card {
+  flex: 0 0 270px;
+  height: 337px;
+  background: var(--tb-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  scroll-snap-align: start;
+  border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+.slide-card .slide-headline {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--tb-text);
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.slide-card .slide-body {
+  font-size: 0.75rem;
+  color: #ccc;
+  line-height: 1.4;
+  margin-top: 8px;
+}
+.slide-card .slide-overlay {
+  font-size: 0.7rem;
+  color: var(--tb-accent);
+  font-weight: 600;
+  margin-top: 6px;
+}
+.slide-card .slide-visual {
+  font-size: 0.6rem;
+  color: #555;
+  font-family: monospace;
+  margin-top: 6px;
+  line-height: 1.3;
+}
+.slide-card .slide-pagination {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 0.65rem;
+  color: #666;
+  font-weight: 600;
+}
+.slide-card .slide-arrow {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  font-size: 0.8rem;
+  color: var(--tb-accent);
+}
+.slide-card .slide-num {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 0.65rem;
+  color: #555;
+  font-weight: 700;
+}
+.slide-card .accent-bar {
+  width: 30px;
+  height: 3px;
+  background: var(--tb-accent);
+  margin-bottom: 8px;
+  border-radius: 2px;
+}
+
+/* Reel storyboard */
+.reel-board { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+@media (max-width: 1200px) { .reel-board { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .reel-board { grid-template-columns: repeat(2, 1fr); } }
+.scene-card {
+  background: var(--tb-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #333;
+  aspect-ratio: 9/16;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+}
+.scene-card .scene-num {
+  font-size: 0.6rem;
+  color: #555;
+  font-weight: 700;
+}
+.scene-card .scene-ts {
+  font-size: 0.6rem;
+  color: var(--tb-accent);
+  font-weight: 600;
+}
+.scene-card .scene-vo {
+  font-size: 0.72rem;
+  color: var(--tb-text);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.scene-card .scene-overlay {
+  font-size: 0.6rem;
+  color: var(--tb-accent);
+  margin-top: 4px;
+}
+.scene-card .scene-visual {
+  font-size: 0.55rem;
+  color: #555;
+  font-family: monospace;
+  line-height: 1.3;
+  margin-top: 4px;
+}
+.scene-card .scene-camera {
+  font-size: 0.55rem;
+  color: #444;
+  font-style: italic;
+  margin-top: 2px;
+}
+.scene-card .accent-bar { width: 20px; height: 2px; background: var(--tb-accent); border-radius: 1px; margin-bottom: 4px; }
+
+/* Checks */
+.checks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.check { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; }
+.check-pass { background: rgba(74,222,128,0.1); color: var(--green); }
+.check-fail { background: rgba(248,113,113,0.1); color: var(--red); }
+.check-warn { background: rgba(251,191,36,0.1); color: var(--yellow); }
+
+.prompt-section { margin-top: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.prompt-section pre { white-space: pre-wrap; font-size: 0.78rem; color: var(--muted); font-family: monospace; margin-top: 12px; }
 </style>
 </head>
 <body>
 
 <h1>Benchmark Content Machine — 4 CLIs</h1>
-<p class="subtitle">TechBody · Modelo: MiniMax-M3 (provider oficial minimax.io) · Mesma prompt · 2 testes: Carrossel + Reel</p>
+<p class="subtitle">TechBody · Modelo: MiniMax-M3 (provider oficial minimax.io) · Mesma prompt · Carrossel + Reel</p>
 
 <div class="summary">
   <div class="summary-card">
-    <h3>Pi<span class="badge badge-warn">⚠ 1 falha</span></h3>
-    <div class="model">MiniMax-M3 (minimax.io)</div>
+    <h3>Pi<span class="badge badge-warn">1 falha</span></h3>
+    <div class="model">MiniMax-M3</div>
     <div class="score score-warn">2/3</div>
-    <div class="detail">Carrossel: ✅ · Reel: ✅ · Hook reel: ⚠ 13 palavras</div>
+    <div class="detail">Carrossel: ✅ · Reel: ✅ · Hook: ⚠ 13p</div>
   </div>
   <div class="summary-card">
-    <h3>Claude Code<span class="badge badge-pass">✅ Tudo OK</span></h3>
-    <div class="model">MiniMax-M3 (anthropic endpoint)</div>
+    <h3>Claude Code<span class="badge badge-pass">OK</span></h3>
+    <div class="model">MiniMax-M3</div>
     <div class="score score-pass">3/3</div>
-    <div class="detail">Carrossel: ✅ · Reel: ✅ · Hook reel: ✅</div>
+    <div class="detail">Carrossel: ✅ · Reel: ✅ · Hook: ✅</div>
   </div>
   <div class="summary-card">
-    <h3>Codex<span class="badge badge-pass">✅ Tudo OK</span></h3>
-    <div class="model">MiniMax-M3 (minimax.io)</div>
+    <h3>Codex<span class="badge badge-pass">OK</span></h3>
+    <div class="model">MiniMax-M3</div>
     <div class="score score-pass">3/3</div>
-    <div class="detail">Carrossel: ✅ · Reel: ✅ · Hook reel: ✅</div>
+    <div class="detail">Carrossel: ✅ · Reel: ✅ · Hook: ✅</div>
   </div>
   <div class="summary-card">
-    <h3>OpenCode<span class="badge badge-pass">✅ Tudo OK</span></h3>
-    <div class="model">MiniMax-M3 (minimax.io)</div>
+    <h3>OpenCode<span class="badge badge-pass">OK</span></h3>
+    <div class="model">MiniMax-M3</div>
     <div class="score score-pass">3/3</div>
-    <div class="detail">Carrossel: ✅ · Reel: ✅ · Hook reel: ✅</div>
+    <div class="detail">Carrossel: ✅ · Reel: ✅ · Hook: ✅</div>
   </div>
 </div>
 
-<h2>Teste 1: Carrossel — Ciência EMS (6 slides)</h2>
-<div class="grid">
-  <div class="card">
-    <div class="card-header">
-      <h3>Pi</h3>
-      <div class="model">MiniMax-M3 (minimax.io)</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">1</span>O que muda quando o EMS ativa vários músculos ao mesmo tempo?</div>
-      <div class="item-body">No estúdio TechBody, uma sessão WB-EMS combina estímulo elétrico e movimento orientado.</div>
-      <div class="item-overlay">O que muda quando o EMS ativa vários músculos ao mesmo tempo?
+<div class="tabs">
+  <div class="tab active" onclick="showTab('carousel')">Carrossel — Ciência EMS</div>
+  <div class="tab" onclick="showTab('reel')">Reel — Experiência de Sessão</div>
+</div>
+
+<div id="tab-carousel" class="tab-content active">
+<div class="cli-section">
+  <h3>Pi <span style="font-size:0.8rem;color:var(--muted);font-weight:400">· MiniMax-M3</span></h3>
+  <div class="checks">
+    <span class="check check-pass">✅ Voz impessoal</span>
+    <span class="check check-pass">✅ Estatística</span>
+    <span class="check check-pass">✅ CTA</span>
+    <span class="check check-pass">✅ Hook ≤12</span>
+    <span class="check check-pass">✅ Paginação</span>
+  </div>
+  <div class="slides-row">
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 1</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">O que muda quando o EMS ativa vários músculos ao mesmo tempo?</div>
+        <div class="slide-body">No estúdio TechBody, uma sessão WB-EMS combina estímulo elétrico e movimento orientado.</div>
+        <div class="slide-overlay">O que muda quando o EMS ativa vários músculos ao mesmo tempo?
 
 No estúdio TechBody
 →</div>
-      <div class="item-visual">Premium editorial photograph inside a dark charcoal TechBody EMS studio, a real adult client wearing...</div>
+        <div class="slide-visual">Premium editorial photograph inside a dark charcoal TechBody EMS studio, a real adult client wearing a clean dark full-b...</div>
+      </div>
+      <div class="slide-pagination">1/6</div>
+      <div class="slide-arrow">→</div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">2</span>Um estímulo. Vários grupos musculares.</div>
-      <div class="item-body">Durante a sessão, o EMS ativa simultaneamente múltiplos grupos musculares. O treinador ajusta o estímulo ao exercício.</div>
-      <div class="item-overlay">Um estímulo.
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 2</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Um estímulo. Vários grupos musculares.</div>
+        <div class="slide-body">Durante a sessão, o EMS ativa simultaneamente múltiplos grupos musculares. O treinador ajusta o estímulo ao exercício.</div>
+        <div class="slide-overlay">Um estímulo.
 Vários grupos musculares.
 
 Ativação simultânea
 →</div>
-      <div class="item-visual">High-end editorial anatomical-inspired composition in a dark charcoal studio, a human silhouette wea...</div>
+        <div class="slide-visual">High-end editorial anatomical-inspired composition in a dark charcoal studio, a human silhouette wearing a dark TechBody...</div>
+      </div>
+      <div class="slide-pagination">2/6</div>
+      <div class="slide-arrow">→</div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">3</span>O recrutamento de fibras pode chegar aos 85–90%</div>
-      <div class="item-body">Com EMS, face a cerca de 30–40% num treino convencional. Um dado sobre o estímulo, não uma promessa de resultados.</div>
-      <div class="item-overlay">ATÉ
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 3</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">O recrutamento de fibras pode chegar aos 85–90%</div>
+        <div class="slide-body">Com EMS, face a cerca de 30–40% num treino convencional. Um dado sobre o estímulo, não uma promessa de resultados.</div>
+        <div class="slide-overlay">ATÉ
 85–90%
 
 Recrutamento de fibras
@@ -119,366 +268,673 @@ Recrutamento de fibras
 vs cerca de 30–40%
 no treino convencional
 →</div>
-      <div class="item-visual">Bold typographic editorial poster for EMS science, dark charcoal background with an oversized copper...</div>
+        <div class="slide-visual">Bold typographic editorial poster for EMS science, dark charcoal background with an oversized copper 85–90% statistic, a...</div>
+      </div>
+      <div class="slide-pagination">3/6</div>
+      <div class="slide-arrow">→</div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">4</span>Uma sessão de corpo inteiro em 20–25 minutos</div>
-      <div class="item-body">O formato é curto e estruturado: preparação, ativação e recuperação acompanhadas no estúdio.</div>
-      <div class="item-overlay">20–25 MINUTOS
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 4</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Uma sessão de corpo inteiro em 20–25 minutos</div>
+        <div class="slide-body">O formato é curto e estruturado: preparação, ativação e recuperação acompanhadas no estúdio.</div>
+        <div class="slide-overlay">20–25 MINUTOS
 
 Corpo inteiro.
 Acompanhamento presencial.
 →</div>
-      <div class="item-visual">Cinematic premium photograph of a focused client in a dark full-body TechBody EMS suit inside a refi...</div>
+        <div class="slide-visual">Cinematic premium photograph of a focused client in a dark full-body TechBody EMS suit inside a refined charcoal studio,...</div>
+      </div>
+      <div class="slide-pagination">4/6</div>
+      <div class="slide-arrow">→</div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">5</span>Baixo impacto articular. 1–3 sessões por semana</div>
-      <div class="item-body">O WB-EMS permite um treino de baixo impacto articular. A frequência habitual pode variar entre 1 e 3 sessões por semana.</div>
-      <div class="item-overlay">BAIXO IMPACTO
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 5</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Baixo impacto articular. 1–3 sessões por semana</div>
+        <div class="slide-body">O WB-EMS permite um treino de baixo impacto articular. A frequência habitual pode variar entre 1 e 3 sessões por semana.</div>
+        <div class="slide-overlay">BAIXO IMPACTO
 ARTICULAR
 
 1–3 sessões
 por semana
 →</div>
-      <div class="item-visual">Refined editorial image of an adult client performing a controlled low-impact movement in a dark Tec...</div>
+        <div class="slide-visual">Refined editorial image of an adult client performing a controlled low-impact movement in a dark TechBody EMS studio, fu...</div>
+      </div>
+      <div class="slide-pagination">5/6</div>
+      <div class="slide-arrow">→</div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">6</span>Marca a tua sessão experimental</div>
-      <div class="item-body">Conhece o estúdio TechBody e percebe como funciona uma sessão WB-EMS.</div>
-      <div class="item-overlay">Marca a tua sessão experimental</div>
-      <div class="item-visual">Premium closing image inside a dark charcoal TechBody studio, confident real adult client and traine...</div>
-    </div>
-    <div class="checks">
-      <div class="check check-pass">✅ Voz impessoal</div>
-      <div class="check check-pass">✅ Estatística (30-40% vs 85-90%)</div>
-      <div class="check check-pass">✅ CTA correcto</div>
-      <div class="check check-pass">✅ Hook ≤12 palavras</div>
-      <div class="check check-pass">✅ Paginação</div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      <h3>Claude Code</h3>
-      <div class="model">MiniMax-M3 (anthropic endpoint)</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">1</span>Vinte e cinco minutos mudam o treino.</div>
-      <div class="item-body">A eletroestimulação WB-EMS recruta até 85% das fibras musculares numa sessão curta, com baixo impacto articular.</div>
-      <div class="item-overlay">25 minutos. Até 85% das fibras recrutadas.</div>
-      <div class="item-visual">Dark charcoal studio interior, single WB-EMS suit on a minimal mannequin under dramatic editorial li...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">2</span>Mais fibras em menos tempo.</div>
-      <div class="item-body">O treino convencional activa entre 30% e 40% das fibras musculares. A eletroestimulação WB-EMS pode chegar aos 85% a 90%, com estímulos eléctricos controlados que atravessam o músculo em profundidade.</div>
-      <div class="item-overlay">Convencional: 30-40% das fibras. WB-EMS: até 85-90%.</div>
-      <div class="item-visual">Abstract anatomical illustration of muscle fiber recruitment, split comparison: left side convention...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">3</span>Corpo todo num só movimento.</div>
-      <div class="item-body">Os eléctrodos distribuídos pelo fato activam em simultâneo vários grupos musculares, sem sobrecarga numa só articulação. O estímulo chega onde o exercício isolado, por vezes, não chega.</div>
-      <div class="item-overlay">Activação simultânea de múltiplos grupos musculares.</div>
-      <div class="item-visual">Silhouette of human body with glowing orange electrode zones highlighting major muscle groups simult...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">4</span>Vinte minutos, uma a três vezes por semana.</div>
-      <div class="item-body">A sessão típica de WB-EMS dura entre 20 e 25 minutos. A frequência recomendada situa-se entre uma e três sessões semanais, consoante o objectivo e a recuperação individual.</div>
-      <div class="item-overlay">20-25 min por sessão. 1 a 3 vezes por semana.</div>
-      <div class="item-visual">Minimalist clock face showing twenty-five minutes, surrounded by three small calendar week markers i...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">5</span>Baixo impacto articular, equipamento certificado.</div>
-      <div class="item-body">O movimento é leve, sem cargas pesadas sobre as articulações. O equipamento utilizado é certificado para uso médico, fabricado na Alemanha, com parâmetros ajustados a cada pessoa.</div>
-      <div class="item-overlay">Baixo impacto articular. Equipamento certificado, fabricado na Alemanha.</div>
-      <div class="item-visual">Close-up of WB-EMS suit fabric texture with subtle certification mark, dramatic side lighting castin...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">6</span>Marca a tua sessão experimental.</div>
-      <div class="item-body">A experiência começa no estúdio. Sessão inicial com avaliação, ajuste de parâmetros e acompanhamento técnico individual.</div>
-      <div class="item-overlay">Marca a tua sessão experimental.</div>
-      <div class="item-visual">Dark charcoal studio environment with a single chair and a WB-EMS suit neatly placed, warm soft oran...</div>
-    </div>
-    <div class="checks">
-      <div class="check check-pass">✅ Voz impessoal</div>
-      <div class="check check-pass">✅ Estatística (30-40% vs 85-90%)</div>
-      <div class="check check-pass">✅ CTA correcto</div>
-      <div class="check check-pass">✅ Hook ≤12 palavras</div>
-      <div class="check check-pass">✅ Paginação</div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      <h3>Codex</h3>
-      <div class="model">MiniMax-M3 (minimax.io)</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">1</span>Treinar não chega.</div>
-      <div class="item-body">A ciência mostra que existe uma forma mais eficiente de ativar o corpo em apenas 20 minutos por semana.</div>
-      <div class="item-overlay">TREINAR NÃO CHEGA.</div>
-      <div class="item-visual">Dark charcoal studio background (#1a1a1a), a single athlete silhouette standing on a minimalist plat...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">2</span>O que é o EMS?</div>
-      <div class="item-body">Estimulação Elétrica Muscular: impulsos elétricos que ativam diretamente as fibras musculares, recrutando mais músculo por contração do que o treino convencional.</div>
-      <div class="item-overlay">O QUE É O EMS?</div>
-      <div class="item-visual">Dark editorial close-up of an athlete's torso wearing the WB-EMS electrode vest, subtle electrical p...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">3</span>Recrutamento de fibras.</div>
-      <div class="item-body">No treino convencional, o corpo ativa cerca de 30 a 40% das fibras musculares. Com WB-EMS, esse recrutamento pode chegar aos 85 a 90%.</div>
-      <div class="item-overlay">30–40% VS 85–90%</div>
-      <div class="item-visual">Split composition on dark charcoal background: left side showing a barbell with subtle muscle fiber ...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">4</span>20 minutos. Corpo inteiro.</div>
-      <div class="item-body">Uma sessão WB-EMS típica dura 20 a 25 minutos. Ativa simultaneamente vários grupos musculares com baixo impacto articular.</div>
-      <div class="item-overlay">20 MINUTOS. CORPO INTEIRO.</div>
-      <div class="item-visual">Wide editorial shot of athlete in full WB-EMS suit standing in a dark studio, multiple muscle group ...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">5</span>Frequência inteligente.</div>
-      <div class="item-body">O protocolo recomendado varia entre 1 e 3 sessões por semana. Equipamento com certificação médica, fabricado na Alemanha.</div>
-      <div class="item-overlay">1 A 3 SESSÕES POR SEMANA</div>
-      <div class="item-visual">Dark charcoal editorial scene featuring a sleek German-engineered WB-EMS control unit on a minimal s...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">6</span>Marca a tua sessão experimental.</div>
-      <div class="item-body">Dá o próximo passo no TechBody U. A primeira sessão aproxima-te de um treino com a ciência como base.</div>
-      <div class="item-overlay">MARCA A TUA SESSÃO EXPERIMENTAL</div>
-      <div class="item-visual">Dark charcoal studio hero shot, athlete in WB-EMS gear in a confident standing pose facing camera, s...</div>
-    </div>
-    <div class="checks">
-      <div class="check check-pass">✅ Voz impessoal</div>
-      <div class="check check-pass">✅ Estatística (30-40% vs 85-90%)</div>
-      <div class="check check-pass">✅ CTA correcto</div>
-      <div class="check check-pass">✅ Hook ≤12 palavras</div>
-      <div class="check check-pass">✅ Paginação</div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header">
-      <h3>OpenCode</h3>
-      <div class="model">MiniMax-M3 (minimax.io)</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">1</span>90% das fibras musculares activas em 20 minutos.</div>
-      <div class="item-body">A ciência por trás do treino EMS nos estúdios TechBody.</div>
-      <div class="item-overlay">90% · fibras activas →</div>
-      <div class="item-visual">Editorial dark charcoal gym scene, athlete in fitted EMS training suit mid-squat, dramatic chiaroscu...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">2</span>Treino convencional recruta só parte das fibras.</div>
-      <div class="item-body">Estudos de electromiografia indicam 30 a 40% de recrutamento em séries tradicionais com carga.</div>
-      <div class="item-overlay">30-40% · recrutamento clássico →</div>
-      <div class="item-visual">Side-by-side composition, left athlete lifting conventional barbell in chalk dust, right athlete in ...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">3</span>EMS activa múltiplos grupos musculares em simultâneo.</div>
-      <div class="item-body">Os impulsos eléctricos chegam ao músculo e contornam as limitações do recrutamento voluntário.</div>
-      <div class="item-overlay">Activação simultânea · glúteo · core · pernas →</div>
-      <div class="item-visual">Editorial photograph, athlete in EMS suit with orange glow tracing major muscle groups, dark studio,...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">4</span>20 a 25 minutos, uma a três vezes por semana.</div>
-      <div class="item-body">Duração típica de uma sessão WB-EMS e frequência recomendada em protocolo.</div>
-      <div class="item-overlay">20-25 MIN · 1-3x por semana →</div>
-      <div class="item-visual">Minimalist editorial still life, stopwatch centered on dark steel surface, orange second hand, singl...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">5</span>Equipamento certificado, fabricado na Alemanha.</div>
-      <div class="item-body">Treino de baixo impacto articular, com a segurança de um dispositivo com classificação médica.</div>
-      <div class="item-overlay">Baixo impacto · certificação médica →</div>
-      <div class="item-visual">Premium product macro photograph, EMS device console detail with small orange accent indicator, dark...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">6</span>Marca a tua sessão experimental.</div>
-      <div class="item-body">O primeiro passo começa no estúdio TechBody mais perto de ti.</div>
-      <div class="item-overlay">Marca a tua sessão experimental</div>
-      <div class="item-visual">Wide editorial shot, athlete seated in EMS suit inside dark studio, orange TechBody logo projected a...</div>
-    </div>
-    <div class="checks">
-      <div class="check check-pass">✅ Voz impessoal</div>
-      <div class="check check-pass">✅ Estatística (30-40% vs 85-90%)</div>
-      <div class="check check-pass">✅ CTA correcto</div>
-      <div class="check check-pass">✅ Hook ≤12 palavras</div>
-      <div class="check check-pass">✅ Paginação</div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 6</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Marca a tua sessão experimental</div>
+        <div class="slide-body">Conhece o estúdio TechBody e percebe como funciona uma sessão WB-EMS.</div>
+        <div class="slide-overlay">Marca a tua sessão experimental</div>
+        <div class="slide-visual">Premium closing image inside a dark charcoal TechBody studio, confident real adult client and trainer in a calm post-ses...</div>
+      </div>
+      <div class="slide-pagination">6/6</div>
+      <div class="slide-arrow"></div>
     </div>
   </div>
 </div>
+<div class="cli-section">
+  <h3>Claude Code <span style="font-size:0.8rem;color:var(--muted);font-weight:400">· MiniMax-M3</span></h3>
+  <div class="checks">
+    <span class="check check-pass">✅ Voz impessoal</span>
+    <span class="check check-pass">✅ Estatística</span>
+    <span class="check check-pass">✅ CTA</span>
+    <span class="check check-pass">✅ Hook ≤12</span>
+    <span class="check check-pass">✅ Paginação</span>
+  </div>
+  <div class="slides-row">
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 1</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Vinte e cinco minutos mudam o treino.</div>
+        <div class="slide-body">A eletroestimulação WB-EMS recruta até 85% das fibras musculares numa sessão curta, com baixo impacto articular.</div>
+        <div class="slide-overlay">25 minutos. Até 85% das fibras recrutadas.</div>
+        <div class="slide-visual">Dark charcoal studio interior, single WB-EMS suit on a minimal mannequin under dramatic editorial lighting, soft orange ...</div>
+      </div>
+      <div class="slide-pagination">1/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 2</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Mais fibras em menos tempo.</div>
+        <div class="slide-body">O treino convencional activa entre 30% e 40% das fibras musculares. A eletroestimulação WB-EMS pode chegar aos 85% a 90%, com estímulos eléctricos controlados que atravessam o músculo em profundidade.</div>
+        <div class="slide-overlay">Convencional: 30-40% das fibras. WB-EMS: até 85-90%.</div>
+        <div class="slide-visual">Abstract anatomical illustration of muscle fiber recruitment, split comparison: left side conventional training showing ...</div>
+      </div>
+      <div class="slide-pagination">2/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 3</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Corpo todo num só movimento.</div>
+        <div class="slide-body">Os eléctrodos distribuídos pelo fato activam em simultâneo vários grupos musculares, sem sobrecarga numa só articulação. O estímulo chega onde o exercício isolado, por vezes, não chega.</div>
+        <div class="slide-overlay">Activação simultânea de múltiplos grupos musculares.</div>
+        <div class="slide-visual">Silhouette of human body with glowing orange electrode zones highlighting major muscle groups simultaneously activated, ...</div>
+      </div>
+      <div class="slide-pagination">3/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 4</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Vinte minutos, uma a três vezes por semana.</div>
+        <div class="slide-body">A sessão típica de WB-EMS dura entre 20 e 25 minutos. A frequência recomendada situa-se entre uma e três sessões semanais, consoante o objectivo e a recuperação individual.</div>
+        <div class="slide-overlay">20-25 min por sessão. 1 a 3 vezes por semana.</div>
+        <div class="slide-visual">Minimalist clock face showing twenty-five minutes, surrounded by three small calendar week markers in soft orange, dark ...</div>
+      </div>
+      <div class="slide-pagination">4/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 5</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Baixo impacto articular, equipamento certificado.</div>
+        <div class="slide-body">O movimento é leve, sem cargas pesadas sobre as articulações. O equipamento utilizado é certificado para uso médico, fabricado na Alemanha, com parâmetros ajustados a cada pessoa.</div>
+        <div class="slide-overlay">Baixo impacto articular. Equipamento certificado, fabricado na Alemanha.</div>
+        <div class="slide-visual">Close-up of WB-EMS suit fabric texture with subtle certification mark, dramatic side lighting casting long shadows, dark...</div>
+      </div>
+      <div class="slide-pagination">5/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 6</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Marca a tua sessão experimental.</div>
+        <div class="slide-body">A experiência começa no estúdio. Sessão inicial com avaliação, ajuste de parâmetros e acompanhamento técnico individual.</div>
+        <div class="slide-overlay">Marca a tua sessão experimental.</div>
+        <div class="slide-visual">Dark charcoal studio environment with a single chair and a WB-EMS suit neatly placed, warm soft orange accent lighting c...</div>
+      </div>
+      <div class="slide-pagination">6/6</div>
+      <div class="slide-arrow"></div>
+    </div>
+  </div>
+</div>
+<div class="cli-section">
+  <h3>Codex <span style="font-size:0.8rem;color:var(--muted);font-weight:400">· MiniMax-M3</span></h3>
+  <div class="checks">
+    <span class="check check-pass">✅ Voz impessoal</span>
+    <span class="check check-pass">✅ Estatística</span>
+    <span class="check check-pass">✅ CTA</span>
+    <span class="check check-pass">✅ Hook ≤12</span>
+    <span class="check check-pass">✅ Paginação</span>
+  </div>
+  <div class="slides-row">
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 1</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Treinar não chega.</div>
+        <div class="slide-body">A ciência mostra que existe uma forma mais eficiente de ativar o corpo em apenas 20 minutos por semana.</div>
+        <div class="slide-overlay">TREINAR NÃO CHEGA.</div>
+        <div class="slide-visual">Dark charcoal studio background (#1a1a1a), a single athlete silhouette standing on a minimalist platform, wearing a WB-E...</div>
+      </div>
+      <div class="slide-pagination">1/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 2</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">O que é o EMS?</div>
+        <div class="slide-body">Estimulação Elétrica Muscular: impulsos elétricos que ativam diretamente as fibras musculares, recrutando mais músculo por contração do que o treino convencional.</div>
+        <div class="slide-overlay">O QUE É O EMS?</div>
+        <div class="slide-visual">Dark editorial close-up of an athlete's torso wearing the WB-EMS electrode vest, subtle electrical pulse visualization g...</div>
+      </div>
+      <div class="slide-pagination">2/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 3</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Recrutamento de fibras.</div>
+        <div class="slide-body">No treino convencional, o corpo ativa cerca de 30 a 40% das fibras musculares. Com WB-EMS, esse recrutamento pode chegar aos 85 a 90%.</div>
+        <div class="slide-overlay">30–40% VS 85–90%</div>
+        <div class="slide-visual">Split composition on dark charcoal background: left side showing a barbell with subtle muscle fiber wireframe diagram, r...</div>
+      </div>
+      <div class="slide-pagination">3/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 4</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">20 minutos. Corpo inteiro.</div>
+        <div class="slide-body">Uma sessão WB-EMS típica dura 20 a 25 minutos. Ativa simultaneamente vários grupos musculares com baixo impacto articular.</div>
+        <div class="slide-overlay">20 MINUTOS. CORPO INTEIRO.</div>
+        <div class="slide-visual">Wide editorial shot of athlete in full WB-EMS suit standing in a dark studio, multiple muscle group zones subtly highlig...</div>
+      </div>
+      <div class="slide-pagination">4/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 5</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Frequência inteligente.</div>
+        <div class="slide-body">O protocolo recomendado varia entre 1 e 3 sessões por semana. Equipamento com certificação médica, fabricado na Alemanha.</div>
+        <div class="slide-overlay">1 A 3 SESSÕES POR SEMANA</div>
+        <div class="slide-visual">Dark charcoal editorial scene featuring a sleek German-engineered WB-EMS control unit on a minimal surface, subtle techn...</div>
+      </div>
+      <div class="slide-pagination">5/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 6</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Marca a tua sessão experimental.</div>
+        <div class="slide-body">Dá o próximo passo no TechBody U. A primeira sessão aproxima-te de um treino com a ciência como base.</div>
+        <div class="slide-overlay">MARCA A TUA SESSÃO EXPERIMENTAL</div>
+        <div class="slide-visual">Dark charcoal studio hero shot, athlete in WB-EMS gear in a confident standing pose facing camera, soft orange (#d4773b)...</div>
+      </div>
+      <div class="slide-pagination">6/6</div>
+      <div class="slide-arrow"></div>
+    </div>
+  </div>
+</div>
+<div class="cli-section">
+  <h3>OpenCode <span style="font-size:0.8rem;color:var(--muted);font-weight:400">· MiniMax-M3</span></h3>
+  <div class="checks">
+    <span class="check check-pass">✅ Voz impessoal</span>
+    <span class="check check-pass">✅ Estatística</span>
+    <span class="check check-pass">✅ CTA</span>
+    <span class="check check-pass">✅ Hook ≤12</span>
+    <span class="check check-pass">✅ Paginação</span>
+  </div>
+  <div class="slides-row">
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 1</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">90% das fibras musculares activas em 20 minutos.</div>
+        <div class="slide-body">A ciência por trás do treino EMS nos estúdios TechBody.</div>
+        <div class="slide-overlay">90% · fibras activas →</div>
+        <div class="slide-visual">Editorial dark charcoal gym scene, athlete in fitted EMS training suit mid-squat, dramatic chiaroscuro lighting, single ...</div>
+      </div>
+      <div class="slide-pagination">1/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 2</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Treino convencional recruta só parte das fibras.</div>
+        <div class="slide-body">Estudos de electromiografia indicam 30 a 40% de recrutamento em séries tradicionais com carga.</div>
+        <div class="slide-overlay">30-40% · recrutamento clássico →</div>
+        <div class="slide-visual">Side-by-side composition, left athlete lifting conventional barbell in chalk dust, right athlete in EMS suit with subtle...</div>
+      </div>
+      <div class="slide-pagination">2/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 3</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">EMS activa múltiplos grupos musculares em simultâneo.</div>
+        <div class="slide-body">Os impulsos eléctricos chegam ao músculo e contornam as limitações do recrutamento voluntário.</div>
+        <div class="slide-overlay">Activação simultânea · glúteo · core · pernas →</div>
+        <div class="slide-visual">Editorial photograph, athlete in EMS suit with orange glow tracing major muscle groups, dark studio, clean negative spac...</div>
+      </div>
+      <div class="slide-pagination">3/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 4</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">20 a 25 minutos, uma a três vezes por semana.</div>
+        <div class="slide-body">Duração típica de uma sessão WB-EMS e frequência recomendada em protocolo.</div>
+        <div class="slide-overlay">20-25 MIN · 1-3x por semana →</div>
+        <div class="slide-visual">Minimalist editorial still life, stopwatch centered on dark steel surface, orange second hand, single dramatic spotlight...</div>
+      </div>
+      <div class="slide-pagination">4/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 5</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Equipamento certificado, fabricado na Alemanha.</div>
+        <div class="slide-body">Treino de baixo impacto articular, com a segurança de um dispositivo com classificação médica.</div>
+        <div class="slide-overlay">Baixo impacto · certificação médica →</div>
+        <div class="slide-visual">Premium product macro photograph, EMS device console detail with small orange accent indicator, dark charcoal surface, s...</div>
+      </div>
+      <div class="slide-pagination">5/6</div>
+      <div class="slide-arrow">→</div>
+    </div>
+    <div class="slide-card">
+      <div class="slide-num">SLIDE 6</div>
+      <div>
+        <div class="accent-bar"></div>
+        <div class="slide-headline">Marca a tua sessão experimental.</div>
+        <div class="slide-body">O primeiro passo começa no estúdio TechBody mais perto de ti.</div>
+        <div class="slide-overlay">Marca a tua sessão experimental</div>
+        <div class="slide-visual">Wide editorial shot, athlete seated in EMS suit inside dark studio, orange TechBody logo projected as light beam on the ...</div>
+      </div>
+      <div class="slide-pagination">6/6</div>
+      <div class="slide-arrow"></div>
+    </div>
+  </div>
+</div>
+</div>
 
-<h2>Teste 2: Reel — Experiência de Sessão (30s, 6 cenas)</h2>
-<div class="grid">
-  <div class="card">
-    <div class="card-header">
-      <h3>Pi</h3>
-      <div class="model">MiniMax-M3 (minimax.io)</div>
+<div id="tab-reel" class="tab-content">
+<div class="cli-section">
+  <h3>Pi <span style="font-size:0.8rem;color:var(--muted);font-weight:400">· MiniMax-M3</span></h3>
+  <div class="checks">
+    <span class="check check-pass">✅ Voz impessoal</span>
+    <span class="check check-pass">✅ Estatística</span>
+    <span class="check check-pass">✅ CTA</span>
+    <span class="check check-warn">⚠ Hook ≤12 (13)</span>
+    <span class="check check-pass">✅ Timestamps</span>
+  </div>
+  <div class="reel-board">
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 1</div>
+        <div class="scene-ts">0-5s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Todo o corpo a treinar em simultâneo. Em vinte e cinco minutos bastam.</div>
+        <div class="scene-overlay">25 min · corpo inteiro</div>
+      </div>
+      <div>
+        <div class="scene-visual">Wide cinematic shot of a premium dark fitness studio. Charcoal walls with subtle...</div>
+        <div class="scene-camera">Slow dolly forward, slight downward tilt, rack focus from fo...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">1</span>0-5s — Todo o corpo a treinar em simultâneo. Em vinte e cinco minutos bastam.</div>
-      <div class="item-overlay">25 min · corpo inteiro</div>
-      <div class="item-visual">Wide cinematic shot of a premium dark fitness studio. Charcoal walls with subtle copper rim lighting...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 2</div>
+        <div class="scene-ts">5-10s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">O colete ajusta-se. Os elétrodos posicionam-se sobre os principais grupos musculares.</div>
+        <div class="scene-overlay">Até 85% fibras</div>
+      </div>
+      <div>
+        <div class="scene-visual">Close-up detail of a black EMS vest being adjusted on a client. Hands fastening ...</div>
+        <div class="scene-camera">Macro push-in with shallow depth of field, subtle parallax s...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">2</span>5-10s — O colete ajusta-se. Os elétrodos posicionam-se sobre os principais grupos muscul</div>
-      <div class="item-overlay">Até 85% fibras</div>
-      <div class="item-visual">Close-up detail of a black EMS vest being adjusted on a client. Hands fastening neoprene straps and ...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 3</div>
+        <div class="scene-ts">10-15s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">O treinador programa a intensidade. Cada sessão é adaptada ao objetivo.</div>
+        <div class="scene-overlay">intensidade adaptada</div>
+      </div>
+      <div>
+        <div class="scene-visual">Medium two-shot. Trainer in dark athletic wear stands beside client, tablet in h...</div>
+        <div class="scene-camera">Static medium shot with gentle handheld micro-movements...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">3</span>10-15s — O treinador programa a intensidade. Cada sessão é adaptada ao objetivo.</div>
-      <div class="item-overlay">intensidade adaptada</div>
-      <div class="item-visual">Medium two-shot. Trainer in dark athletic wear stands beside client, tablet in hand, gesturing to th...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 4</div>
+        <div class="scene-ts">15-20s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Os músculos contraem além do esforço voluntário. O recrutamento ultrapassa o convencional.</div>
+        <div class="scene-overlay">até 90% recrutamento</div>
+      </div>
+      <div>
+        <div class="scene-visual">Close-up to medium close of muscle contractions under EMS stimulation. Visible c...</div>
+        <div class="scene-camera">Handheld micro-movements with occasional slow push-in, dynam...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">4</span>15-20s — Os músculos contraem além do esforço voluntário. O recrutamento ultrapassa o con</div>
-      <div class="item-overlay">até 90% recrutamento</div>
-      <div class="item-visual">Close-up to medium close of muscle contractions under EMS stimulation. Visible contractions across q...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 5</div>
+        <div class="scene-ts">20-25s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">O treino terminou. Músculos ativados. Articulações protegidas.</div>
+        <div class="scene-overlay">baixo impacto articular</div>
+      </div>
+      <div>
+        <div class="scene-visual">Client steps out of training position, slight breath, controlled posture. Traine...</div>
+        <div class="scene-camera">Steadicam slow orbit around subject, slight pull back...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">5</span>20-25s — O treino terminou. Músculos ativados. Articulações protegidas.</div>
-      <div class="item-overlay">baixo impacto articular</div>
-      <div class="item-visual">Client steps out of training position, slight breath, controlled posture. Trainer approaches with co...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">6</span>25-30s — Marca a tua sessão experimental.</div>
-      <div class="item-overlay">MARCA A TUA SESSÃO EXPERIMENTAL</div>
-      <div class="item-visual">Clean studio hero shot. Dark charcoal background, copper light accents framing the composition. Tech...</div>
-    </div>
-    <div class="checks">
-      <div class="check check-pass">✅ Voz impessoal</div>
-      <div class="check check-pass">✅ Estatística</div>
-      <div class="check check-pass">✅ CTA correcto</div>
-      <div class="check check-warn">⚠ Hook ≤12 palavras (13)</div>
-      <div class="check check-pass">✅ Timestamps</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 6</div>
+        <div class="scene-ts">25-30s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Marca a tua sessão experimental.</div>
+        <div class="scene-overlay">MARCA A TUA SESSÃO EXPERIMENTAL</div>
+      </div>
+      <div>
+        <div class="scene-visual">Clean studio hero shot. Dark charcoal background, copper light accents framing t...</div>
+        <div class="scene-camera">Static wide shot with very slow zoom in toward logo...</div>
+      </div>
     </div>
   </div>
-  <div class="card">
-    <div class="card-header">
-      <h3>Claude Code</h3>
-      <div class="model">MiniMax-M3 (anthropic endpoint)</div>
+</div>
+<div class="cli-section">
+  <h3>Claude Code <span style="font-size:0.8rem;color:var(--muted);font-weight:400">· MiniMax-M3</span></h3>
+  <div class="checks">
+    <span class="check check-pass">✅ Voz impessoal</span>
+    <span class="check check-pass">✅ Estatística</span>
+    <span class="check check-pass">✅ CTA</span>
+    <span class="check check-pass">✅ Hook ≤12 (12)</span>
+    <span class="check check-pass">✅ Timestamps</span>
+  </div>
+  <div class="reel-board">
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 1</div>
+        <div class="scene-ts">0-5s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Uma nova forma de viver o treino começa no momento da entrada.</div>
+        <div class="scene-overlay">A EXPERIÊNCIA COMEÇA AQUI</div>
+      </div>
+      <div>
+        <div class="scene-visual">A client enters a refined EMS studio through a dark charcoal doorway. Warm soft ...</div>
+        <div class="scene-camera">Slow forward dolly from the studio entrance, with a subtle l...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">1</span>0-5s — Uma nova forma de viver o treino começa no momento da entrada.</div>
-      <div class="item-overlay">A EXPERIÊNCIA COMEÇA AQUI</div>
-      <div class="item-visual">A client enters a refined EMS studio through a dark charcoal doorway. Warm soft orange practical lig...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 2</div>
+        <div class="scene-ts">5-10s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">O fato EMS ajusta-se ao corpo para uma sessão orientada e precisa.</div>
+        <div class="scene-overlay">FATO EMS · AJUSTE PRECISO</div>
+      </div>
+      <div>
+        <div class="scene-visual">Detailed close-up of a client putting on the black EMS suit. Textured fabric, se...</div>
+        <div class="scene-camera">Macro lateral tracking shot across the suit, cutting to a sm...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">2</span>5-10s — O fato EMS ajusta-se ao corpo para uma sessão orientada e precisa.</div>
-      <div class="item-overlay">FATO EMS · AJUSTE PRECISO</div>
-      <div class="item-visual">Detailed close-up of a client putting on the black EMS suit. Textured fabric, secure electrodes, and...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 3</div>
+        <div class="scene-ts">10-15s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Com acompanhamento próximo, cada movimento encontra a posição certa.</div>
+        <div class="scene-overlay">ACOMPANHAMENTO PRÓXIMO</div>
+      </div>
+      <div>
+        <div class="scene-visual">A qualified trainer calmly explains the session beside the client. The client st...</div>
+        <div class="scene-camera">Controlled shoulder-level orbit around trainer and client, e...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">3</span>10-15s — Com acompanhamento próximo, cada movimento encontra a posição certa.</div>
-      <div class="item-overlay">ACOMPANHAMENTO PRÓXIMO</div>
-      <div class="item-visual">A qualified trainer calmly explains the session beside the client. The client stands in a balanced a...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 4</div>
+        <div class="scene-ts">15-20s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">A WB-EMS ativa simultaneamente vários grupos musculares, com baixo impacto articular.</div>
+        <div class="scene-overlay">ATIVAÇÃO SIMULTÂNEA · BAIXO IMPACTO</div>
+      </div>
+      <div>
+        <div class="scene-visual">The EMS session reaches its active phase. Close-ups show controlled movement, vi...</div>
+        <div class="scene-camera">Dynamic push-in with a brief controlled slow-motion detail o...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">4</span>15-20s — A WB-EMS ativa simultaneamente vários grupos musculares, com baixo impacto artic</div>
-      <div class="item-overlay">ATIVAÇÃO SIMULTÂNEA · BAIXO IMPACTO</div>
-      <div class="item-visual">The EMS session reaches its active phase. Close-ups show controlled movement, visible muscle contrac...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 5</div>
+        <div class="scene-ts">20-25s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Em 20 a 25 minutos, fica a sensação de um treino completo e acompanhado.</div>
+        <div class="scene-overlay">20–25 MINUTOS DE SESSÃO</div>
+      </div>
+      <div>
+        <div class="scene-visual">The client finishes the session, removes the EMS suit, and stands tall with a co...</div>
+        <div class="scene-camera">Gentle arc around the client, moving from a close-up of the ...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">5</span>20-25s — Em 20 a 25 minutos, fica a sensação de um treino completo e acompanhado.</div>
-      <div class="item-overlay">20–25 MINUTOS DE SESSÃO</div>
-      <div class="item-visual">The client finishes the session, removes the EMS suit, and stands tall with a composed, satisfied ex...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">6</span>25-30s — Marca a tua sessão experimental.</div>
-      <div class="item-overlay">MARCA A TUA SESSÃO EXPERIMENTAL</div>
-      <div class="item-visual">Minimal final studio frame: the TechBody wordmark sits in white on a dark charcoal background, frame...</div>
-    </div>
-    <div class="checks">
-      <div class="check check-pass">✅ Voz impessoal</div>
-      <div class="check check-pass">✅ Estatística</div>
-      <div class="check check-pass">✅ CTA correcto</div>
-      <div class="check check-pass">✅ Hook ≤12 palavras (12)</div>
-      <div class="check check-pass">✅ Timestamps</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 6</div>
+        <div class="scene-ts">25-30s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Marca a tua sessão experimental.</div>
+        <div class="scene-overlay">MARCA A TUA SESSÃO EXPERIMENTAL</div>
+      </div>
+      <div>
+        <div class="scene-visual">Minimal final studio frame: the TechBody wordmark sits in white on a dark charco...</div>
+        <div class="scene-camera">Slow static-to-close push toward the TechBody wordmark, hold...</div>
+      </div>
     </div>
   </div>
-  <div class="card">
-    <div class="card-header">
-      <h3>Codex</h3>
-      <div class="model">MiniMax-M3 (minimax.io)</div>
+</div>
+<div class="cli-section">
+  <h3>Codex <span style="font-size:0.8rem;color:var(--muted);font-weight:400">· MiniMax-M3</span></h3>
+  <div class="checks">
+    <span class="check check-pass">✅ Voz impessoal</span>
+    <span class="check check-pass">✅ Estatística</span>
+    <span class="check check-pass">✅ CTA</span>
+    <span class="check check-pass">✅ Hook ≤12 (9)</span>
+    <span class="check check-pass">✅ Timestamps</span>
+  </div>
+  <div class="reel-board">
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 1</div>
+        <div class="scene-ts">0-5s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Tudo começa num estúdio preparado para uma experiência diferente.</div>
+        <div class="scene-overlay">Uma experiência diferente</div>
+      </div>
+      <div>
+        <div class="scene-visual">Premium TechBody studio entrance with dark charcoal walls, soft orange accent li...</div>
+        <div class="scene-camera">Smooth forward tracking shot through the entrance, ending wi...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">1</span>0-5s — Tudo começa num estúdio preparado para uma experiência diferente.</div>
-      <div class="item-overlay">Uma experiência diferente</div>
-      <div class="item-visual">Premium TechBody studio entrance with dark charcoal walls, soft orange accent lighting, white signag...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 2</div>
+        <div class="scene-ts">5-10s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">O fato EMS é ajustado ao corpo com equipamento certificado médico, fabricado na Alemanha.</div>
+        <div class="scene-overlay">Fato EMS ajustado ao corpo</div>
+      </div>
+      <div>
+        <div class="scene-visual">Detailed close-ups of the client putting on the EMS suit while a trainer adjusts...</div>
+        <div class="scene-camera">Fast cinematic macro cuts across fabric, electrodes and fast...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">2</span>5-10s — O fato EMS é ajustado ao corpo com equipamento certificado médico, fabricado na </div>
-      <div class="item-overlay">Fato EMS ajustado ao corpo</div>
-      <div class="item-visual">Detailed close-ups of the client putting on the EMS suit while a trainer adjusts the electrodes; pre...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 3</div>
+        <div class="scene-ts">10-15s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Com orientação próxima, cada posição e intensidade são ajustadas antes de começar.</div>
+        <div class="scene-overlay">Orientação em cada movimento</div>
+      </div>
+      <div>
+        <div class="scene-visual">The trainer calmly explains the session while the client adopts a stable exercis...</div>
+        <div class="scene-camera">Over-the-shoulder shot toward the control system, then a slo...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">3</span>10-15s — Com orientação próxima, cada posição e intensidade são ajustadas antes de começa</div>
-      <div class="item-overlay">Orientação em cada movimento</div>
-      <div class="item-visual">The trainer calmly explains the session while the client adopts a stable exercise position; the EMS ...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 4</div>
+        <div class="scene-ts">15-20s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Os impulsos ativam vários grupos musculares em simultâneo, com baixo impacto articular.</div>
+        <div class="scene-overlay">Ativação muscular simultânea</div>
+      </div>
+      <div>
+        <div class="scene-visual">Peak WB-EMS training moment: the client performs a controlled squat as impulses ...</div>
+        <div class="scene-camera">Dynamic low-angle orbit around the squat, intercut with tigh...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">4</span>15-20s — Os impulsos ativam vários grupos musculares em simultâneo, com baixo impacto art</div>
-      <div class="item-overlay">Ativação muscular simultânea</div>
-      <div class="item-visual">Peak WB-EMS training moment: the client performs a controlled squat as impulses activate, with visib...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 5</div>
+        <div class="scene-ts">20-25s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Em cerca de 20 a 25 minutos, fica a sensação de um treino completo.</div>
+        <div class="scene-overlay">20 a 25 minutos</div>
+      </div>
+      <div>
+        <div class="scene-visual">The session ends and the client stands upright, breathing steadily with a satisf...</div>
+        <div class="scene-camera">Slow pull-back from a close portrait to reveal the full stud...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">5</span>20-25s — Em cerca de 20 a 25 minutos, fica a sensação de um treino completo.</div>
-      <div class="item-overlay">20 a 25 minutos</div>
-      <div class="item-visual">The session ends and the client stands upright, breathing steadily with a satisfied expression and a...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">6</span>25-30s — Descobre a experiência TechBody. Marca a tua sessão experimental.</div>
-      <div class="item-overlay">Marca a tua sessão experimental</div>
-      <div class="item-visual">Minimal premium end frame with the TechBody identity on a dark charcoal background, soft orange acce...</div>
-    </div>
-    <div class="checks">
-      <div class="check check-pass">✅ Voz impessoal</div>
-      <div class="check check-pass">✅ Estatística</div>
-      <div class="check check-pass">✅ CTA correcto</div>
-      <div class="check check-pass">✅ Hook ≤12 palavras (9)</div>
-      <div class="check check-pass">✅ Timestamps</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 6</div>
+        <div class="scene-ts">25-30s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Descobre a experiência TechBody. Marca a tua sessão experimental.</div>
+        <div class="scene-overlay">Marca a tua sessão experimental</div>
+      </div>
+      <div>
+        <div class="scene-visual">Minimal premium end frame with the TechBody identity on a dark charcoal backgrou...</div>
+        <div class="scene-camera">Subtle cinematic push-in toward the centered call to action,...</div>
+      </div>
     </div>
   </div>
-  <div class="card">
-    <div class="card-header">
-      <h3>OpenCode</h3>
-      <div class="model">MiniMax-M3 (minimax.io)</div>
+</div>
+<div class="cli-section">
+  <h3>OpenCode <span style="font-size:0.8rem;color:var(--muted);font-weight:400">· MiniMax-M3</span></h3>
+  <div class="checks">
+    <span class="check check-pass">✅ Voz impessoal</span>
+    <span class="check check-pass">✅ Estatística</span>
+    <span class="check check-pass">✅ CTA</span>
+    <span class="check check-pass">✅ Hook ≤12 (12)</span>
+    <span class="check check-pass">✅ Timestamps</span>
+  </div>
+  <div class="reel-board">
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 1</div>
+        <div class="scene-ts">0-5s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Vinte e cinco minutos. Um estúdio. Um método que muda o treino.</div>
+        <div class="scene-overlay">25 MIN · TREINO COMPLETO</div>
+      </div>
+      <div>
+        <div class="scene-visual">Cinematic wide shot entering a premium TechBody studio through a frosted glass d...</div>
+        <div class="scene-camera">Slow dolly push-in through doorway, low angle, ending on med...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">1</span>0-5s — Vinte e cinco minutos. Um estúdio. Um método que muda o treino.</div>
-      <div class="item-overlay">25 MIN · TREINO COMPLETO</div>
-      <div class="item-visual">Cinematic wide shot entering a premium TechBody studio through a frosted glass door. Dark charcoal w...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 2</div>
+        <div class="scene-ts">5-10s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">O equipamento certificado activa múltiplos grupos musculares em simultâneo.</div>
+        <div class="scene-overlay">CERTIFICADO MÉDICO · MADE IN GERMANY</div>
+      </div>
+      <div>
+        <div class="scene-visual">Extreme close-up of black WB-EMS suit being worn. Hands adjusting chest straps a...</div>
+        <div class="scene-camera">Macro focus pull on the chest connector, slow lateral slide ...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">2</span>5-10s — O equipamento certificado activa múltiplos grupos musculares em simultâneo.</div>
-      <div class="item-overlay">CERTIFICADO MÉDICO · MADE IN GERMANY</div>
-      <div class="item-visual">Extreme close-up of black WB-EMS suit being worn. Hands adjusting chest straps and electrode connect...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 3</div>
+        <div class="scene-ts">10-15s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">O treinador ajusta cada impulso ao objectivo. A sessão começa.</div>
+        <div class="scene-overlay">1 A 3 VEZES POR SEMANA</div>
+      </div>
+      <div>
+        <div class="scene-visual">Two-shot inside the studio: trainer in dark athletic wear gestures toward the pl...</div>
+        <div class="scene-camera">Static medium two-shot with subtle rack focus from trainer t...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">3</span>10-15s — O treinador ajusta cada impulso ao objectivo. A sessão começa.</div>
-      <div class="item-overlay">1 A 3 VEZES POR SEMANA</div>
-      <div class="item-visual">Two-shot inside the studio: trainer in dark athletic wear gestures toward the platform, client steps...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 4</div>
+        <div class="scene-ts">15-20s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Até oitenta e cinco por cento das fibras musculares activas. Sem impacto articular.</div>
+        <div class="scene-overlay">ATÉ 85% FIBRAS ACTIVAS · BAIXO IMPACTO</div>
+      </div>
+      <div>
+        <div class="scene-visual">Tight mid-shot of the client's torso during contraction. Visible muscle engageme...</div>
+        <div class="scene-camera">Slow lateral tracking shot on torso with mild handheld micro...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">4</span>15-20s — Até oitenta e cinco por cento das fibras musculares activas. Sem impacto articul</div>
-      <div class="item-overlay">ATÉ 85% FIBRAS ACTIVAS · BAIXO IMPACTO</div>
-      <div class="item-visual">Tight mid-shot of the client's torso during contraction. Visible muscle engagement under the suit fa...</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 5</div>
+        <div class="scene-ts">20-25s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">O treino termina. A sensação de trabalho completo fica.</div>
+        <div class="scene-overlay">20 A 25 MIN POR SESSÃO</div>
+      </div>
+      <div>
+        <div class="scene-visual">Client steps off the platform with controlled composure, no exhaustion posture. ...</div>
+        <div class="scene-camera">Slow pull-back at low angle transitioning from medium portra...</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">5</span>20-25s — O treino termina. A sensação de trabalho completo fica.</div>
-      <div class="item-overlay">20 A 25 MIN POR SESSÃO</div>
-      <div class="item-visual">Client steps off the platform with controlled composure, no exhaustion posture. Editorial portrait l...</div>
-    </div>
-    <div class="item">
-      <div class="item-title"><span class="item-num">6</span>25-30s — Marca a tua sessão experimental.</div>
-      <div class="item-overlay">MARCA A TUA SESSÃO EXPERIMENTAL · LINK NA BIO</div>
-      <div class="item-visual">Full studio wide shot, clean and atmospheric. Centre frame holds on the empty TechBody platform with...</div>
-    </div>
-    <div class="checks">
-      <div class="check check-pass">✅ Voz impessoal</div>
-      <div class="check check-pass">✅ Estatística</div>
-      <div class="check check-pass">✅ CTA correcto</div>
-      <div class="check check-pass">✅ Hook ≤12 palavras (12)</div>
-      <div class="check check-pass">✅ Timestamps</div>
+    <div class="scene-card">
+      <div>
+        <div class="scene-num">CENA 6</div>
+        <div class="scene-ts">25-30s</div>
+        <div class="accent-bar" style="margin-top:6px"></div>
+        <div class="scene-vo">Marca a tua sessão experimental.</div>
+        <div class="scene-overlay">MARCA A TUA SESSÃO EXPERIMENTAL · LINK NA BIO</div>
+      </div>
+      <div>
+        <div class="scene-visual">Full studio wide shot, clean and atmospheric. Centre frame holds on the empty Te...</div>
+        <div class="scene-camera">Locked static wide shot, subtle fade-in of brand mark and CT...</div>
+      </div>
     </div>
   </div>
+</div>
 </div>
 
 <div class="prompt-section">
@@ -504,6 +960,15 @@ por semana
 - Cena 6: CTA "Marca a tua sessão experimental"
 - Output: JSON array (scene, timestamp, visual_description, voiceover, text_overlay, camera_movement)</pre>
 </div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
 
 </body>
 </html>
