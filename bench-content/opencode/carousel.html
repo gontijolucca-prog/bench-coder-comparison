@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechBody — Ciência da EMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;600&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --ink-raised: #232323;
+      --orange: #d4773b;
+      --white: #ffffff;
+      --muted: #aaa49e;
+      --line: rgba(255, 255, 255, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #0d0d0d;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+      padding: 48px 0;
+      color: var(--white);
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      flex: 0 0 1350px;
+      overflow: hidden;
+      isolation: isolate;
+      background:
+        radial-gradient(circle at 86% 15%, rgba(212, 119, 59, 0.14), transparent 28%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 84px),
+        var(--ink);
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.38;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 0.7px, transparent 0.7px);
+      background-size: 8px 8px;
+      mask-image: linear-gradient(to bottom, black, transparent 70%);
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      right: -184px;
+      bottom: -215px;
+      width: 600px;
+      height: 600px;
+      z-index: -1;
+      border: 1px solid rgba(212, 119, 59, 0.35);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 72px rgba(212, 119, 59, 0.035),
+        0 0 0 144px rgba(212, 119, 59, 0.025);
+    }
+
+    .frame {
+      position: absolute;
+      inset: 54px;
+      border: 1px solid var(--line);
+      pointer-events: none;
+    }
+
+    .header {
+      position: absolute;
+      top: 78px;
+      left: 80px;
+      right: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: "Syne", monospace;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+    }
+
+    .logo-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      background: var(--orange);
+      color: var(--ink);
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .series {
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .content {
+      position: absolute;
+      inset: 230px 106px 185px 106px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 34px;
+      color: var(--orange);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 48px;
+      height: 3px;
+      background: var(--orange);
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1,
+    h2 {
+      max-width: 850px;
+      font-family: "Syne", monospace;
+      font-weight: 800;
+      letter-spacing: -0.055em;
+      line-height: 0.94;
+      text-wrap: pretty;
+    }
+
+    h1 {
+      font-size: 116px;
+    }
+
+    h2 {
+      font-size: 92px;
+    }
+
+    .accent {
+      color: var(--orange);
+    }
+
+    .body-copy {
+      max-width: 730px;
+      margin-top: 42px;
+      color: #d8d4d0;
+      font-size: 29px;
+      font-weight: 300;
+      line-height: 1.55;
+      text-wrap: pretty;
+    }
+
+    .footer {
+      position: absolute;
+      left: 80px;
+      right: 80px;
+      bottom: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page {
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+    }
+
+    .page strong {
+      color: var(--white);
+      font-size: 29px;
+    }
+
+    .arrow {
+      display: grid;
+      place-items: center;
+      width: 72px;
+      height: 72px;
+      border: 1px solid var(--orange);
+      color: var(--orange);
+      font-family: "Syne", monospace;
+      font-size: 40px;
+    }
+
+    .pulse-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      width: 100%;
+      margin-top: 62px;
+      align-items: end;
+    }
+
+    .pulse-grid span {
+      display: block;
+      height: var(--height);
+      min-height: 34px;
+      background: linear-gradient(to top, var(--orange), #efab7c);
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 42px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .divider {
+      width: 1px;
+      height: 390px;
+      background: var(--line);
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-number {
+      font-family: "Syne", monospace;
+      font-size: 122px;
+      font-weight: 800;
+      letter-spacing: -0.08em;
+      line-height: 0.9;
+    }
+
+    .stat:last-child .stat-number {
+      color: var(--orange);
+      font-size: 136px;
+    }
+
+    .stat-label {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.5;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .time-lockup {
+      display: flex;
+      align-items: baseline;
+      gap: 22px;
+    }
+
+    .time-number {
+      color: var(--orange);
+      font-family: "Syne", monospace;
+      font-size: 220px;
+      font-weight: 800;
+      letter-spacing: -0.1em;
+      line-height: 0.8;
+    }
+
+    .time-unit {
+      font-family: "Syne", monospace;
+      font-size: 46px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .frequency {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 62px;
+      padding: 19px 26px;
+      border: 1px solid var(--orange);
+      color: var(--white);
+      font-size: 21px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 58px;
+    }
+
+    .benefit {
+      min-height: 230px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .benefit-index {
+      color: var(--orange);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+    }
+
+    .benefit h3 {
+      margin: 58px 0 0;
+      font-family: "Syne", monospace;
+      font-size: 31px;
+      font-weight: 800;
+      line-height: 1.08;
+    }
+
+    .cta-slide {
+      background:
+        linear-gradient(145deg, rgba(212, 119, 59, 0.14), transparent 48%),
+        radial-gradient(circle at 84% 20%, rgba(212, 119, 59, 0.26), transparent 28%),
+        var(--ink);
+    }
+
+    .cta-slide .content {
+      right: 92px;
+    }
+
+    .cta-slide h2 {
+      font-size: 108px;
+    }
+
+    .cta-line {
+      width: 210px;
+      height: 10px;
+      margin-top: 52px;
+      background: var(--orange);
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 22px;
+      width: fit-content;
+      margin-top: 58px;
+      padding: 24px 30px;
+      background: var(--orange);
+      color: var(--ink);
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .cta-button span {
+      font-family: "Syne", monospace;
+      font-size: 31px;
+      line-height: 0;
+    }
+
+    @media (max-width: 1080px) {
+      body {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="slide" aria-label="Slide 1 de 6">
+    <div class="frame"></div>
+    <header class="header">
+      <div class="logo"><span class="logo-mark">T</span>TechBody</div>
+      <div class="series">Ciência da EMS</div>
+    </header>
+    <main class="content">
+      <div class="eyebrow">No estúdio</div>
+      <h1>O que cabe numa <span class="accent">sessão</span> TechBody?</h1>
+      <p class="body-copy">Mais recrutamento muscular. Menos tempo. Um treino acompanhado e ajustado a cada sessão.</p>
+    </main>
+    <footer class="footer">
+      <div class="page"><strong>01</strong> / 06</div>
+      <div class="arrow">→</div>
+    </footer>
+  </section>
+
+  <section class="slide" aria-label="Slide 2 de 6">
+    <div class="frame"></div>
+    <header class="header">
+      <div class="logo"><span class="logo-mark">T</span>TechBody</div>
+      <div class="series">Ciência da EMS</div>
+    </header>
+    <main class="content">
+      <div class="eyebrow">Ativação simultânea</div>
+      <h2>Vários grupos musculares. <span class="accent">Ao mesmo tempo.</span></h2>
+      <p class="body-copy">A eletroestimulação complementa o movimento e ativa vários grupos musculares em simultâneo durante o treino.</p>
+      <div class="pulse-grid" aria-hidden="true">
+        <span style="--height: 60px"></span>
+        <span style="--height: 126px"></span>
+        <span style="--height: 82px"></span>
+        <span style="--height: 170px"></span>
+        <span style="--height: 112px"></span>
+        <span style="--height: 196px"></span>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="page"><strong>02</strong> / 06</div>
+      <div class="arrow">→</div>
+    </footer>
+  </section>
+
+  <section class="slide" aria-label="Slide 3 de 6">
+    <div class="frame"></div>
+    <header class="header">
+      <div class="logo"><span class="logo-mark">T</span>TechBody</div>
+      <div class="series">Recrutamento muscular</div>
+    </header>
+    <main class="content">
+      <div class="eyebrow">A diferença em números</div>
+      <div class="comparison">
+        <div class="stat">
+          <div class="stat-number">30–40%</div>
+          <div class="stat-label">Treino<br>convencional</div>
+        </div>
+        <div class="divider"></div>
+        <div class="stat">
+          <div class="stat-number">85–90%</div>
+          <div class="stat-label">Treino<br>com EMS</div>
+        </div>
+      </div>
+      <p class="body-copy">Mais fibras musculares recrutadas durante cada movimento.</p>
+    </main>
+    <footer class="footer">
+      <div class="page"><strong>03</strong> / 06</div>
+      <div class="arrow">→</div>
+    </footer>
+  </section>
+
+  <section class="slide" aria-label="Slide 4 de 6">
+    <div class="frame"></div>
+    <header class="header">
+      <div class="logo"><span class="logo-mark">T</span>TechBody</div>
+      <div class="series">Tempo otimizado</div>
+    </header>
+    <main class="content">
+      <div class="eyebrow">Cada sessão</div>
+      <div class="time-lockup">
+        <div class="time-number">20–25</div>
+        <div class="time-unit">min</div>
+      </div>
+      <h2>Treino completo. <span class="accent">Tempo bem usado.</span></h2>
+      <div class="frequency">1–3 vezes por semana</div>
+    </main>
+    <footer class="footer">
+      <div class="page"><strong>04</strong> / 06</div>
+      <div class="arrow">→</div>
+    </footer>
+  </section>
+
+  <section class="slide" aria-label="Slide 5 de 6">
+    <div class="frame"></div>
+    <header class="header">
+      <div class="logo"><span class="logo-mark">T</span>TechBody</div>
+      <div class="series">Tecnologia e controlo</div>
+    </header>
+    <main class="content">
+      <div class="eyebrow">Treino acompanhado</div>
+      <h2>Intenso nos músculos. <span class="accent">Suave nas articulações.</span></h2>
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-index">01 / IMPACTO</div>
+          <h3>Baixo impacto articular</h3>
+        </div>
+        <div class="benefit">
+          <div class="benefit-index">02 / EQUIPAMENTO</div>
+          <h3>Certificação médica alemã</h3>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="page"><strong>05</strong> / 06</div>
+      <div class="arrow">→</div>
+    </footer>
+  </section>
+
+  <section class="slide cta-slide" aria-label="Slide 6 de 6">
+    <div class="frame"></div>
+    <header class="header">
+      <div class="logo"><span class="logo-mark">T</span>TechBody</div>
+      <div class="series">Começa agora</div>
+    </header>
+    <main class="content">
+      <div class="eyebrow">Experimenta no estúdio</div>
+      <h2>Marca a tua <span class="accent">sessão experimental.</span></h2>
+      <div class="cta-line"></div>
+      <div class="cta-button">Encontra o teu estúdio <span>→</span></div>
+    </main>
+    <footer class="footer">
+      <div class="page"><strong>06</strong> / 06</div>
+    </footer>
+  </section>
+</body>
+</html>

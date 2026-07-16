@@ -1,18 +1,64 @@
-Create a landing page for a fictional product called "NebulaTask" — a task management app for remote teams.
+# Tarefa: Gerar carrossel Instagram para TechBody
 
-Requirements:
-1. React + Vite + TypeScript + Tailwind CSS
-2. Hero section with: product name, tagline, and a CTA button "Start Free Trial"
-3. Three feature cards with icons (use emoji or SVG): 
-   - "Smart Prioritization" — AI ranks your tasks automatically
-   - "Team Sync" — Real-time collaboration across timezones
-   - "Deep Focus Mode" — Block distractions with one click
-4. A stats bar with 3 numbers: "50K+ teams", "4.9/5 rating", "120+ countries"
-5. A footer with: "NebulaTask" logo text, copyright "© 2026 NebulaTask Inc.", and 3 fake links (About, Pricing, Contact)
-6. The page must compile with `npm run build` with zero errors
-7. Use a modern, polished design — not generic. Pick a distinctive color scheme (not default Tailwind blue).
-8. Make it responsive (mobile + desktop)
+## Contexto
+Estás a trabalhar no projecto Content Machine em ~/content-machine/.
+Gera um carrossel de 6 slides para a marca TechBody.
 
-Do NOT add any extra features beyond what is listed above. Keep it clean and minimal.
+## Especificações
+- Marca: TechBody (@techbody_pt)
+- Tipo: carrossel
+- Tema: ciencia_ems (Ciência do EMS)
+- Audiência: b2c
+- Número de slides: 6
+- Idioma: pt_PT (Portugal)
 
-When done, run `npm run build` to verify it compiles.
+## Regras obrigatórias
+1. Voz impessoal: sem "eu", "me", "mim", "comigo", "aprendi", "fiz"
+2. Sem títulos honoríficos (Dr., doutor)
+3. Sem emojis
+4. Sem estrangeirismos (exceto: EMS, WB-EMS, TechBody, TechBody U)
+5. Claims científicos permitidos:
+   - Recrutamento fibras: ~30-40% treino convencional vs até ~85-90% EMS
+   - Sessão WB-EMS típica: ~20-25 minutos
+   - Frequência: 1 a 3 sessões por semana
+   - Ativação simultânea de múltiplos grupos musculares
+   - Baixo impacto articular
+   - Equipamento certificado médico, fabricado na Alemanha
+6. Claims proibidas: citar autores/datas/DOIs específicos, inventar percentagens, prometer resultados garantidos
+7. Sem "Symbiont" (brand legado banido)
+8. Sem menção a preços
+9. CTA do último slide: "Marca a tua sessão experimental"
+
+## Estrutura dos slides
+- Slide 1: Hook (máx 12 palavras) + referência ao estúdio/sessão
+- Slides 2-5: Desenvolvimento com progressão lógica
+  - Pelo menos 1 slide com número/percentagem/estatística em destaque
+  - Ensino concreto, não decoração de citações
+- Slide 6: CTA ("Marca a tua sessão experimental")
+
+## Formato de output
+Gera um ficheiro JSON array válido (sem markdown, sem ```json) com esta estrutura:
+
+[
+  {
+    "slide": 1,
+    "headline": "texto principal curto",
+    "body": "texto de apoio 1-3 linhas",
+    "visual_prompt": "descrição visual em inglês para geração de imagem",
+    "text_overlay": "texto sobreposto em pt_PT",
+    "pagination": "1/6"
+  },
+  ...
+]
+
+## Formato visual
+- Fundo: dark charcoal (#1a1a1a)
+- Accent: laranja suave (#d4773b)
+- Texto: branco (#ffffff)
+- Iluminação editorial, contraste alto, sombras definidas
+- Logo TechBody no canto superior
+- Paginação X/N no canto inferior
+- Seta de continuação (→) em todos exceto último slide
+
+## Entrega
+Escreve o resultado num ficheiro chamado carousel_techbody_ciencia_ems.json no diretório actual.

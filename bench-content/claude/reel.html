@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<title>TechBody — Experiência de Sessão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;400;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a1a1a;
+    --bg-2: #0e0e0e;
+    --accent: #d4773b;
+    --accent-soft: #b85f24;
+    --text: #ffffff;
+    --muted: #a0a0a0;
+    --hairline: #2a2a2a;
+    --grid: rgba(255,255,255,0.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #050505;
+    font-family: 'Archivo', sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+  }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 0 48px;
+  }
+  .meta {
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* ===== STAGE 1080x1920 ===== */
+  .stage {
+    width: 1080px;
+    height: 1920px;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    z-index: 50;
+  }
+  .progress .fill {
+    width: 0%;
+    height: 100%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  /* ===== TIMECODE / HUD ===== */
+  .hud {
+    position: absolute;
+    top: 36px;
+    left: 56px;
+    right: 56px;
+    z-index: 30;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hud .logo {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hud .logo .dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--accent);
+  }
+  .hud .time b {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ===== SCENES ===== */
+  .scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 140px 80px 120px;
+  }
+
+  /* shared */
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .vo {
+    font-weight: 800;
+    font-size: 88px;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .vo em { font-style: normal; color: var(--accent); font-weight: 200; }
+  .desc {
+    font-weight: 200;
+    font-size: 28px;
+    line-height: 1.4;
+    color: rgba(255,255,255,0.78);
+    max-width: 880px;
+    text-wrap: pretty;
+  }
+  .scene-tag {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .scene-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .scene-num b { color: var(--accent); font-weight: 700; }
+  .scene-cta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ===== SCENE 1 — HOOK / ESTÚDIO ===== */
+  .s1 { background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%); }
+  .s1 .visual {
+    position: absolute;
+    inset: 140px 0 120px;
+    overflow: hidden;
+  }
+  .s1 .door {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 480px; height: 760px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: linear-gradient(180deg, rgba(212,119,59,0.04), rgba(212,119,59,0));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .s1 .door::before {
+    content: "";
+    position: absolute;
+    inset: 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .s1 .door-glow {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 1200px; height: 1200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,119,59,0.18), transparent 60%);
+    animation: pulse 5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+  }
+  .s1 .door-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.4em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  /* ===== SCENE 2 — FATO EMS ===== */
+  .s2 .visual {
+    position: absolute;
+    inset: 140px 0 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .s2 .suit {
+    position: relative;
+    width: 600px; height: 900px;
+  }
+  .s2 .suit-torso {
+    position: absolute;
+    left: 50%; top: 18%;
+    transform: translateX(-50%);
+    width: 420px; height: 540px;
+    border-radius: 200px 200px 80px 80px;
+    border: 2px solid rgba(255,255,255,0.4);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)),
+      repeating-linear-gradient(45deg, transparent 0 8px, rgba(255,255,255,0.03) 8px 9px);
+  }
+  .s2 .suit-leg {
+    position: absolute;
+    bottom: 0;
+    width: 140px; height: 360px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 60px 60px 0 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
+  }
+  .s2 .suit-leg.left { left: 25%; }
+  .s2 .suit-leg.right { right: 25%; }
+  .s2 .pad {
+    position: absolute;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 24px var(--accent);
+    animation: padpulse 1.4s ease-in-out infinite;
+  }
+  .s2 .pad.p1 { top: 28%; left: 32%; animation-delay: 0s; }
+  .s2 .pad.p2 { top: 32%; right: 32%; animation-delay: 0.2s; }
+  .s2 .pad.p3 { top: 52%; left: 35%; animation-delay: 0.4s; }
+  .s2 .pad.p4 { top: 52%; right: 35%; animation-delay: 0.6s; }
+  .s2 .pad.p5 { top: 72%; left: 36%; animation-delay: 0.8s; }
+  .s2 .pad.p6 { top: 72%; right: 36%; animation-delay: 1.0s; }
+  @keyframes padpulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+  }
+  .s2 .lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .s2 .lines svg { width: 100%; height: 100%; }
+
+  /* ===== SCENE 3 — POSICIONAMENTO ===== */
+  .s3 .visual {
+    position: absolute;
+    inset: 140px 0 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+  }
+  .s3 .person {
+    position: relative;
+    width: 220px; height: 580px;
+  }
+  .s3 .person .head {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.6);
+    margin: 0 auto 16px;
+    background: rgba(255,255,255,0.04);
+  }
+  .s3 .person .body {
+    width: 200px; height: 320px;
+    margin: 0 auto;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(212,119,59,0.12), transparent);
+  }
+  .s3 .person .legs {
+    width: 180px; height: 180px;
+    margin: 8px auto 0;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-top: none;
+    border-radius: 0 0 24px 24px;
+    background: rgba(255,255,255,0.02);
+  }
+  .s3 .trainer {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
+  .s3 .arrow-flow {
+    width: 80px;
+    height: 2px;
+    background: var(--accent);
+    position: relative;
+    animation: flow 1.6s linear infinite;
+  }
+  .s3 .arrow-flow::after {
+    content: "";
+    position: absolute;
+    right: -2px; top: -6px;
+    width: 0; height: 0;
+    border-left: 14px solid var(--accent);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+  }
+  @keyframes flow {
+    0% { opacity: 0.4; transform: translateX(-12px); }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; transform: translateX(12px); }
+  }
+  .s3 .pose-grid {
+    position: absolute;
+    bottom: 40px;
+    left: 80px;
+    right: 80px;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--hairline);
+    padding-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .s3 .pose-grid span { display: flex; gap: 8px; align-items: center; }
+  .s3 .pose-grid span::before {
+    content: ""; width: 6px; height: 6px; background: var(--accent); border-radius: 50%;
+  }
+
+  /* ===== SCENE 4 — PICO DA SESSÃO ===== */
+  .s4 .visual {
+    position: absolute;
+    inset: 140px 0 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .s4 .ring {
+    position: relative;
+    width: 800px; height: 800px;
+  }
+  .s4 .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .s4 .ring circle.bg {
+    fill: none;
+    stroke: rgba(255,255,255,0.06);
+    stroke-width: 2;
+  }
+  .s4 .ring circle.fg {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 2512;
+    stroke-dashoffset: 2512;
+    animation: ringfill 5s linear infinite;
+  }
+  @keyframes ringfill {
+    0% { stroke-dashoffset: 2512; }
+    100% { stroke-dashoffset: 0; }
+  }
+  .s4 .center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .s4 .center .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .s4 .center .value {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    font-size: 160px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .s4 .wave {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .s4 .pulse-dot {
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 24px var(--accent);
+    animation: orbit 5s linear infinite;
+  }
+  .s4 .pulse-dot.d1 { animation-delay: 0s; }
+  .s4 .pulse-dot.d2 { animation-delay: -1.25s; }
+  .s4 .pulse-dot.d3 { animation-delay: -2.5s; }
+  .s4 .pulse-dot.d4 { animation-delay: -3.75s; }
+  @keyframes orbit {
+    from { transform: rotate(0deg) translateX(380px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(380px) rotate(-360deg); }
+  }
+
+  /* ===== SCENE 5 — RESULTADO ===== */
+  .s5 .visual {
+    position: absolute;
+    inset: 140px 0 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+  }
+  .s5 .bars {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 600px;
+  }
+  .s5 .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 24px;
+  }
+  .s5 .bar-row:last-child { border-bottom: none; }
+  .s5 .bar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    width: 140px;
+    flex-shrink: 0;
+  }
+  .s5 .bar-track {
+    flex: 1;
+    height: 32px;
+    background: rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .s5 .bar-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    animation: fillbar 5s ease-out infinite;
+  }
+  @keyframes fillbar {
+    0% { width: 0; }
+    40%, 100% { width: var(--w); }
+  }
+  .s5 .bar-row:nth-child(1) .bar-fill { --w: 90%; }
+  .s5 .bar-row:nth-child(2) .bar-fill { --w: 78%; }
+  .s5 .bar-row:nth-child(3) .bar-fill { --w: 92%; }
+  .s5 .bar-row:nth-child(4) .bar-fill { --w: 70%; }
+  .s5 .bar-val {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    width: 80px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ===== SCENE 6 — CTA ===== */
+  .s6 { background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%); }
+  .s6 .deco {
+    position: absolute;
+    right: -240px;
+    top: -240px;
+    width: 900px;
+    height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,119,59,0.28), transparent 65%);
+    z-index: 0;
+  }
+  .s6 .inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; }
+  .s6 .center-stack {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 60px;
+  }
+  .s6 h2 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    font-size: 156px;
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+  .s6 h2 em { color: var(--accent); font-style: italic; font-weight: 200; }
+  .s6 .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 56px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    letter-spacing: -0.01em;
+    align-self: flex-start;
+  }
+  .s6 .cta svg { width: 32px; height: 32px; }
+
+  /* ===== ANIMATION: scene visibility ===== */
+  /* total 30s; 6 scenes of 5s; crossfade 0.6s */
+  .scene { opacity: 0; }
+  .scene.show { opacity: 1; }
+  .scene.show .vo,
+  .scene.show .kicker,
+  .scene.show .desc,
+  .scene.show .visual,
+  .scene.show .center-stack,
+  .scene.show .scene-tag,
+  .scene.show .pose-grid,
+  .scene.show .visual > * {
+    animation: risein 0.9s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .scene.show .kicker { animation-delay: 0.05s; }
+  .scene.show .vo { animation-delay: 0.15s; }
+  .scene.show .desc { animation-delay: 0.35s; }
+  .scene.show .visual { animation-delay: 0.05s; }
+  .scene.show .pose-grid { animation-delay: 0.6s; }
+  .scene.show .scene-tag { animation-delay: 0.7s; }
+  .scene.show .center-stack > * { animation: risein 0.9s cubic-bezier(.2,.8,.2,1) both; }
+  .scene.show .center-stack .kicker { animation-delay: 0.1s; }
+  .scene.show .center-stack h2 { animation-delay: 0.2s; }
+  .scene.show .center-stack .cta { animation-delay: 0.4s; }
+  @keyframes risein {
+    from { opacity: 0; transform: translateY(36px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== DEBUG FOOTER ===== */
+  .controls {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .controls button {
+    background: transparent;
+    border: 1px solid var(--hairline);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    padding: 8px 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .controls button:hover { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="meta">TechBody · Experiência de Sessão · 1080×1920 · 6 cenas × 5s · autoplay</div>
+
+<div class="stage" id="stage">
+  <div class="progress"><div class="fill" id="fill"></div></div>
+
+  <div class="hud">
+    <div class="logo"><span class="dot"></span>TechBody</div>
+    <div class="time" id="timecode">00:00 / 00:30</div>
+  </div>
+
+  <!-- SCENE 1: 0-5s -->
+  <section class="scene s1" data-start="0">
+    <div class="visual">
+      <div class="door-glow"></div>
+      <div class="door"><span class="door-text">Estúdio TechBody</span></div>
+    </div>
+    <div class="kicker">00:00 — 00:05 · Entrada</div>
+    <h2 class="vo">Bem-vindo ao <em>estúdio</em>.</h2>
+    <p class="desc">Ambiente reservado, luz baixa e música cuidada. Antes do primeiro impulso, há um momento de preparação.</p>
+    <div class="scene-tag">
+      <div class="scene-num">Cena <b>01</b> · 06</div>
+      <div class="scene-cta">EMS · 25 min</div>
+    </div>
+  </section>
+
+  <!-- SCENE 2: 5-10s -->
+  <section class="scene s2" data-start="5">
+    <div class="visual">
+      <div class="suit">
+        <div class="suit-torso"></div>
+        <div class="suit-leg left"></div>
+        <div class="suit-leg right"></div>
+        <div class="pad p1"></div>
+        <div class="pad p2"></div>
+        <div class="pad p3"></div>
+        <div class="pad p4"></div>
+        <div class="pad p5"></div>
+        <div class="pad p6"></div>
+      </div>
+    </div>
+    <div class="kicker">00:05 — 00:10 · Equipamento</div>
+    <h2 class="vo">O fato que <em>conduz</em>.</h2>
+    <p class="desc">Eléctrodos estrategicamente posicionados activam grandes grupos musculares em sincronia, com carga progressiva.</p>
+    <div class="scene-tag">
+      <div class="scene-num">Cena <b>02</b> · 06</div>
+      <div class="scene-cta">Equipamento certificado · norma CE</div>
+    </div>
+  </section>
+
+  <!-- SCENE 3: 10-15s -->
+  <section class="scene s3" data-start="10">
+    <div class="visual">
+      <div class="person trainer">
+        <div class="head"></div>
+        <div class="body"></div>
+        <div class="legs"></div>
+      </div>
+      <div class="arrow-flow"></div>
+      <div class="person">
+        <div class="head"></div>
+        <div class="body"></div>
+        <div class="legs"></div>
+      </div>
+    </div>
+    <div class="kicker">00:10 — 00:15 · Posicionamento</div>
+    <h2 class="vo">O treinador <em>define</em>.</h2>
+    <p class="desc">Alinhamento, postura e intensidade definidos antes do primeiro impulso. Cada sessão é desenhada ao milímetro.</p>
+    <div class="pose-grid">
+      <span>Aquecimento</span>
+      <span>Alinhamento</span>
+      <span>Calibração</span>
+      <span>Confirmação</span>
+    </div>
+    <div class="scene-tag">
+      <div class="scene-num">Cena <b>03</b> · 06</div>
+      <div class="scene-cta">Acompanhamento 1:1</div>
+    </div>
+  </section>
+
+  <!-- SCENE 4: 15-20s -->
+  <section class="scene s4" data-start="15">
+    <div class="visual">
+      <div class="ring">
+        <svg viewBox="0 0 800 800">
+          <circle class="bg" cx="400" cy="400" r="395"/>
+          <circle class="fg" cx="400" cy="400" r="395"/>
+        </svg>
+        <div class="pulse-dot d1"></div>
+        <div class="pulse-dot d2"></div>
+        <div class="pulse-dot d3"></div>
+        <div class="pulse-dot d4"></div>
+        <div class="center">
+          <div class="label">Intensidade</div>
+          <div class="value">85–90%</div>
+        </div>
+      </div>
+    </div>
+    <div class="kicker">00:15 — 00:20 · Pico</div>
+    <h2 class="vo">O treino <em>acontece</em>.</h2>
+    <p class="desc">Impulsos activos, musculatura a contrair em padrões coordenados. Recrutamento entre 85 e 90%, em apenas vinte e cinco minutos.</p>
+    <div class="scene-tag">
+      <div class="scene-num">Cena <b>04</b> · 06</div>
+      <div class="scene-cta">EMS · WB-EMS</div>
+    </div>
+  </section>
+
+  <!-- SCENE 5: 20-25s -->
+  <section class="scene s5" data-start="20">
+    <div class="visual">
+      <div class="bars">
+        <div class="bar-row">
+          <div class="bar-label">Força</div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+          <div class="bar-val">+90%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Resistência</div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+          <div class="bar-val">+78%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Activação</div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+          <div class="bar-val">+92%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Densidade</div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+          <div class="bar-val">+70%</div>
+        </div>
+      </div>
+    </div>
+    <div class="kicker">00:20 — 00:25 · Resultado</div>
+    <h2 class="vo">Vinte e cinco minutos, <em>trabalho</em> feito.</h2>
+    <p class="desc">Treino completo, sem carga axial, com baixo impacto articular. O regresso à calma marca o fim da sessão.</p>
+    <div class="scene-tag">
+      <div class="scene-num">Cena <b>05</b> · 06</div>
+      <div class="scene-cta">1 a 3× por semana</div>
+    </div>
+  </section>
+
+  <!-- SCENE 6: 25-30s -->
+  <section class="scene s6" data-start="25">
+    <div class="deco"></div>
+    <div class="inner">
+      <div class="center-stack">
+        <div class="kicker">00:25 — 00:30 · Próximo passo</div>
+        <h2>Marca a <em>tu</em>a sessão experimental.</h2>
+        <a class="cta" href="#">
+          Marcar sessão experimental
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="scene-tag">
+        <div class="scene-num">Cena <b>06</b> · 06</div>
+        <div class="scene-cta">TechBody · Electroestimulação integral</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="restart">Reiniciar</button>
+  <button id="pause">Pausa</button>
+  <span>Auto-replay ao fim dos 30s</span>
+</div>
+
+<script>
+(function () {
+  const TOTAL = 30; // seconds
+  const FADE = 0.6; // crossfade seconds
+  const stage = document.getElementById('stage');
+  const fill = document.getElementById('fill');
+  const tc = document.getElementById('timecode');
+  const scenes = Array.from(document.querySelectorAll('.scene'));
+  const btnRestart = document.getElementById('restart');
+  const btnPause = document.getElementById('pause');
+
+  let start = performance.now();
+  let offset = 0;
+  let paused = false;
+  let pausedAt = 0;
+
+  function fmt(s) {
+    s = Math.max(0, Math.min(TOTAL, s));
+    const m = Math.floor(s / 60).toString().padStart(2, '0');
+    const sec = Math.floor(s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+  }
+
+  function tick(now) {
+    if (paused) {
+      requestAnimationFrame(tick);
+      return;
+    }
+    const elapsed = offset + (now - start) / 1000;
+    const t = elapsed % TOTAL;
+    fill.style.width = (t / TOTAL * 100) + '%';
+    tc.innerHTML = `<b>${fmt(t)}</b> / 00:30`;
+
+    // determine active scene
+    let activeIdx = -1;
+    for (let i = 0; i < scenes.length; i++) {
+      const startAt = parseFloat(scenes[i].dataset.start);
+      if (t >= startAt && t < startAt + 5) { activeIdx = i; break; }
+    }
+    scenes.forEach((s, i) => {
+      if (i === activeIdx) s.classList.add('show');
+      else s.classList.remove('show');
+    });
+
+    requestAnimationFrame(tick);
+  }
+
+  btnRestart.addEventListener('click', () => {
+    offset = 0;
+    start = performance.now();
+  });
+  btnPause.addEventListener('click', () => {
+    paused = !paused;
+    btnPause.textContent = paused ? 'Retomar' : 'Pausa';
+    if (!paused) {
+      start = performance.now();
+    }
+  });
+
+  // initial
+  scenes[0].classList.add('show');
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

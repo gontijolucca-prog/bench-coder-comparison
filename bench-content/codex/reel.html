@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8" />
+<title>TechBody — Experiência de Sessão</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a1a1a;
+    --bg-soft: #232323;
+    --bg-line: #2a2a2a;
+    --ink: #ffffff;
+    --ink-mute: rgba(255,255,255,0.62);
+    --ink-faint: rgba(255,255,255,0.32);
+    --accent: #d4773b;
+    --accent-soft: rgba(212,119,59,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #050505;
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+    height: 100%;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  /* ── Stage ── */
+  .stage {
+    width: min(100vw, 1080px * 100 / 1920);
+    aspect-ratio: 1080 / 1920;
+    max-height: 100vh;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  }
+  /* On big screens, scale by height */
+  @media (min-aspect-ratio: 1080/1920) {
+    .stage { width: calc(100vh * 1080 / 1920); height: 100vh; aspect-ratio: auto; }
+  }
+
+  /* Grain */
+  .stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.45;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  /* ── HUD ── */
+  .hud-top {
+    position: absolute;
+    top: 56px; left: 56px; right: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 60;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+  }
+  .logo-dot { width: 9px; height: 9px; background: var(--accent); border-radius: 50%; }
+  .hud-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .hud-meta .rec {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 10px;
+    animation: blink 1.2s ease-in-out infinite;
+    vertical-align: middle;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+
+  .progress-wrap {
+    position: absolute;
+    top: 110px; left: 56px; right: 56px;
+    z-index: 60;
+  }
+  .progress-track {
+    height: 2px;
+    background: var(--bg-line);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform-origin: left center;
+    transform: scaleX(0);
+    animation: progress 30s linear forwards;
+  }
+  @keyframes progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  .progress-ticks {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    margin-top: 14px;
+    gap: 0;
+  }
+  .progress-ticks span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    text-align: left;
+  }
+  .progress-ticks span.active {
+    color: var(--accent);
+  }
+
+  .hud-bottom {
+    position: absolute;
+    bottom: 56px; left: 56px; right: 56px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    color: var(--ink-mute);
+  }
+  .hud-bottom .time b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .hud-bottom .scenes {
+    color: var(--ink-faint);
+  }
+  .hud-bottom .scenes b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ── Scene container ── */
+  .scenes {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+  }
+  .scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    animation-fill-mode: both;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 280px 56px 130px;
+  }
+
+  /* Each scene occupies 5s of the 30s loop */
+  .scene {
+    animation: sceneAppear 30s linear infinite;
+  }
+  .scene.s1 { animation-delay: 0s; }
+  .scene.s2 { animation-delay: 5s; }
+  .scene.s3 { animation-delay: 10s; }
+  .scene.s4 { animation-delay: 15s; }
+  .scene.s5 { animation-delay: 20s; }
+  .scene.s6 { animation-delay: 25s; }
+
+  @keyframes sceneAppear {
+    0%   { opacity: 0; visibility: hidden; transform: translateY(20px); }
+    2%   { opacity: 1; visibility: visible; transform: translateY(0); }
+    14%  { opacity: 1; visibility: visible; transform: translateY(0); }
+    17%  { opacity: 0; visibility: hidden; transform: translateY(-10px); }
+    100% { opacity: 0; visibility: hidden; }
+  }
+
+  .scene-num {
+    position: absolute;
+    top: 220px;
+    left: 56px;
+    z-index: 2;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s ease-out forwards;
+    animation-fill-mode: both;
+  }
+  .scene-num::before {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .scene-timestamp {
+    position: absolute;
+    top: 220px;
+    right: 56px;
+    z-index: 2;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    color: var(--ink-faint);
+    opacity: 0;
+    animation: fadeUp 0.6s 0.3s ease-out forwards;
+  }
+  .voiceover {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 56px;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    max-width: 900px;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s ease-out forwards;
+  }
+  .voiceover em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .visual-desc {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink-mute);
+    max-width: 760px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.6s ease-out forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Visuals per scene ── */
+
+  /* S1: Studio ambient — concentric ambient pulses */
+  .vis-s1 {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .vis-s1 .ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    border: 1px solid rgba(212,119,59,0.18);
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 0;
+    animation: ringOut 5s ease-out infinite;
+  }
+  .vis-s1 .ring:nth-child(1) { animation-delay: 0.2s; }
+  .vis-s1 .ring:nth-child(2) { animation-delay: 1.1s; border-color: rgba(212,119,59,0.28); }
+  .vis-s1 .ring:nth-child(3) { animation-delay: 2.0s; }
+  .vis-s1 .ring:nth-child(4) { animation-delay: 2.9s; border-color: rgba(255,255,255,0.08); }
+  @keyframes ringOut {
+    0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+    20%  { opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
+  }
+  .vis-s1 .core {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(212,119,59,0.6) 0%, rgba(212,119,59,0) 70%);
+    animation: corePulse 2.6s ease-in-out infinite;
+  }
+  @keyframes corePulse {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  }
+  .vis-s1 .cross {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 320px; height: 1px;
+    background: var(--accent);
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+  }
+  .vis-s1 .cross.v {
+    width: 1px; height: 320px;
+  }
+  .vis-s1 .tag {
+    position: absolute;
+    top: 260px;
+    left: 56px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+  .vis-s1 .tag b {
+    color: var(--accent);
+  }
+  .vis-s1 .corner {
+    position: absolute;
+    width: 32px; height: 32px;
+    border: 1px solid var(--ink-faint);
+  }
+  .vis-s1 .corner.tl { top: 280px; left: 56px; border-right: none; border-bottom: none; }
+  .vis-s1 .corner.tr { top: 280px; right: 56px; border-left: none; border-bottom: none; }
+  .vis-s1 .corner.bl { bottom: 280px; left: 56px; border-right: none; border-top: none; }
+  .vis-s1 .corner.br { bottom: 280px; right: 56px; border-left: none; border-top: none; }
+
+  /* S2: Suit close-up — schematic silhouette */
+  .vis-s2 {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vis-s2 svg {
+    width: 380px;
+    height: 560px;
+    opacity: 0;
+    animation: fadeIn 0.8s 0.3s ease-out forwards;
+  }
+  .vis-s2 .pulse {
+    animation: pulseLine 1.6s ease-in-out infinite;
+  }
+  .vis-s2 .pulse.d2 { animation-delay: 0.2s; }
+  .vis-s2 .pulse.d3 { animation-delay: 0.4s; }
+  .vis-s2 .pulse.d4 { animation-delay: 0.6s; }
+  @keyframes pulseLine {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  .vis-s2 .label-t {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.5s ease-out forwards;
+  }
+  .vis-s2 .label-t.l1 { top: 280px; right: 56px; animation-delay: 0.6s; color: var(--accent); }
+  .vis-s2 .label-t.l2 { top: 460px; right: 56px; animation-delay: 0.8s; }
+  .vis-s2 .label-t.l3 { top: 640px; right: 56px; animation-delay: 1.0s; }
+  .vis-s2 .label-t.l4 { bottom: 280px; left: 56px; animation-delay: 1.2s; color: var(--accent); }
+  .vis-s2 .scan {
+    position: absolute;
+    left: 56px; right: 56px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    top: 0;
+    opacity: 0.6;
+    animation: scanY 3s ease-in-out infinite;
+  }
+  @keyframes scanY {
+    0% { top: 30%; }
+    50% { top: 70%; }
+    100% { top: 30%; }
+  }
+
+  /* S3: Trainer + client — diagram */
+  .vis-s3 {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vis-s3 .fig {
+    position: relative;
+    width: 560px;
+    height: 480px;
+  }
+  .vis-s3 .person {
+    position: absolute;
+    width: 100px;
+    height: 220px;
+    border: 1px solid var(--ink-faint);
+    border-radius: 50px 50px 8px 8px;
+    opacity: 0;
+    animation: fadeIn 0.7s ease-out forwards;
+  }
+  .vis-s3 .person.t {
+    top: 60px; left: 40px;
+    border-color: var(--accent);
+    animation-delay: 0.3s;
+  }
+  .vis-s3 .person.c {
+    top: 60px; right: 40px;
+    animation-delay: 0.5s;
+  }
+  .vis-s3 .person::before {
+    content: "";
+    position: absolute;
+    top: -70px; left: 50%;
+    transform: translateX(-50%);
+    width: 60px; height: 60px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+  }
+  .vis-s3 .person.t { color: var(--accent); }
+  .vis-s3 .person.c { color: var(--ink); }
+  .vis-s3 .connect {
+    position: absolute;
+    top: 180px; left: 140px; right: 140px;
+    height: 1px;
+    background: var(--bg-line);
+  }
+  .vis-s3 .connect::before {
+    content: "";
+    position: absolute;
+    top: -3px; left: 50%;
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 0 8px rgba(212,119,59,0.18);
+    animation: blink 1.2s ease-in-out infinite;
+  }
+  .vis-s3 .caption {
+    position: absolute;
+    bottom: -20px;
+    width: 100%;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    opacity: 0;
+    animation: fadeIn 0.6s 0.9s ease-out forwards;
+  }
+  .vis-s3 .caption b { color: var(--accent); }
+
+  /* S4: Muscle activation — pulse lines on body */
+  .vis-s4 {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vis-s4 .body {
+    position: relative;
+    width: 320px;
+    height: 540px;
+  }
+  .vis-s4 .silhouette {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--ink-faint);
+    border-radius: 120px 120px 40px 40px;
+    opacity: 0.6;
+  }
+  .vis-s4 .silhouette::before {
+    content: "";
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 80px; height: 80px;
+    border: 1px solid var(--ink-faint);
+    border-radius: 50%;
+  }
+  .vis-s4 .node {
+    position: absolute;
+    width: 16px; height: 16px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 10px rgba(212,119,59,0.22);
+    opacity: 0;
+    animation: nodePulse 1.2s ease-out infinite;
+  }
+  .vis-s4 .node.n1 { top: 12%; left: 30%; animation-delay: 0s; }
+  .vis-s4 .node.n2 { top: 12%; left: 70%; animation-delay: 0.2s; }
+  .vis-s4 .node.n3 { top: 28%; left: 25%; animation-delay: 0.4s; }
+  .vis-s4 .node.n4 { top: 28%; left: 75%; animation-delay: 0.6s; }
+  .vis-s4 .node.n5 { top: 42%; left: 50%; animation-delay: 0.8s; }
+  .vis-s4 .node.n6 { top: 58%; left: 30%; animation-delay: 1.0s; }
+  .vis-s4 .node.n7 { top: 58%; left: 70%; animation-delay: 0.3s; }
+  .vis-s4 .node.n8 { top: 75%; left: 35%; animation-delay: 0.5s; }
+  .vis-s4 .node.n9 { top: 75%; left: 65%; animation-delay: 0.7s; }
+  .vis-s4 .node.n10 { top: 92%; left: 50%; animation-delay: 0.9s; }
+  @keyframes nodePulse {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    50%  { opacity: 1; transform: translate(-50%, -50%) scale(1.4); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  }
+  .vis-s4 .ecg {
+    position: absolute;
+    bottom: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 380px;
+    height: 60px;
+    opacity: 0.8;
+  }
+  .vis-s4 .pct {
+    position: absolute;
+    top: -40px; right: 0;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 56px;
+    color: var(--accent);
+    letter-spacing: -0.03em;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.4s ease-out forwards;
+  }
+  .vis-s4 .pct .sm {
+    font-size: 18px;
+    color: var(--ink-mute);
+    font-weight: 300;
+  }
+
+  /* S5: Result — bar chart */
+  .vis-s5 {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vis-s5 .bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    height: 340px;
+    padding: 0 20px;
+  }
+  .vis-s5 .bar {
+    width: 60px;
+    background: var(--bg-line);
+    position: relative;
+    opacity: 0;
+    animation: barGrow 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .vis-s5 .bar.lit {
+    background: var(--accent);
+  }
+  .vis-s5 .bar::before {
+    content: attr(data-v);
+    position: absolute;
+    top: -32px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 24px;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .vis-s5 .bar.lit::before { color: var(--accent); }
+  .vis-s5 .bar::after {
+    content: attr(data-l);
+    position: absolute;
+    bottom: -28px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+  @keyframes barGrow {
+    from { height: 0; opacity: 0; }
+    to { opacity: 1; }
+  }
+  .vis-s5 .bar.b1 { height: 40%;  animation-delay: 0.2s; }
+  .vis-s5 .bar.b2 { height: 55%;  animation-delay: 0.3s; }
+  .vis-s5 .bar.b3 { height: 70%;  animation-delay: 0.4s; }
+  .vis-s5 .bar.b4 { height: 85%;  animation-delay: 0.5s; }
+  .vis-s5 .bar.b5 { height: 100%; animation-delay: 0.6s; }
+  .vis-s5 .bar.b6 { height: 92%;  animation-delay: 0.7s; }
+  .vis-s5 .bar.b7 { height: 80%;  animation-delay: 0.8s; }
+
+  /* S6: CTA */
+  .vis-s6 {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vis-s6 .circle {
+    width: 360px; height: 360px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: relative;
+    opacity: 0;
+    animation: scaleIn 0.9s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.6); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .vis-s6 .circle::before, .vis-s6 .circle::after {
+    content: "";
+    position: absolute;
+    background: var(--accent);
+  }
+  .vis-s6 .circle::before {
+    top: 50%; left: -20px; right: -20px; height: 1px;
+  }
+  .vis-s6 .circle::after {
+    left: 50%; top: -20px; bottom: -20px; width: 1px;
+  }
+  .vis-s6 .pulse {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 360px; height: 360px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: ringExpand 2.4s ease-out infinite;
+    opacity: 0;
+  }
+  .vis-s6 .pulse.d2 { animation-delay: 1.2s; }
+  @keyframes ringExpand {
+    0%   { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+  }
+  .vis-s6 .center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px; height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 0 14px rgba(212,119,59,0.2);
+    animation: blink 1.4s ease-in-out infinite;
+  }
+  .vis-s6 .corner {
+    position: absolute;
+    width: 28px; height: 28px;
+    border: 1px solid var(--accent);
+  }
+  .vis-s6 .corner.tl { top: -14px; left: -14px; border-right: none; border-bottom: none; }
+  .vis-s6 .corner.tr { top: -14px; right: -14px; border-left: none; border-bottom: none; }
+  .vis-s6 .corner.bl { bottom: -14px; left: -14px; border-right: none; border-top: none; }
+  .vis-s6 .corner.br { bottom: -14px; right: -14px; border-left: none; border-top: none; }
+
+  /* S6 CTA btn */
+  .s6 .voiceover { margin-bottom: 48px; }
+  .s6 .visual-desc { margin-bottom: 40px; }
+  .s6 .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 36px;
+    background: var(--accent);
+    color: #1a1a1a;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+    border-radius: 999px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.8s ease-out forwards;
+  }
+  .s6 .cta .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #1a1a1a;
+    animation: blink 1.4s ease-in-out infinite;
+  }
+  .s6 .cta-url {
+    margin-left: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    opacity: 0;
+    animation: fadeUp 0.7s 1.0s ease-out forwards;
+  }
+
+  /* Scene overlay borders */
+  .scene::before {
+    content: "";
+    position: absolute;
+    inset: 56px;
+    border: 1px solid transparent;
+    transition: border-color 0.3s;
+    pointer-events: none;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .scene { animation: none; }
+    .scene.s1 { opacity: 1; visibility: visible; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- HUD -->
+  <div class="hud-top">
+    <div class="logo"><span class="logo-dot"></span>TechBody</div>
+    <div class="hud-meta"><span class="rec"></span>Sessão EMS</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill"></div></div>
+    <div class="progress-ticks">
+      <span class="active" data-tick="1">00:00</span>
+      <span data-tick="2">00:05</span>
+      <span data-tick="3">00:10</span>
+      <span data-tick="4">00:15</span>
+      <span data-tick="5">00:20</span>
+      <span data-tick="6">00:25</span>
+    </div>
+  </div>
+
+  <div class="hud-bottom">
+    <div class="time"><b id="tNow">00:00</b> / 00:30</div>
+    <div class="scenes"><b id="sNow">01</b> / 06</div>
+  </div>
+
+  <!-- SCENE 1 — Hook -->
+  <section class="scene s1">
+    <div class="vis-s1">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="core"></div>
+      <div class="cross"></div>
+      <div class="cross v"></div>
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+      <div class="tag">Estúdio <b>TechBody</b></div>
+    </div>
+    <div class="scene-num">Cena 01</div>
+    <div class="scene-timestamp">00:00 — 00:05</div>
+    <div class="voiceover">A porta abre-se.<br/>Começa a <em>sessão.</em></div>
+    <p class="visual-desc">Entrada no estúdio TechBody: ambiente escuro, luz quente, equipamento visível ao fundo. Sessões curtas, 20–25 minutos, 1–3 vezes por semana.</p>
+  </section>
+
+  <!-- SCENE 2 — Vestir fato -->
+  <section class="scene s2">
+    <div class="vis-s2">
+      <svg viewBox="0 0 200 300" fill="none">
+        <!-- Suit outline -->
+        <path d="M100 30 C120 30 135 45 135 65 L135 95 L160 110 L175 150 L170 200 L155 270 L150 290 L130 290 L120 240 L115 200 L110 170 L100 170 L90 170 L85 200 L80 240 L70 290 L50 290 L45 270 L30 200 L25 150 L40 110 L65 95 L65 65 C65 45 80 30 100 30 Z"
+              stroke="rgba(255,255,255,0.5)" stroke-width="1.2" />
+        <!-- Electrode dots -->
+        <circle class="pulse"    cx="65"  cy="120" r="4" fill="#d4773b"/>
+        <circle class="pulse d2" cx="135" cy="120" r="4" fill="#d4773b"/>
+        <circle class="pulse d3" cx="55"  cy="180" r="4" fill="#d4773b"/>
+        <circle class="pulse d4" cx="145" cy="180" r="4" fill="#d4773b"/>
+        <circle class="pulse"    cx="80"  cy="230" r="4" fill="#d4773b"/>
+        <circle class="pulse d2" cx="120" cy="230" r="4" fill="#d4773b"/>
+        <circle class="pulse d3" cx="70"  cy="265" r="4" fill="#d4773b"/>
+        <circle class="pulse d4" cx="130" cy="265" r="4" fill="#d4773b"/>
+        <!-- Connection lines -->
+        <path d="M65 120 L80 230 M135 120 L120 230 M55 180 L70 265 M145 180 L130 265"
+              stroke="rgba(212,119,59,0.4)" stroke-width="0.6" stroke-dasharray="2 3"/>
+      </svg>
+      <div class="scan"></div>
+      <div class="label-t l1">WB-EMS · Activação total</div>
+      <div class="label-t l2">Activação simultânea</div>
+      <div class="label-t l3">Eléctrodos integrados</div>
+      <div class="label-t l4">Certificação médica</div>
+    </div>
+    <div class="scene-num">Cena 02</div>
+    <div class="scene-timestamp">00:05 — 00:10</div>
+    <div class="voiceover">O fato ajusta-se ao corpo.<br/><em>Os eléctrodos encontram os músculos.</em></div>
+    <p class="visual-desc">Close-up do fato EMS com pontos de contacto nos principais grupos musculares. Sessão de 20–25 minutos, 1–3 vezes por semana.</p>
+  </section>
+
+  <!-- SCENE 3 — Treinador explica -->
+  <section class="scene s3">
+    <div class="vis-s3">
+      <div class="fig">
+        <div class="person t"></div>
+        <div class="person c"></div>
+        <div class="connect"></div>
+        <div class="caption">Treinador <b>certificado</b> · Cliente posicionado</div>
+      </div>
+    </div>
+    <div class="scene-num">Cena 03</div>
+    <div class="scene-timestamp">00:10 — 00:15</div>
+    <div class="voiceover">O treinador explica.<br/>O corpo <em>posiciona-se.</em></div>
+    <p class="visual-desc">Diagrama a duas figuras: treinador à esquerda em destaque a laranja, cliente à direita. Linha de comunicação entre ambos.</p>
+  </section>
+
+  <!-- SCENE 4 — Pico da sessão -->
+  <section class="scene s4">
+    <div class="vis-s4">
+      <div class="body">
+        <div class="silhouette"></div>
+        <div class="node n1"></div>
+        <div class="node n2"></div>
+        <div class="node n3"></div>
+        <div class="node n4"></div>
+        <div class="node n5"></div>
+        <div class="node n6"></div>
+        <div class="node n7"></div>
+        <div class="node n8"></div>
+        <div class="node n9"></div>
+        <div class="node n10"></div>
+        <div class="pct">85–90<span class="sm">% recrutamento</span></div>
+        <svg class="ecg" viewBox="0 0 380 60" fill="none">
+          <path d="M0 30 L80 30 L95 30 L105 10 L115 50 L125 20 L140 30 L220 30 L235 30 L245 10 L255 50 L265 20 L280 30 L380 30"
+                stroke="#d4773b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <animate attributeName="stroke-dasharray" from="0 1000" to="1000 0" dur="3s" repeatCount="indefinite"/>
+          </path>
+        </svg>
+      </div>
+    </div>
+    <div class="scene-num">Cena 04</div>
+    <div class="scene-timestamp">00:15 — 00:20</div>
+    <div class="voiceover">Impulsos activos.<br/><em>Os músculos contraem.</em></div>
+    <p class="visual-desc">Silhueta do corpo com pontos de activação a pulsar em sequência. ECG a percorrer a base. Percentagem 85–90% em destaque.</p>
+  </section>
+
+  <!-- SCENE 5 — Resultado -->
+  <section class="scene s5">
+    <div class="vis-s5">
+      <div class="bars">
+        <div class="bar" data-v="40%" data-l="30–40% Conv."></div>
+        <div class="bar" data-v="55%" data-l=""></div>
+        <div class="bar" data-v="70%" data-l=""></div>
+        <div class="bar lit" data-v="85–90%" data-l="85–90% EMS"></div>
+        <div class="bar" data-v="92%" data-l=""></div>
+        <div class="bar lit" data-v="100%" data-l="Pico"></div>
+        <div class="bar" data-v="80%" data-l=""></div>
+      </div>
+    </div>
+    <div class="scene-num">Cena 05</div>
+    <div class="scene-timestamp">00:20 — 00:25</div>
+    <div class="voiceover">Vinte minutos chegam.<br/>O corpo <em>responde.</em></div>
+    <p class="visual-desc">Comparação directa: 30–40% de recrutamento no treino convencional, 85–90% em EMS. Barras a animar do mínimo ao pico da sessão.</p>
+  </section>
+
+  <!-- SCENE 6 — CTA -->
+  <section class="scene s6">
+    <div class="vis-s6">
+      <div class="pulse"></div>
+      <div class="pulse d2"></div>
+      <div class="circle">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+        <div class="center"></div>
+      </div>
+    </div>
+    <div class="scene-num">Cena 06</div>
+    <div class="scene-timestamp">00:25 — 00:30</div>
+    <div class="voiceover">Marca a tua<br/><em>sessão experimental.</em></div>
+    <p class="visual-desc">Equipamento com certificação médica alemã, baixo impacto articular. Círculo-alvo TechBody a laranja. Botão de reserva activo.</p>
+    <div>
+      <span class="cta"><span class="dot"></span>Reservar agora</span>
+      <span class="cta-url">techbody.pt</span>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // 30s loop timer — updates HUD clock + scene counter + progress ticks
+  const tNow = document.getElementById('tNow');
+  const sNow = document.getElementById('sNow');
+  const ticks = document.querySelectorAll('.progress-ticks span');
+  const start = performance.now();
+  function fmt(ms) {
+    const total = Math.floor(ms / 1000);
+    const m = String(Math.floor(total / 60)).padStart(2, '0');
+    const s = String(total % 60).padStart(2, '0');
+    return m + ':' + s;
+  }
+  function tick() {
+    const elapsed = ((performance.now() - start) / 1000) % 30;
+    tNow.textContent = fmt(elapsed * 1000);
+    const sceneIdx = Math.min(6, Math.floor(elapsed / 5) + 1);
+    sNow.textContent = String(sceneIdx).padStart(2, '0');
+    ticks.forEach((t, i) => {
+      t.classList.toggle('active', i === sceneIdx - 1);
+    });
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+</script>
+</body>
+</html>
