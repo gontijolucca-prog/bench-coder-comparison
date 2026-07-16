@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benchmark Content Machine — 4 CLIs</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0a0a0a;
+    color: #e8e8e8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  body { padding: 32px 24px 64px; }
+
+  header {
+    max-width: 1400px;
+    margin: 0 auto 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #222;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #f5f5f5;
+    letter-spacing: -0.02em;
+  }
+  .subtitle {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #999;
+    letter-spacing: 0.02em;
+  }
+  .accent { color: #d4773b; }
+
+  .tabs {
+    max-width: 1400px;
+    margin: 0 auto 28px;
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid #222;
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .tab:hover { color: #ccc; }
+  .tab.active {
+    color: #d4773b;
+    border-bottom-color: #d4773b;
+  }
+
+  .grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .card {
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .cli-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f0f0f0;
+    letter-spacing: 0.01em;
+  }
+  .badge {
+    background: rgba(212, 119, 59, 0.12);
+    color: #d4773b;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(212, 119, 59, 0.3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .frame-wrap {
+    position: relative;
+    width: 270px;
+    margin: 16px auto;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #000;
+  }
+  /* 1080x1080 square @ 0.25 = 270x270 */
+  .frame-wrap.size-1080 { height: 270px; }
+  /* 1080x1920 portrait @ 0.25 = 270x480 */
+  .frame-wrap.size-1920 { height: 480px; }
+  /* 1080 wide carousel @ 0.25 = 270 wide; height auto via inner */
+  .frame-wrap.size-auto { height: 3375px; }
+
+  .frame-wrap iframe {
+    width: 1080px;
+    border: 0;
+    display: block;
+    transform: scale(0.25);
+    transform-origin: top left;
+  }
+  .size-1080 iframe { height: 1080px; }
+  .size-1920 iframe { height: 1920px; }
+  .size-auto iframe { height: 13500px; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  footer {
+    max-width: 1400px;
+    margin: 64px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid #222;
+    color: #777;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  footer h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #999;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .prompt-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .prompt-item h4 {
+    font-size: 13px;
+    color: #d4773b;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .prompt-item p { color: #888; }
+
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .prompt-list { grid-template-columns: 1fr; }
+    body { padding: 20px 14px 48px; }
+    h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Benchmark Content Machine — <span class="accent">4 CLIs</span></h1>
+  <div class="subtitle">TechBody · MiniMax-M3 · Mesma prompt</div>
+</header>
+
+<div class="tabs" role="tablist">
+  <button class="tab active" data-tab="carousel">Carrossel</button>
+  <button class="tab" data-tab="reel">Reel</button>
+  <button class="tab" data-tab="hyperframes">Hyperframes</button>
+  <button class="tab" data-tab="remotion">Remotion</button>
+</div>
+
+<!-- CARROSSEL: 1080x13500 (10 slides stacked) scaled to 270x3375px -->
+<section class="tab-panel active" id="panel-carousel">
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Pi</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-auto">
+        <iframe src="bench-content/pi/carousel.html" loading="eager" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Claude Code</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-auto">
+        <iframe src="bench-content/claude/carousel.html" loading="eager" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Codex</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-auto">
+        <iframe src="bench-content/codex/carousel.html" loading="eager" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">OpenCode</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-auto">
+        <iframe src="bench-content/opencode/carousel.html" loading="eager" scrolling="no"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REEL: 1080x1920 portrait -->
+<section class="tab-panel" id="panel-reel">
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Pi</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1920">
+        <iframe src="bench-content/pi/reel.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Claude Code</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1920">
+        <iframe src="bench-content/claude/reel.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Codex</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1920">
+        <iframe src="bench-content/codex/reel.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">OpenCode</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1920">
+        <iframe src="bench-content/opencode/reel.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HYPERFRAMES: 1080x1080 square -->
+<section class="tab-panel" id="panel-hyperframes">
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Pi</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1080">
+        <iframe src="bench-content/pi/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Claude Code</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1080">
+        <iframe src="bench-content/claude/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Codex</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1080">
+        <iframe src="bench-content/codex/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">OpenCode</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1080">
+        <iframe src="bench-content/opencode/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REMOTION: 1080x1920 portrait -->
+<section class="tab-panel" id="panel-remotion">
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Pi</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1920">
+        <iframe src="bench-content/pi/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Claude Code</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1920">
+        <iframe src="bench-content/claude/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">Codex</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1920">
+        <iframe src="bench-content/codex/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="cli-name">OpenCode</span><span class="badge">MiniMax-M3</span></div>
+      <div class="frame-wrap size-1920">
+        <iframe src="bench-content/opencode/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <h3>Prompts Utilizados</h3>
+  <div class="prompt-list">
+    <div class="prompt-item">
+      <h4>Prompt 1 — Carrossel & Reel</h4>
+      <p>Gera um carrossel de Instagram (10 slides, 1080x1080) e um Reel vertical (1080x1920) para a marca TechBody, com copy persuasivo, paleta dark e tipografia editorial.</p>
+    </div>
+    <div class="prompt-item">
+      <h4>Prompt 2 — Hyperframes & Remotion</h4>
+      <p>Produz uma animação HTML/CSS determinística em Hyperframes e um clipe React no Remotion (1080x1080 e 1080x1920) para o mesmo conceito criativo da TechBody.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.tab-panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.toggle('active', t === tab));
+      panels.forEach(p => p.classList.toggle('active', p.id === 'panel-' + target));
+      // Force reload of iframes in the newly activated panel so animations restart
+      document.querySelectorAll('#panel-' + target + ' iframe').forEach(f => {
+        const src = f.getAttribute('src');
+        if (f.src && f.src !== 'about:blank') {
+          f.src = 'about:blank';
+          setTimeout(() => { f.src = src; }, 30);
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, initial-scale=1" />
+<title>TechBody EMS Studio</title>
+<style>
+  /* ---------- Reset & Stage ---------- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #0d0d0d;
+    font-family: "Helvetica Neue", "Inter", "Segoe UI", Arial, sans-serif;
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* ---------- Easings ---------- */
+  :root {
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --accent: #d4773b;
+    --accent-soft: rgba(212, 119, 59, 0.18);
+    --ink: #1a1a1a;
+    --paper: #f6f3ef;
+    --line: rgba(255, 255, 255, 0.12);
+  }
+
+  /* ---------- Composition Stage ---------- */
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: var(--ink);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Subtle film grain + vignette */
+  .stage::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px);
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  /* ---------- Top Bar: Brand + Timecode + Progress ---------- */
+  .topbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 56px 64px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 40;
+    color: rgba(255,255,255,0.85);
+    font-size: 22px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 24px var(--accent);
+  }
+  .timecode {
+    font-variant-numeric: tabular-nums;
+    font-size: 22px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.22em;
+  }
+  .timecode .now { color: var(--accent); }
+
+  .progress-track {
+    position: absolute;
+    top: 118px; left: 64px; right: 64px;
+    height: 2px;
+    background: rgba(255,255,255,0.08);
+    z-index: 40;
+  }
+  .progress-bar {
+    position: absolute;
+    inset: 0;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #f0a05a);
+    box-shadow: 0 0 14px rgba(212,119,59,0.6);
+    animation: progress-fill 30s linear infinite;
+  }
+  .progress-tick {
+    position: absolute;
+    top: -6px;
+    width: 2px; height: 14px;
+    background: rgba(255,255,255,0.25);
+  }
+  .progress-tick.t1 { left: 16.666%; }
+  .progress-tick.t2 { left: 33.333%; }
+  .progress-tick.t3 { left: 50%; }
+  .progress-tick.t4 { left: 66.666%; }
+  .progress-tick.t5 { left: 83.333%; }
+
+  @keyframes progress-fill {
+    from { width: 0%; }
+    to   { width: 100%; }
+  }
+
+  /* ---------- Scene Container ---------- */
+  .scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 220px 90px 220px;
+    opacity: 0;
+    transform: translateY(40px);
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: var(--ease-out-expo);
+    animation-fill-mode: both;
+  }
+
+  .scene-1 { animation-name: scene1; }
+  .scene-2 { animation-name: scene2; }
+  .scene-3 { animation-name: scene3; }
+  .scene-4 { animation-name: scene4; }
+  .scene-5 { animation-name: scene5; }
+  .scene-6 { animation-name: scene6; }
+
+  @keyframes scene1 {
+    0%, 3%       { opacity: 0; transform: translateY(40px); }
+    8%, 14%      { opacity: 1; transform: translateY(0); }
+    19%          { opacity: 1; transform: translateY(0); }
+    21%          { opacity: 0; transform: translateY(-30px); }
+    100%         { opacity: 0; transform: translateY(-30px); }
+  }
+  @keyframes scene2 {
+    0%, 17%      { opacity: 0; transform: translateY(40px); }
+    20%, 30%     { opacity: 1; transform: translateY(0); }
+    33%          { opacity: 1; transform: translateY(0); }
+    35%          { opacity: 0; transform: translateY(-30px); }
+    100%         { opacity: 0; transform: translateY(-30px); }
+  }
+  @keyframes scene3 {
+    0%, 34%      { opacity: 0; transform: translateY(40px); }
+    37%, 47%     { opacity: 1; transform: translateY(0); }
+    49%          { opacity: 1; transform: translateY(0); }
+    51%          { opacity: 0; transform: translateY(-30px); }
+    100%         { opacity: 0; transform: translateY(-30px); }
+  }
+  @keyframes scene4 {
+    0%, 50%      { opacity: 0; transform: translateY(40px); }
+    53%, 63%     { opacity: 1; transform: translateY(0); }
+    66%          { opacity: 1; transform: translateY(0); }
+    68%          { opacity: 0; transform: translateY(-30px); }
+    100%         { opacity: 0; transform: translateY(-30px); }
+  }
+  @keyframes scene5 {
+    0%, 67%      { opacity: 0; transform: translateY(40px); }
+    70%, 80%     { opacity: 1; transform: translateY(0); }
+    82%          { opacity: 1; transform: translateY(0); }
+    84%          { opacity: 0; transform: translateY(-30px); }
+    100%         { opacity: 0; transform: translateY(-30px); }
+  }
+  @keyframes scene6 {
+    0%, 83%      { opacity: 0; transform: translateY(40px); }
+    86%, 100%    { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- Typography primitives ---------- */
+  .eyebrow {
+    font-size: 26px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 36px;
+    font-weight: 600;
+  }
+  .eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 48px;
+    height: 2px;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-right: 18px;
+    transform: translateY(-3px);
+  }
+  h1, h2 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+  }
+  .lede {
+    font-size: 30px;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.78);
+    font-weight: 400;
+    max-width: 880px;
+  }
+  .divider {
+    width: 72px;
+    height: 3px;
+    background: var(--accent);
+    margin: 40px 0;
+    transform-origin: left;
+  }
+
+  /* ---------- Scene 1: Hook ---------- */
+  .scene-1 .frame > * {
+    opacity: 0;
+    transform: translateY(40px);
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  .scene-1 .frame > *:nth-child(1) { animation-name: s1a; }
+  .scene-1 .frame > *:nth-child(2) { animation-name: s1b; }
+  .scene-1 .frame > *:nth-child(3) { animation-name: s1c; }
+  .scene-1 .frame > *:nth-child(4) { animation-name: s1d; }
+  .scene-1 .frame > *:nth-child(5) { animation-name: s1e; }
+
+  @keyframes s1a {
+    0%, 2%    { opacity: 0; transform: translateY(40px); }
+    7%        { opacity: 1; transform: translateY(0); }
+    19%       { opacity: 1; transform: translateY(0); }
+    21%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s1b {
+    0%, 4%    { opacity: 0; transform: translateY(50px); }
+    10%       { opacity: 1; transform: translateY(0); }
+    19%       { opacity: 1; transform: translateY(0); }
+    21%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s1c {
+    0%, 6%    { opacity: 0; transform: translateY(40px); }
+    13%       { opacity: 1; transform: translateY(0); }
+    19%       { opacity: 1; transform: translateY(0); }
+    21%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s1d {
+    0%, 9%    { opacity: 0; transform: scaleX(0); }
+    14%       { opacity: 1; transform: scaleX(1); }
+    19%       { opacity: 1; transform: scaleX(1); }
+    21%       { opacity: 0; transform: scaleX(0); }
+    100%      { opacity: 0; transform: scaleX(0); }
+  }
+  @keyframes s1e {
+    0%, 11%   { opacity: 0; transform: translateY(30px); }
+    16%       { opacity: 1; transform: translateY(0); }
+    19%       { opacity: 1; transform: translateY(0); }
+    21%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+
+  .scene-1 h1 {
+    font-size: 132px;
+    line-height: 1.02;
+  }
+  .scene-1 h1 .accent { color: var(--accent); }
+  .scene-1 .meta {
+    margin-top: 64px;
+    font-size: 22px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* Pulsing orb decoration */
+  .orb {
+    position: absolute;
+    right: -180px; top: 50%;
+    width: 720px; height: 720px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(212,119,59,0.35), rgba(212,119,59,0) 65%);
+    filter: blur(20px);
+    animation: orbPulse 6s ease-in-out infinite;
+    z-index: -1;
+  }
+  @keyframes orbPulse {
+    0%, 100% { transform: translate(0, -50%) scale(1); opacity: 0.8; }
+    50%      { transform: translate(-30px, -50%) scale(1.08); opacity: 1; }
+  }
+
+  /* ---------- Scene 2: Muscle recruitment numbers ---------- */
+  .scene-2 .stats {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 40px;
+    margin-top: 48px;
+  }
+  .scene-2 .stat {
+    text-align: center;
+  }
+  .scene-2 .stat-label {
+    font-size: 26px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 24px;
+  }
+  .scene-2 .stat-value {
+    font-size: 240px;
+    font-weight: 800;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.04em;
+  }
+  .scene-2 .stat-1 .stat-value { color: rgba(255,255,255,0.78); }
+  .scene-2 .stat-2 .stat-value { color: var(--accent); }
+  .scene-2 .stat-unit {
+    font-size: 32px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-top: 18px;
+  }
+  .scene-2 .pct {
+    font-size: 140px;
+    vertical-align: top;
+    font-weight: 700;
+  }
+  .scene-2 .vs {
+    font-size: 56px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.2em;
+    align-self: center;
+  }
+
+  .scene-2 h2 {
+    font-size: 72px;
+    margin-bottom: 8px;
+  }
+
+  .scene-2 .stat, .scene-2 h2 {
+    opacity: 0;
+    transform: translateY(40px);
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  .scene-2 h2      { animation-name: s2Title; }
+  .scene-2 .stat-1 { animation-name: s2Left; }
+  .scene-2 .stat-2 { animation-name: s2Right; }
+  .scene-2 .vs     { animation-name: s2Vs; }
+
+  @keyframes s2Title {
+    0%, 18%   { opacity: 0; transform: translateY(40px); }
+    22%       { opacity: 1; transform: translateY(0); }
+    32%       { opacity: 1; transform: translateY(0); }
+    35%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s2Left {
+    0%, 19%   { opacity: 0; transform: translateY(40px); }
+    24%       { opacity: 1; transform: translateY(0); }
+    32%       { opacity: 1; transform: translateY(0); }
+    35%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s2Right {
+    0%, 21%   { opacity: 0; transform: translateY(40px); }
+    27%       { opacity: 1; transform: translateY(0); }
+    32%       { opacity: 1; transform: translateY(0); }
+    35%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s2Vs {
+    0%, 20%   { opacity: 0; }
+    25%       { opacity: 1; }
+    32%       { opacity: 1; }
+    35%       { opacity: 0; }
+    100%      { opacity: 0; }
+  }
+
+  /* ---------- Scene 3: 20-25 min sessions ---------- */
+  .scene-3 h2 {
+    font-size: 124px;
+    line-height: 1;
+    margin-bottom: 28px;
+  }
+  .scene-3 h2 .num-big {
+    color: var(--accent);
+    font-size: 200px;
+    font-weight: 800;
+    line-height: 0.9;
+    display: inline-block;
+  }
+  .scene-3 .row {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .scene-3 .unit {
+    font-size: 40px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .scene-3 .frequency {
+    margin-top: 56px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    font-size: 38px;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.04em;
+  }
+  .scene-3 .freq-num {
+    font-size: 96px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .scene-3 .pulse-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 18px var(--accent);
+    animation: dotPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes dotPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.4); opacity: 0.6; }
+  }
+
+  .scene-3 .tag-row {
+    display: flex;
+    gap: 18px;
+    margin-top: 64px;
+    flex-wrap: wrap;
+  }
+  .scene-3 .tag {
+    padding: 14px 26px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    font-size: 22px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    backdrop-filter: blur(4px);
+  }
+  .scene-3 .tag.accent {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .scene-3 h2, .scene-3 .frequency, .scene-3 .tag-row {
+    opacity: 0;
+    transform: translateY(40px);
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  .scene-3 h2        { animation-name: s3Title; }
+  .scene-3 .frequency { animation-name: s3Freq; }
+  .scene-3 .tag-row   { animation-name: s3Tags; }
+
+  @keyframes s3Title {
+    0%, 35%   { opacity: 0; transform: translateY(40px); }
+    39%       { opacity: 1; transform: translateY(0); }
+    49%       { opacity: 1; transform: translateY(0); }
+    51%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s3Freq {
+    0%, 38%   { opacity: 0; transform: translateY(40px); }
+    43%       { opacity: 1; transform: translateY(0); }
+    49%       { opacity: 1; transform: translateY(0); }
+    51%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s3Tags {
+    0%, 41%   { opacity: 0; transform: translateY(40px); }
+    47%       { opacity: 1; transform: translateY(0); }
+    49%       { opacity: 1; transform: translateY(0); }
+    51%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+
+  /* ---------- Scene 4: Low joint impact + certified ---------- */
+  .scene-4 h2 {
+    font-size: 92px;
+    line-height: 1.05;
+    margin-bottom: 24px;
+  }
+  .scene-4 .lede {
+    margin-bottom: 8px;
+  }
+  .scene-4 .badge-row {
+    display: flex;
+    align-items: stretch;
+    gap: 24px;
+    margin-top: 56px;
+  }
+  .scene-4 .badge {
+    flex: 1;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 18px;
+    padding: 40px 32px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    position: relative;
+    overflow: hidden;
+  }
+  .scene-4 .badge::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    border: 1px solid var(--accent);
+    opacity: 0;
+    transform: scale(1.04);
+    animation: badgeRing 30s var(--ease-out-quart) infinite;
+  }
+  @keyframes badgeRing {
+    0%, 56%   { opacity: 0; transform: scale(1.04); }
+    63%       { opacity: 0.7; transform: scale(1); }
+    65%       { opacity: 0.7; transform: scale(1); }
+    68%       { opacity: 0; transform: scale(1.04); }
+    100%      { opacity: 0; transform: scale(1.04); }
+  }
+  .scene-4 .badge .label {
+    font-size: 22px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  .scene-4 .badge .body {
+    font-size: 30px;
+    line-height: 1.3;
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+  }
+  .scene-4 .check {
+    position: absolute;
+    top: 36px; right: 36px;
+    width: 28px; height: 28px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+  }
+  .scene-4 .check::after {
+    content: "";
+    position: absolute;
+    left: 7px; top: 4px;
+    width: 8px; height: 14px;
+    border-right: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(45deg);
+  }
+
+  /* Joint diagram */
+  .scene-4 .joint {
+    position: absolute;
+    right: 90px; top: 50%;
+    transform: translateY(-50%);
+    width: 280px; height: 280px;
+    opacity: 0.85;
+  }
+  .scene-4 .joint svg { width: 100%; height: 100%; }
+
+  .scene-4 h2, .scene-4 .lede, .scene-4 .badge-row, .scene-4 .joint {
+    opacity: 0;
+    transform: translateY(40px);
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  .scene-4 h2        { animation-name: s4Title; }
+  .scene-4 .lede     { animation-name: s4Lede; }
+  .scene-4 .badge-row { animation-name: s4Badges; }
+  .scene-4 .joint    { animation-name: s4Joint; transform-origin: center; }
+
+  @keyframes s4Title {
+    0%, 52%   { opacity: 0; transform: translateY(40px); }
+    56%       { opacity: 1; transform: translateY(0); }
+    66%       { opacity: 1; transform: translateY(0); }
+    68%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s4Lede {
+    0%, 54%   { opacity: 0; transform: translateY(40px); }
+    58%       { opacity: 1; transform: translateY(0); }
+    66%       { opacity: 1; transform: translateY(0); }
+    68%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s4Badges {
+    0%, 57%   { opacity: 0; transform: translateY(40px); }
+    63%       { opacity: 1; transform: translateY(0); }
+    66%       { opacity: 1; transform: translateY(0); }
+    68%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s4Joint {
+    0%, 55%   { opacity: 0; transform: translate(0, -50%) scale(0.9); }
+    61%       { opacity: 0.85; transform: translate(0, -50%) scale(1); }
+    66%       { opacity: 0.85; transform: translate(0, -50%) scale(1); }
+    68%       { opacity: 0; transform: translate(0, -50%) scale(0.9); }
+    100%      { opacity: 0; transform: translate(0, -50%) scale(0.9); }
+  }
+
+  /* ---------- Scene 5: Full body session complete ---------- */
+  .scene-5 h2 {
+    font-size: 104px;
+    line-height: 1.05;
+    margin-bottom: 24px;
+  }
+  .scene-5 .lede { margin-bottom: 8px; }
+  .scene-5 .body-grid {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .scene-5 .muscle {
+    aspect-ratio: 1;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+  }
+  .scene-5 .muscle .name {
+    font-size: 22px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+  }
+  .scene-5 .muscle .meter {
+    position: absolute;
+    inset: auto 22px 22px 22px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .scene-5 .muscle .meter::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 0;
+    background: var(--accent);
+    border-radius: 2px;
+    animation: meterFill 30s var(--ease-out-quart) infinite;
+  }
+  @keyframes meterFill {
+    0%, 70%   { width: 0; }
+    80%       { width: var(--w, 100%); }
+    82%       { width: var(--w, 100%); }
+    84%       { width: 0; }
+    100%      { width: 0; }
+  }
+  .scene-5 .muscle.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .scene-5 .muscle.active .name { color: var(--accent); }
+  .scene-5 .summary {
+    margin-top: 48px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 30px;
+    color: rgba(255,255,255,0.85);
+  }
+  .scene-5 .summary .check {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 28px;
+    box-shadow: 0 0 32px rgba(212,119,59,0.45);
+  }
+
+  .scene-5 h2, .scene-5 .lede, .scene-5 .body-grid, .scene-5 .summary {
+    opacity: 0;
+    transform: translateY(40px);
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  .scene-5 h2        { animation-name: s5Title; }
+  .scene-5 .lede     { animation-name: s5Lede; }
+  .scene-5 .body-grid { animation-name: s5Grid; }
+  .scene-5 .summary  { animation-name: s5Summary; }
+
+  @keyframes s5Title {
+    0%, 69%   { opacity: 0; transform: translateY(40px); }
+    73%       { opacity: 1; transform: translateY(0); }
+    82%       { opacity: 1; transform: translateY(0); }
+    84%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s5Lede {
+    0%, 71%   { opacity: 0; transform: translateY(40px); }
+    75%       { opacity: 1; transform: translateY(0); }
+    82%       { opacity: 1; transform: translateY(0); }
+    84%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s5Grid {
+    0%, 73%   { opacity: 0; transform: translateY(40px); }
+    78%       { opacity: 1; transform: translateY(0); }
+    82%       { opacity: 1; transform: translateY(0); }
+    84%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+  @keyframes s5Summary {
+    0%, 76%   { opacity: 0; transform: translateY(40px); }
+    80%       { opacity: 1; transform: translateY(0); }
+    82%       { opacity: 1; transform: translateY(0); }
+    84%       { opacity: 0; transform: translateY(-20px); }
+    100%      { opacity: 0; transform: translateY(-20px); }
+  }
+
+  /* ---------- Scene 6: CTA ---------- */
+  .scene-6 .frame { text-align: left; }
+  .scene-6 h2 {
+    font-size: 108px;
+    line-height: 1.04;
+    margin-bottom: 36px;
+  }
+  .scene-6 h2 .accent { color: var(--accent); }
+  .scene-6 .lede { margin-bottom: 56px; max-width: 820px; }
+
+  .scene-6 .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 56px;
+    background: var(--accent);
+    color: #1a1a1a;
+    border-radius: 999px;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    box-shadow: 0 18px 60px rgba(212,119,59,0.35);
+    animation: ctaPulse 2.4s var(--ease-in-out-cubic) infinite;
+  }
+  @keyframes ctaPulse {
+    0%, 100% { transform: translateY(0); box-shadow: 0 18px 60px rgba(212,119,59,0.35); }
+    50%      { transform: translateY(-6px); box-shadow: 0 28px 80px rgba(212,119,59,0.55); }
+  }
+  .scene-6 .cta-btn .arrow {
+    width: 24px; height: 24px;
+    border-top: 4px solid #1a1a1a;
+    border-right: 4px solid #1a1a1a;
+    transform: rotate(45deg);
+    margin-left: 8px;
+  }
+
+  .scene-6 .contact {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    max-width: 760px;
+  }
+  .scene-6 .contact .item {
+    border-left: 2px solid var(--accent);
+    padding-left: 20px;
+  }
+  .scene-6 .contact .item .label {
+    font-size: 20px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 10px;
+  }
+  .scene-6 .contact .item .value {
+    font-size: 30px;
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .scene-6 .frame > * {
+    opacity: 0;
+    transform: translateY(40px);
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  .scene-6 .frame > *:nth-child(1) { animation-name: s6a; }
+  .scene-6 .frame > *:nth-child(2) { animation-name: s6b; }
+  .scene-6 .frame > *:nth-child(3) { animation-name: s6c; }
+  .scene-6 .frame > *:nth-child(4) { animation-name: s6d; }
+
+  @keyframes s6a {
+    0%, 84%   { opacity: 0; transform: translateY(40px); }
+    88%       { opacity: 1; transform: translateY(0); }
+    100%      { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes s6b {
+    0%, 86%   { opacity: 0; transform: translateY(40px); }
+    91%       { opacity: 1; transform: translateY(0); }
+    100%      { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes s6c {
+    0%, 88%   { opacity: 0; transform: translateY(40px); }
+    93%       { opacity: 1; transform: translateY(0); }
+    100%      { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes s6d {
+    0%, 90%   { opacity: 0; transform: translateY(40px); }
+    95%       { opacity: 1; transform: translateY(0); }
+    100%      { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- Footer chrome ---------- */
+  .footer {
+    position: absolute;
+    bottom: 64px; left: 64px; right: 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(255,255,255,0.55);
+    font-size: 20px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    z-index: 40;
+  }
+  .footer .scene-label {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ---------- Background animated accent line ---------- */
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 80px 80px;
+    z-index: -2;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  }
+  .bg-accent {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    z-index: -1;
+    opacity: 0.4;
+    animation: bgAccent 8s ease-in-out infinite;
+  }
+  .bg-accent.top { top: 18%; }
+  .bg-accent.bottom { top: 78%; animation-delay: -4s; }
+  @keyframes bgAccent {
+    0%, 100% { transform: translateX(-15%); opacity: 0.25; }
+    50%      { transform: translateX(15%); opacity: 0.55; }
+  }
+</style>
+</head>
+<body>
+  <div class="stage" role="img" aria-label="TechBody EMS Studio - 30 segundos">
+
+    <div class="bg-grid"></div>
+    <div class="bg-accent top"></div>
+    <div class="bg-accent bottom"></div>
+
+    <!-- Top chrome -->
+    <div class="topbar">
+      <div class="brand-mark">
+        <span class="brand-dot"></span>
+        <span>TECHBODY &middot; EMS</span>
+      </div>
+      <div class="timecode"><span class="now" id="tc">00:00</span> / 00:30</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-bar"></div>
+      <span class="progress-tick t1"></span>
+      <span class="progress-tick t2"></span>
+      <span class="progress-tick t3"></span>
+      <span class="progress-tick t4"></span>
+      <span class="progress-tick t5"></span>
+    </div>
+
+    <!-- Footer chrome -->
+    <div class="footer">
+      <span class="scene-label" id="sceneLabel">CENA 01 &middot; GANCHO</span>
+      <span>STUDIO &middot; LISBOA</span>
+    </div>
+
+    <!-- ================== SCENE 1: HOOK ================== -->
+    <section class="scene scene-1">
+      <div class="orb"></div>
+      <div class="frame">
+        <div class="eyebrow">TechBody &middot; Treino inteligente</div>
+        <h1>25 minutos<br/>mudam <span class="accent">o treino.</span></h1>
+        <div class="divider"></div>
+        <p class="lede">Estimulacao muscular eletrica de corpo inteiro, em metade do tempo de um treino convencional.</p>
+        <div class="meta">Ciencia &middot; Tecnologia &middot; Resultados</div>
+      </div>
+    </section>
+
+    <!-- ================== SCENE 2: MUSCLE RECRUITMENT ================== -->
+    <section class="scene scene-2">
+      <div class="eyebrow">Ativacao muscular</div>
+      <h2>Recrutamento muscular comparado</h2>
+      <div class="stats">
+        <div class="stat stat-1">
+          <div class="stat-label">Convencional</div>
+          <div class="stat-value">30<span class="pct">%</span></div>
+          <div class="stat-unit">das fibras</div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="stat stat-2">
+          <div class="stat-label">TechBody EMS</div>
+          <div class="stat-value">90<span class="pct">%</span></div>
+          <div class="stat-unit">das fibras</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================== SCENE 3: SESSOES ================== -->
+    <section class="scene scene-3">
+      <div class="eyebrow">Tempo &middot; Frequencia</div>
+      <h2 class="row">
+        <span class="num-big">20&ndash;25</span>
+        <span class="unit">minutos por sessao</span>
+      </h2>
+      <div class="frequency">
+        <span class="pulse-dot"></span>
+        <span class="freq-num">1&ndash;3</span>
+        <span>sessoes por semana</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag accent">Curto</span>
+        <span class="tag">Eficaz</span>
+        <span class="tag">Consistente</span>
+        <span class="tag">Sem joelheiras</span>
+      </div>
+    </section>
+
+    <!-- ================== SCENE 4: ARTICULAR + CERTIFICADO ================== -->
+    <section class="scene scene-4">
+      <div class="eyebrow">Equipamento certificado</div>
+      <h2>Baixo impacto articular,<br/>alta precisao tecnica.</h2>
+      <p class="lede">Equipamento medico de origem alema, com certificacao europeia e parametros ajustados a cada perfil.</p>
+
+      <div class="joint" aria-hidden="true">
+        <svg viewBox="0 0 200 200" fill="none">
+          <defs>
+            <radialGradient id="jointG" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#d4773b" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#d4773b" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="90" fill="url(#jointG)"/>
+          <circle cx="100" cy="100" r="64" stroke="#d4773b" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.6"/>
+          <circle cx="100" cy="100" r="36" stroke="#fff" stroke-width="1.5" opacity="0.7"/>
+          <circle cx="100" cy="100" r="14" fill="#d4773b"/>
+          <line x1="100" y1="20" x2="100" y2="180" stroke="#ffffff" stroke-width="0.8" opacity="0.25"/>
+          <line x1="20" y1="100" x2="180" y2="100" stroke="#ffffff" stroke-width="0.8" opacity="0.25"/>
+        </svg>
+      </div>
+
+      <div class="badge-row">
+        <div class="badge">
+          <span class="check"></span>
+          <div class="label">Impacto</div>
+          <div class="body">Reducao significativa de carga nas articulacoes</div>
+        </div>
+        <div class="badge">
+          <span class="check"></span>
+          <div class="label">Certificacao</div>
+          <div class="body">Equipamento medico alemao, norma CE</div>
+        </div>
+        <div class="badge">
+          <span class="check"></span>
+          <div class="label">Precisao</div>
+          <div class="body">Parametros individuais por grupo muscular</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================== SCENE 5: FULL BODY COMPLETE ================== -->
+    <section class="scene scene-5">
+      <div class="eyebrow">Sessao completa</div>
+      <h2>Corpo inteiro,<br/>em 25 minutos.</h2>
+      <p class="lede">Ativacao simultanea de grandes grupos musculares com controlo postural assistido.</p>
+
+      <div class="body-grid">
+        <div class="muscle active"><div class="name">Peito</div><div class="meter"></div></div>
+        <div class="muscle"><div class="name">Costas</div><div class="meter"></div></div>
+        <div class="muscle active"><div class="name">Abdomen</div><div class="meter"></div></div>
+        <div class="muscle"><div class="name">Gluteos</div><div class="meter"></div></div>
+        <div class="muscle active"><div class="name">Quadriceps</div><div class="meter"></div></div>
+        <div class="muscle"><div class="name">Posteriores</div><div class="meter"></div></div>
+        <div class="muscle"><div class="name">Ombros</div><div class="meter"></div></div>
+        <div class="muscle active"><div class="name">Biceps</div><div class="meter"></div></div>
+        <div class="muscle"><div class="name">Triceps</div><div class="meter"></div></div>
+      </div>
+
+      <div class="summary">
+        <span class="check">&#10003;</span>
+        <span>Sessao concluida &middot; corpo inteiro trabalhado</span>
+      </div>
+    </section>
+
+    <!-- ================== SCENE 6: CTA ================== -->
+    <section class="scene scene-6">
+      <div class="frame">
+        <div class="eyebrow">Agendar agora</div>
+        <h2>Marca a tua<br/><span class="accent">sessao experimental.</span></h2>
+        <p class="lede">A primeira avaliacao e pessoalmente no studio, em Lisboa, com duracao de cerca de 45 minutos.</p>
+
+        <div class="cta-btn">
+          <span>Reservar sessao</span>
+          <span class="arrow"></span>
+        </div>
+
+        <div class="contact">
+          <div class="item">
+            <div class="label">Local</div>
+            <div class="value">Studio &middot; Lisboa</div>
+          </div>
+          <div class="item">
+            <div class="label">Contacto</div>
+            <div class="value">+351 210 000 000</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+<script>
+  // Timecode + scene label synced to the 30s master animation
+  (function () {
+    var tc = document.getElementById('tc');
+    var label = document.getElementById('sceneLabel');
+    var scenes = [
+      { start: 0,  end: 5,  text: 'CENA 01 \u00b7 GANCHO' },
+      { start: 5,  end: 10, text: 'CENA 02 \u00b7 ATIVACAO' },
+      { start: 10, end: 15, text: 'CENA 03 \u00b7 TEMPO' },
+      { start: 15, end: 20, text: 'CENA 04 \u00b7 EQUIPAMENTO' },
+      { start: 20, end: 25, text: 'CENA 05 \u00b7 CORPO INTEIRO' },
+      { start: 25, end: 30, text: 'CENA 06 \u00b7 AGENDAR' }
+    ];
+    var start = null;
+    function tick(ts) {
+      if (start === null) start = ts;
+      var elapsed = ((ts - start) % 30000) / 1000;
+      var s = Math.floor(elapsed);
+      tc.textContent = '00:' + (s < 10 ? '0' + s : s);
+      var cur = scenes[0];
+      for (var i = 0; i < scenes.length; i++) {
+        if (elapsed >= scenes[i].start && elapsed < scenes[i].end) { cur = scenes[i]; break; }
+      }
+      label.textContent = cur.text;
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+</script>
+</body>
+</html>

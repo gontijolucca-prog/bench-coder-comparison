@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<title>TechBody — A ciência por trás de 25 minutos</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;0,9..144,800;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;700&family=Manrope:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1a1a1a;
+  --accent: #d4773b;
+  --accent-bright: #f59e3f;
+  --accent-glow: rgba(212, 119, 59, 0.25);
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.55);
+  --text-dim: rgba(255, 255, 255, 0.28);
+  --line: rgba(255, 255, 255, 0.05);
+  --bar-track: rgba(255, 255, 255, 0.07);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #050505;
+  font-family: 'Manrope', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.stage {
+  width: 1080px;
+  height: 1080px;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  color: var(--text);
+}
+
+/* Layered background */
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 22% 12%, rgba(212, 119, 59, 0.18) 0%, transparent 42%),
+    radial-gradient(ellipse at 85% 88%, rgba(212, 119, 59, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.025) 0%, transparent 60%),
+    linear-gradient(180deg, #1d1d1d 0%, #131313 100%);
+  pointer-events: none;
+}
+
+.stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, black 18%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 18%, transparent 75%);
+}
+
+/* Corner brackets */
+.corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  opacity: 0;
+  animation: cornerFade 10s ease-out infinite;
+}
+.corner::before, .corner::after {
+  content: '';
+  position: absolute;
+  background: var(--accent);
+}
+.corner.tl { top: 56px; left: 56px; }
+.corner.tl::before { top: 0; left: 0; width: 20px; height: 1px; }
+.corner.tl::after { top: 0; left: 0; width: 1px; height: 20px; }
+.corner.tr { top: 56px; right: 56px; }
+.corner.tr::before { top: 0; right: 0; width: 20px; height: 1px; }
+.corner.tr::after { top: 0; right: 0; width: 1px; height: 20px; }
+.corner.bl { bottom: 56px; left: 56px; }
+.corner.bl::before { bottom: 0; left: 0; width: 20px; height: 1px; }
+.corner.bl::after { bottom: 0; left: 0; width: 1px; height: 20px; }
+.corner.br { bottom: 56px; right: 56px; }
+.corner.br::before { bottom: 0; right: 0; width: 20px; height: 1px; }
+.corner.br::after { bottom: 0; right: 0; width: 1px; height: 20px; }
+
+@keyframes cornerFade {
+  0%, 3% { opacity: 0; }
+  8%, 88% { opacity: 0.65; }
+  100% { opacity: 0; }
+}
+
+/* Eyebrow */
+.eyebrow {
+  position: absolute;
+  top: 88px;
+  left: 100px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: enter 10s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+.eyebrow::before {
+  content: '';
+  width: 36px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* Title */
+.title {
+  position: absolute;
+  top: 130px;
+  left: 100px;
+  right: 100px;
+  font-family: 'Fraunces', serif;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: enter 10s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation-delay: 0.08s;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 300;
+}
+
+/* Stat block */
+.stat-label {
+  position: absolute;
+  top: 296px;
+  left: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: enter 10s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation-delay: 0.18s;
+}
+.stat-label::before {
+  content: '›';
+  display: inline-block;
+  margin-right: 10px;
+  color: var(--accent);
+}
+
+.stat-number {
+  position: absolute;
+  top: 340px;
+  left: 80px;
+  right: 80px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  color: var(--text);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.num {
+  display: inline-block;
+  font-size: 280px;
+  opacity: 0;
+  transform: scale(0.5);
+  animation: countUp 10s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+  transform-origin: 50% 70%;
+}
+.num.first { animation-delay: 0.25s; }
+.num.second { animation-delay: 0.45s; }
+
+.dash {
+  display: inline-block;
+  font-size: 220px;
+  font-weight: 300;
+  color: var(--text-muted);
+  margin: 0 -0.04em;
+  opacity: 0;
+  animation: fadeOnly 10s ease-out infinite;
+  animation-delay: 0.55s;
+}
+
+.pct {
+  display: inline-block;
+  font-size: 110px;
+  font-weight: 300;
+  color: var(--accent);
+  margin-left: 14px;
+  align-self: flex-start;
+  margin-top: 32px;
+  opacity: 0;
+  transform: translateX(-30px);
+  animation: enterRight 10s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation-delay: 0.65s;
+}
+
+/* Bars */
+.bars {
+  position: absolute;
+  left: 100px;
+  right: 100px;
+  top: 728px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 230px 1fr 110px;
+  align-items: center;
+  gap: 24px;
+  opacity: 0;
+  transform: translateX(40px);
+  animation: enterRight 10s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+.bar-row:nth-child(1) { animation-delay: 0.78s; }
+.bar-row:nth-child(2) { animation-delay: 0.95s; }
+.bar-row:nth-child(3) { animation-delay: 1.12s; }
+
+.bar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.bar-track {
+  height: 3px;
+  background: var(--bar-track);
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+}
+
+.bar-row.ems .bar-fill {
+  animation: fillEMS 10s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation-delay: 0.78s;
+}
+.bar-row.conv .bar-fill {
+  animation: fillConv 10s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation-delay: 0.95s;
+}
+.bar-row.peak .bar-fill {
+  animation: fillPeak 10s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation-delay: 1.12s;
+}
+
+.bar-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.bar-row.conv .bar-value,
+.bar-row.peak .bar-value {
+  color: var(--text-muted);
+}
+
+@keyframes fillEMS {
+  0%, 30% { width: 0; }
+  42%, 85% { width: 88%; }
+  92%, 100% { width: 0; }
+}
+@keyframes fillConv {
+  0%, 30% { width: 0; }
+  42%, 85% { width: 36%; }
+  92%, 100% { width: 0; }
+}
+@keyframes fillPeak {
+  0%, 30% { width: 0; }
+  42%, 85% { width: 60%; }
+  92%, 100% { width: 0; }
+}
+
+/* Caption */
+.caption {
+  position: absolute;
+  left: 100px;
+  right: 100px;
+  top: 880px;
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--text);
+  max-width: 760px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: enter 10s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation-delay: 1.3s;
+}
+.caption strong {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+/* Bottom meta */
+.bottom {
+  position: absolute;
+  left: 100px;
+  right: 100px;
+  bottom: 88px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: enter 10s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation-delay: 1.4s;
+}
+.bottom .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.progress {
+  position: absolute;
+  left: 100px;
+  right: 100px;
+  bottom: 64px;
+  height: 1px;
+  background: var(--bar-track);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  animation: progressBar 10s linear infinite;
+}
+
+@keyframes enter {
+  0%, 5% { opacity: 0; transform: translateY(20px); }
+  12%, 88% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+@keyframes enterRight {
+  0%, 14% { opacity: 0; transform: translateX(40px); }
+  24%, 88% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; }
+}
+
+@keyframes fadeOnly {
+  0%, 14% { opacity: 0; }
+  24%, 88% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes countUp {
+  0%, 8% { opacity: 0; transform: scale(0.5); }
+  18%, 88% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.1); }
+}
+
+@keyframes progressBar {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <span class="corner tl"></span>
+  <span class="corner tr"></span>
+  <span class="corner bl"></span>
+  <span class="corner br"></span>
+
+  <div class="eyebrow">EMS · Ciência Aplicada</div>
+
+  <h1 class="title">A ciência por trás<br>de <em>vinte e cinco minutos</em></h1>
+
+  <div class="stat-label">Recrutamento de fibras musculares</div>
+
+  <div class="stat-number">
+    <span class="num first">85</span><span class="dash">–</span><span class="num second">90</span><span class="pct">%</span>
+  </div>
+
+  <div class="bars">
+    <div class="bar-row ems">
+      <div class="bar-label">EMS · corpo inteiro</div>
+      <div class="bar-track"><div class="bar-fill"></div></div>
+      <div class="bar-value">85–90%</div>
+    </div>
+    <div class="bar-row conv">
+      <div class="bar-label">Treino convencional</div>
+      <div class="bar-track"><div class="bar-fill"></div></div>
+      <div class="bar-value">30–40%</div>
+    </div>
+    <div class="bar-row peak">
+      <div class="bar-label">Treino de pico</div>
+      <div class="bar-track"><div class="bar-fill"></div></div>
+      <div class="bar-value">~60%</div>
+    </div>
+  </div>
+
+  <p class="caption">EMS recruta até <strong>85–90% das fibras musculares</strong> numa única sessão de 20–25 minutos.</p>
+
+  <div class="bottom">
+    <span><span class="dot"></span>TECHBODY · ESTUDO CIENTÍFICO</span>
+    <span>REC 001 / 2026</span>
+  </div>
+
+  <div class="progress"><div class="progress-fill"></div></div>
+</div>
+</body>
+</html>
