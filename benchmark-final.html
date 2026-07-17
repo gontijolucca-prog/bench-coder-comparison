@@ -194,6 +194,104 @@
   }
   .prompt-item p { color: #888; }
 
+
+  /* ============================================
+     VIDEO CARDS (Hyperframes / Remotion)
+     ============================================ */
+  .video-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    background: #000;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+  .video-wrap video {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 480px;
+    background: #000;
+    border-radius: 4px;
+    outline: none;
+  }
+  .card .card-actions {
+    padding: 8px 12px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-top: 1px solid #222;
+    flex-shrink: 0;
+  }
+  .download-link {
+    color: #999;
+    font-size: 11px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .download-link:hover {
+    color: #d4773b;
+    background: rgba(212, 119, 59, 0.08);
+  }
+  .download-link svg { display: block; }
+
+  /* ============================================
+     VIDEO LIGHTBOX
+     ============================================ */
+  .video-lightbox {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0a;
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+  }
+  .video-lightbox.open { display: flex; }
+  .video-lightbox-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid #222;
+    background: #0a0a0a;
+  }
+  .video-lightbox-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .video-lightbox-body video {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    background: #000;
+    border-radius: 6px;
+    border: 1px solid #222;
+    outline: none;
+  }
+  .video-lightbox-hint {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
   /* ============================================
      LIGHTBOX / MODAL
      ============================================ */
@@ -369,7 +467,6 @@
 
 <div class="tabs" role="tablist">
   <button class="tab active" data-tab="carousel">Carrossel</button>
-  <button class="tab" data-tab="reel">Reel</button>
   <button class="tab" data-tab="hyperframes">Hyperframes</button>
   <button class="tab" data-tab="remotion">Remotion</button>
 </div>
@@ -456,251 +553,204 @@
   </div>
 </section>
 
-<!-- REEL: 1080x1920 portrait -->
-<section class="tab-panel" id="panel-reel">
-  <div class="grid">
-    <div class="card" data-src="bench-content/pi/reel.html" data-cli="Pi" data-type="Reel">
-      <div class="card-header">
-        <span class="cli-name">Pi</span>
-        <div class="header-actions">
-          <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
-        </div>
-      </div>
-      <div class="frame-wrap size-1920">
-        <iframe src="bench-content/pi/reel.html" loading="lazy" scrolling="no"></iframe>
-      </div>
-    </div>
-    <div class="card" data-src="bench-content/claude/reel.html" data-cli="Claude Code" data-type="Reel">
-      <div class="card-header">
-        <span class="cli-name">Claude Code</span>
-        <div class="header-actions">
-          <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
-        </div>
-      </div>
-      <div class="frame-wrap size-1920">
-        <iframe src="bench-content/claude/reel.html" loading="lazy" scrolling="no"></iframe>
-      </div>
-    </div>
-    <div class="card" data-src="bench-content/codex/reel.html" data-cli="Codex" data-type="Reel">
-      <div class="card-header">
-        <span class="cli-name">Codex</span>
-        <div class="header-actions">
-          <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
-        </div>
-      </div>
-      <div class="frame-wrap size-1920">
-        <iframe src="bench-content/codex/reel.html" loading="lazy" scrolling="no"></iframe>
-      </div>
-    </div>
-    <div class="card" data-src="bench-content/opencode/reel.html" data-cli="OpenCode" data-type="Reel">
-      <div class="card-header">
-        <span class="cli-name">OpenCode</span>
-        <div class="header-actions">
-          <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
-        </div>
-      </div>
-      <div class="frame-wrap size-1920">
-        <iframe src="bench-content/opencode/reel.html" loading="lazy" scrolling="no"></iframe>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HYPERFRAMES: 1080x1080 square -->
+<!-- HYPERFRAMES: rendered MP4 videos -->
 <section class="tab-panel" id="panel-hyperframes">
   <div class="grid">
-    <div class="card" data-src="bench-content/pi/animations/hyperframes.html" data-cli="Pi" data-type="Hyperframes">
+    <div class="card video-card" data-video="bench-content/pi/skills/hyperframes.mp4" data-cli="Pi" data-type="Hyperframes">
       <div class="card-header">
         <span class="cli-name">Pi</span>
         <div class="header-actions">
           <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
         </div>
       </div>
-      <div class="frame-wrap size-1080">
-        <iframe src="bench-content/pi/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
+      <div class="video-wrap">
+        <video src="bench-content/pi/skills/hyperframes.mp4" autoplay loop muted playsinline controls preload="metadata"></video>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" data-action="view-video" title="Ver em ecrã inteiro">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Ecrã inteiro
+        </button>
+        <a class="download-link" href="bench-content/pi/skills/hyperframes.mp4" download title="Descarregar MP4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download MP4
+        </a>
       </div>
     </div>
-    <div class="card" data-src="bench-content/claude/animations/hyperframes.html" data-cli="Claude Code" data-type="Hyperframes">
+    <div class="card video-card" data-video="bench-content/claude/skills/techbody-ems/hyperframes.mp4" data-cli="Claude Code" data-type="Hyperframes">
       <div class="card-header">
         <span class="cli-name">Claude Code</span>
         <div class="header-actions">
           <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
         </div>
       </div>
-      <div class="frame-wrap size-1080">
-        <iframe src="bench-content/claude/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
+      <div class="video-wrap">
+        <video src="bench-content/claude/skills/techbody-ems/hyperframes.mp4" autoplay loop muted playsinline controls preload="metadata"></video>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" data-action="view-video" title="Ver em ecrã inteiro">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Ecrã inteiro
+        </button>
+        <a class="download-link" href="bench-content/claude/skills/techbody-ems/hyperframes.mp4" download title="Descarregar MP4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download MP4
+        </a>
       </div>
     </div>
-    <div class="card" data-src="bench-content/codex/animations/hyperframes.html" data-cli="Codex" data-type="Hyperframes">
+    <div class="card video-card" data-video="bench-content/codex/skills/hyperframes.mp4" data-cli="Codex" data-type="Hyperframes">
       <div class="card-header">
         <span class="cli-name">Codex</span>
         <div class="header-actions">
           <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
         </div>
       </div>
-      <div class="frame-wrap size-1080">
-        <iframe src="bench-content/codex/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
+      <div class="video-wrap">
+        <video src="bench-content/codex/skills/hyperframes.mp4" autoplay loop muted playsinline controls preload="metadata"></video>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" data-action="view-video" title="Ver em ecrã inteiro">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Ecrã inteiro
+        </button>
+        <a class="download-link" href="bench-content/codex/skills/hyperframes.mp4" download title="Descarregar MP4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download MP4
+        </a>
       </div>
     </div>
-    <div class="card" data-src="bench-content/opencode/animations/hyperframes.html" data-cli="OpenCode" data-type="Hyperframes">
+    <div class="card video-card" data-video="bench-content/opencode/skills/peca1-hyperframes/techbody-ems.mp4" data-cli="OpenCode" data-type="Hyperframes">
       <div class="card-header">
         <span class="cli-name">OpenCode</span>
         <div class="header-actions">
           <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
         </div>
       </div>
-      <div class="frame-wrap size-1080">
-        <iframe src="bench-content/opencode/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
+      <div class="video-wrap">
+        <video src="bench-content/opencode/skills/peca1-hyperframes/techbody-ems.mp4" autoplay loop muted playsinline controls preload="metadata"></video>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" data-action="view-video" title="Ver em ecrã inteiro">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Ecrã inteiro
+        </button>
+        <a class="download-link" href="bench-content/opencode/skills/peca1-hyperframes/techbody-ems.mp4" download title="Descarregar MP4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download MP4
+        </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- REMOTION: 1080x1920 portrait -->
+<!-- REMOTION: rendered MP4 videos -->
 <section class="tab-panel" id="panel-remotion">
   <div class="grid">
-    <div class="card" data-src="bench-content/pi/animations/remotion.html" data-cli="Pi" data-type="Remotion">
+    <div class="card video-card" data-video="bench-content/pi/skills/remotion.mp4" data-cli="Pi" data-type="Remotion">
       <div class="card-header">
         <span class="cli-name">Pi</span>
         <div class="header-actions">
           <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
         </div>
       </div>
-      <div class="frame-wrap size-1920">
-        <iframe src="bench-content/pi/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
+      <div class="video-wrap">
+        <video src="bench-content/pi/skills/remotion.mp4" autoplay loop muted playsinline controls preload="metadata"></video>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" data-action="view-video" title="Ver em ecrã inteiro">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Ecrã inteiro
+        </button>
+        <a class="download-link" href="bench-content/pi/skills/remotion.mp4" download title="Descarregar MP4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download MP4
+        </a>
       </div>
     </div>
-    <div class="card" data-src="bench-content/claude/animations/remotion.html" data-cli="Claude Code" data-type="Remotion">
+    <div class="card video-card" data-video="bench-content/claude/skills/techbody-ems/techbody-reel/techbody-ems-1080.mp4" data-cli="Claude Code" data-type="Remotion">
       <div class="card-header">
         <span class="cli-name">Claude Code</span>
         <div class="header-actions">
           <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
         </div>
       </div>
-      <div class="frame-wrap size-1920">
-        <iframe src="bench-content/claude/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
+      <div class="video-wrap">
+        <video src="bench-content/claude/skills/techbody-ems/techbody-reel/techbody-ems-1080.mp4" autoplay loop muted playsinline controls preload="metadata"></video>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" data-action="view-video" title="Ver em ecrã inteiro">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Ecrã inteiro
+        </button>
+        <a class="download-link" href="bench-content/claude/skills/techbody-ems/techbody-reel/techbody-ems-1080.mp4" download title="Descarregar MP4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download MP4
+        </a>
       </div>
     </div>
-    <div class="card" data-src="bench-content/codex/animations/remotion.html" data-cli="Codex" data-type="Remotion">
+    <div class="card video-card" data-video="bench-content/codex/skills/remotion/out/techbody-ems.mp4" data-cli="Codex" data-type="Remotion">
       <div class="card-header">
         <span class="cli-name">Codex</span>
         <div class="header-actions">
           <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
         </div>
       </div>
-      <div class="frame-wrap size-1920">
-        <iframe src="bench-content/codex/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
+      <div class="video-wrap">
+        <video src="bench-content/codex/skills/remotion/out/techbody-ems.mp4" autoplay loop muted playsinline controls preload="metadata"></video>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" data-action="view-video" title="Ver em ecrã inteiro">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Ecrã inteiro
+        </button>
+        <a class="download-link" href="bench-content/codex/skills/remotion/out/techbody-ems.mp4" download title="Descarregar MP4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download MP4
+        </a>
       </div>
     </div>
-    <div class="card" data-src="bench-content/opencode/animations/remotion.html" data-cli="OpenCode" data-type="Remotion">
+    <div class="card video-card" data-video="bench-content/opencode/skills/peca2-remotion/out/techbody-ems.mp4" data-cli="OpenCode" data-type="Remotion">
       <div class="card-header">
         <span class="cli-name">OpenCode</span>
         <div class="header-actions">
           <span class="badge">MiniMax-M3</span>
-          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            New tab
-          </button>
-          <button class="icon-btn" data-action="view" title="Ver em grande">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            Ver em grande
-          </button>
         </div>
       </div>
-      <div class="frame-wrap size-1920">
-        <iframe src="bench-content/opencode/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
+      <div class="video-wrap">
+        <video src="bench-content/opencode/skills/peca2-remotion/out/techbody-ems.mp4" autoplay loop muted playsinline controls preload="metadata"></video>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" data-action="view-video" title="Ver em ecrã inteiro">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Ecrã inteiro
+        </button>
+        <a class="download-link" href="bench-content/opencode/skills/peca2-remotion/out/techbody-ems.mp4" download title="Descarregar MP4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download MP4
+        </a>
       </div>
     </div>
   </div>
 </section>
+
+<!-- VIDEO LIGHTBOX -->
+<div class="video-lightbox" id="video-lightbox" role="dialog" aria-modal="true" aria-labelledby="video-lightbox-title">
+  <div class="video-lightbox-header">
+    <div class="lightbox-title" id="video-lightbox-title">
+      <span class="cli-name" id="vlb-cli">—</span>
+      <span class="sep">·</span>
+      <span class="type" id="vlb-type">—</span>
+      <span class="badge">MiniMax-M3</span>
+    </div>
+    <button class="lightbox-close" id="vlb-close" aria-label="Fechar (ESC)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="video-lightbox-body">
+    <video id="vlb-video" controls autoplay></video>
+  </div>
+  <div class="video-lightbox-hint">ESC ou clica fora para fechar</div>
+</div>
 
 <!-- LIGHTBOX / MODAL -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-title">
@@ -746,6 +796,19 @@
         const target = tab.dataset.tab;
         tabs.forEach(t => t.classList.toggle('active', t === tab));
         panels.forEach(p => p.classList.toggle('active', p.id === 'panel-' + target));
+        // Pause videos in panels that just became inactive, resume videos in the new one
+        panels.forEach(p => {
+          if (!p.classList.contains('active')) {
+            p.querySelectorAll('video').forEach(v => v.pause());
+          }
+        });
+        const activePanel = document.getElementById('panel-' + target);
+        if (activePanel) {
+          activePanel.querySelectorAll('video').forEach(v => {
+            const p = v.play();
+            if (p && typeof p.catch === 'function') p.catch(() => {});
+          });
+        }
         // Force reload of iframes in the newly activated panel so animations restart
         document.querySelectorAll('#panel-' + target + ' iframe').forEach(f => {
           const src = f.getAttribute('src');
@@ -842,10 +905,66 @@
       if (e.target === lbBody) closeLightbox();
     });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+      if (e.key === 'Escape') {
+        if (lightbox.classList.contains('open')) closeLightbox();
+        if (videoLightbox.classList.contains('open')) closeVideoLightbox();
+      }
     });
     window.addEventListener('resize', () => {
       if (lightbox.classList.contains('open')) applyLightboxScale();
+    });
+
+    // ============================================
+    // VIDEO LIGHTBOX
+    // ============================================
+    const videoLightbox = document.getElementById('video-lightbox');
+    const vlbBody = videoLightbox.querySelector('.video-lightbox-body');
+    const vlbVideo = document.getElementById('vlb-video');
+    const vlbCli = document.getElementById('vlb-cli');
+    const vlbType = document.getElementById('vlb-type');
+    const vlbClose = document.getElementById('vlb-close');
+
+    function openVideoLightbox(src, cli, type) {
+      vlbCli.textContent = cli || '—';
+      vlbType.textContent = type || '—';
+      vlbVideo.src = src + '#t=0.001';
+      videoLightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      const playPromise = vlbVideo.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(() => {});
+      }
+    }
+
+    function closeVideoLightbox() {
+      videoLightbox.classList.remove('open');
+      document.body.style.overflow = '';
+      try { vlbVideo.pause(); } catch (e) {}
+      vlbVideo.removeAttribute('src');
+      vlbVideo.load();
+    }
+
+    vlbClose.addEventListener('click', closeVideoLightbox);
+    vlbBody.addEventListener('click', (e) => {
+      if (e.target === vlbBody) closeVideoLightbox();
+    });
+
+    // Wire up video-card clicks + view-video buttons
+    document.querySelectorAll('.card.video-card').forEach(card => {
+      const src = card.dataset.video;
+      const cli = card.dataset.cli;
+      const type = card.dataset.type;
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('[data-action]') || e.target.closest('a')) return;
+        if (!src) return;
+        openVideoLightbox(src, cli, type);
+      });
+      card.querySelectorAll('[data-action="view-video"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openVideoLightbox(src, cli, type);
+        });
+      });
     });
   })();
 </script>

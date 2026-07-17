@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <title>TechBody EMS — Recrutamento Muscular</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --bg: #1a1a1a;
+        --accent: #d4773b;
+        --fg: #ffffff;
+        --muted: #8a8a8a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+        font-feature-settings: "tnum" 1, "ss01" 1;
+      }
+      code,
+      pre,
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ---------- root scene ---------- */
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background:
+          radial-gradient(1200px 600px at 20% -10%, rgba(212, 119, 59, 0.10), transparent 60%),
+          radial-gradient(900px 600px at 110% 110%, rgba(212, 119, 59, 0.08), transparent 55%),
+          var(--bg);
+      }
+
+      /* grid background */
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 60px 60px;
+        mask-image: radial-gradient(closest-side at 50% 50%, #000 60%, transparent 100%);
+      }
+
+      /* ---------- header ---------- */
+      .header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 48px 64px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 5;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        font-size: 22px;
+      }
+      .logo-mark {
+        width: 28px;
+        height: 28px;
+        background: var(--accent);
+        border-radius: 4px;
+        box-shadow: 0 0 0 2px rgba(212, 119, 59, 0.18);
+      }
+      .section-label {
+        font-size: 14px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      /* ---------- hero number ---------- */
+      .hero-wrap {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 3;
+        pointer-events: none;
+      }
+      .hero-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+      }
+      .hero-eyebrow {
+        font-size: 18px;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .hero-number {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-variant-numeric: tabular-nums;
+        font-size: 320px;
+        line-height: 0.92;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: var(--fg);
+        text-shadow: 0 6px 60px rgba(212, 119, 59, 0.18);
+        font-feature-settings: "tnum" 1;
+      }
+      .hero-number .accent {
+        color: var(--accent);
+      }
+      .hero-caption {
+        font-size: 28px;
+        font-weight: 500;
+        color: var(--fg);
+        opacity: 0.92;
+        max-width: 760px;
+        text-align: center;
+        line-height: 1.35;
+      }
+      .hero-sub {
+        font-size: 16px;
+        color: var(--muted);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+
+      /* ---------- comparison bars ---------- */
+      .bars {
+        position: absolute;
+        left: 64px;
+        right: 64px;
+        bottom: 200px;
+        z-index: 4;
+      }
+      .bars-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .bar-row {
+        display: grid;
+        grid-template-columns: 200px 1fr 140px;
+        align-items: center;
+        gap: 24px;
+      }
+      .bar-label {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--fg);
+      }
+      .bar-track {
+        position: relative;
+        height: 14px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .bar-fill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 0;
+        border-radius: 999px;
+        background: var(--muted);
+      }
+      .bar-fill.ems {
+        background: linear-gradient(90deg, var(--accent), #f59e62);
+        box-shadow: 0 0 24px rgba(212, 119, 59, 0.45);
+      }
+      .bar-value {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-variant-numeric: tabular-nums;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--fg);
+        text-align: right;
+      }
+      .bar-value.ems {
+        color: var(--accent);
+      }
+
+      /* ---------- claim line ---------- */
+      .claim {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 130px;
+        text-align: center;
+        font-size: 22px;
+        color: var(--fg);
+        opacity: 0.86;
+        z-index: 4;
+      }
+      .claim strong {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      /* ---------- footer / progress ---------- */
+      .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 28px 64px 36px;
+        z-index: 5;
+      }
+      .progress-track {
+        height: 3px;
+        background: rgba(255, 255, 255, 0.10);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 0;
+        background: var(--accent);
+        box-shadow: 0 0 12px rgba(212, 119, 59, 0.6);
+      }
+      .footer-meta {
+        margin-top: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: var(--muted);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+      .footer-meta .dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+
+      /* corner accents */
+      .corner {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        border-color: var(--accent);
+        opacity: 0.7;
+      }
+      .corner.tl { top: 22px; left: 22px; border-top: 2px solid; border-left: 2px solid; }
+      .corner.tr { top: 22px; right: 22px; border-top: 2px solid; border-right: 2px solid; }
+      .corner.bl { bottom: 22px; left: 22px; border-bottom: 2px solid; border-left: 2px solid; }
+      .corner.br { bottom: 22px; right: 22px; border-bottom: 2px solid; border-right: 2px solid; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="10"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div class="grid"></div>
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
+
+      <!-- HEADER -->
+      <div class="clip header" id="el-header" data-start="0" data-duration="10" data-track-index="1">
+        <div class="logo">
+          <span class="logo-mark"></span>
+          <span>TECHBODY</span>
+        </div>
+        <div class="section-label">Estudos · EMS</div>
+      </div>
+
+      <!-- HERO -->
+      <div class="clip hero-wrap" id="el-hero" data-start="0" data-duration="3.2" data-track-index="2">
+        <div class="hero-inner" id="hero-inner">
+          <div class="hero-eyebrow" id="hero-eyebrow">Recrutamento Muscular</div>
+          <div class="hero-number mono" id="hero-number">85<span class="accent">–</span>90<span class="accent">%</span></div>
+          <div class="hero-caption" id="hero-caption">das fibras musculares são activadas numa sessão EMS</div>
+          <div class="hero-sub" id="hero-sub">Estudos · electroestimulação integral</div>
+        </div>
+      </div>
+
+      <!-- BARS -->
+      <div class="clip bars" id="el-bars" data-start="3.4" data-duration="2.8" data-track-index="2">
+        <div class="bars-inner" id="bars-inner">
+          <div class="bar-row" id="row-trad">
+            <div class="bar-label">Treino tradicional</div>
+            <div class="bar-track"><div class="bar-fill trad" id="bar-trad-fill"></div></div>
+            <div class="bar-value" id="bar-trad-val">30–40%</div>
+          </div>
+          <div class="bar-row" id="row-ems">
+            <div class="bar-label">Treino com EMS</div>
+            <div class="bar-track"><div class="bar-fill ems" id="bar-ems-fill"></div></div>
+            <div class="bar-value ems" id="bar-ems-val">85–90%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLAIM -->
+      <div class="clip claim" id="el-claim" data-start="6.4" data-duration="3.6" data-track-index="2">
+        <!-- moved to track 2 below — track-index changed -->
+        <strong>EMS</strong> recruta até <strong>85–90%</strong> das fibras musculares em <strong>20–25 min</strong>.
+      </div>
+
+      <!-- FOOTER -->
+      <div class="clip footer" id="el-footer" data-start="0" data-duration="10" data-track-index="3">
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="footer-meta">
+          <span><span class="dot"></span>techbody.pt</span>
+          <span id="timecode">00:00 / 00:10</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ---- entrance: hero ----
+      tl.from("#hero-eyebrow", { opacity: 0, y: 18, duration: 0.55, ease: "power3.out" }, 0.20);
+      tl.from("#hero-number",   { opacity: 0, scale: 0.78, duration: 1.10, ease: "expo.out" }, 0.35);
+      tl.from("#hero-caption",  { opacity: 0, y: 14, duration: 0.55, ease: "power2.out" }, 1.10);
+      tl.from("#hero-sub",      { opacity: 0, duration: 0.40, ease: "power1.out" }, 1.45);
+
+      // ---- exit: hero inner (out at 3.2s) ----
+      tl.to("#hero-inner", { opacity: 0, y: -16, duration: 0.40, ease: "power2.in" }, 2.95);
+      tl.set("#hero-inner", { opacity: 0 }, 3.40);
+
+      // ---- exit: bars inner (out at 6.4s) ----
+      tl.to("#bars-inner", { opacity: 0, y: -16, duration: 0.40, ease: "power2.in" }, 6.10);
+      tl.set("#bars-inner", { opacity: 0 }, 6.40);
+
+      // ---- entrance: header ----
+      tl.from("#el-header",     { opacity: 0, y: -16, duration: 0.55, ease: "power3.out" }, 0.05);
+
+      // ---- entrance: bars (3.4s) ----
+      tl.from("#row-trad", { opacity: 0, x: -22, duration: 0.55, ease: "power3.out" }, 3.40);
+      tl.from("#row-ems",  { opacity: 0, x: -22, duration: 0.55, ease: "power3.out" }, 3.65);
+      tl.to("#bar-trad-fill", { width: "35%", duration: 1.10, ease: "power3.out" }, 3.85);
+      tl.to("#bar-ems-fill",  { width: "88%", duration: 1.30, ease: "power3.out" }, 4.10);
+      tl.from("#bar-trad-val", { opacity: 0, x: 12, duration: 0.30, ease: "power2.out" }, 4.20);
+      tl.from("#bar-ems-val",  { opacity: 0, x: 12, duration: 0.30, ease: "power2.out" }, 4.45);
+
+      // ---- entrance: claim (6.4s) ----
+      tl.from("#el-claim", { opacity: 0, y: 18, duration: 0.65, ease: "power3.out" }, 6.40);
+
+      // ---- progress bar fill over full 10s ----
+      tl.to("#progress-fill", { width: "100%", duration: 10, ease: "none" }, 0);
+
+      // ---- timecode counter (deterministic, frame-stepped via tween) ----
+      tl.to("#timecode", {
+        duration: 10,
+        ease: "none",
+        onUpdate: function () {
+          const t = this.time();
+          const total = 10;
+          const cur = Math.min(total, Math.max(0, t));
+          const pad = (n) => String(Math.floor(n)).padStart(2, "0");
+          this.targets()[0].textContent = `00:${pad(cur)} / 00:${pad(total)}`;
+        },
+      }, 0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
