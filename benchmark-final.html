@@ -75,10 +75,13 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    cursor: zoom-in;
+    transition: border-color 0.15s, transform 0.15s;
   }
+  .card:hover { border-color: #333; }
 
   .card-header {
-    padding: 12px 14px;
+    padding: 10px 12px;
     border-bottom: 1px solid #222;
     display: flex;
     align-items: center;
@@ -103,6 +106,33 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .icon-btn {
+    background: transparent;
+    border: 1px solid #2a2a2a;
+    color: #aaa;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1;
+  }
+  .icon-btn:hover {
+    color: #d4773b;
+    border-color: #d4773b;
+    background: rgba(212, 119, 59, 0.08);
+  }
+  .icon-btn svg { display: block; }
 
   .frame-wrap {
     position: relative;
@@ -111,6 +141,7 @@
     overflow: hidden;
     border-radius: 4px;
     background: #000;
+    pointer-events: none;
   }
   /* 1080x1080 square @ 0.25 = 270x270 */
   .frame-wrap.size-1080 { height: 270px; }
@@ -163,6 +194,158 @@
   }
   .prompt-item p { color: #888; }
 
+  /* ============================================
+     LIGHTBOX / MODAL
+     ============================================ */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0a;
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+  }
+  .lightbox.open { display: flex; }
+
+  .lightbox-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid #222;
+    background: #0a0a0a;
+  }
+  .lightbox-title {
+    font-size: 14px;
+    color: #f0f0f0;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lightbox-title .badge {
+    background: rgba(212, 119, 59, 0.12);
+    color: #d4773b;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(212, 119, 59, 0.3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .lightbox-title .sep {
+    color: #444;
+    font-weight: 400;
+  }
+  .lightbox-title .type {
+    color: #999;
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .lightbox-close {
+    background: transparent;
+    border: 1px solid #2a2a2a;
+    color: #aaa;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .lightbox-close:hover {
+    color: #fff;
+    border-color: #d4773b;
+    background: rgba(212, 119, 59, 0.1);
+  }
+  .lightbox-close svg { width: 18px; height: 18px; }
+
+  .lightbox-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px 24px;
+  }
+  /* Fit-to-viewport modes (square or portrait) center vertically */
+  .lightbox-body.fit-viewport {
+    align-items: center;
+  }
+
+  .lightbox-frame {
+    background: #000;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #222;
+    flex-shrink: 0;
+    width: 1080px;
+    max-width: 100%;
+  }
+  .lightbox-frame iframe {
+    width: 1080px;
+    height: 1080px;
+    border: 0;
+    display: block;
+  }
+  /* Reel/Remotion: 1080x1920 — fit by height to viewport */
+  .lightbox-frame.size-1920 {
+    width: auto;
+    height: calc(100vh - 32px - 32px - 65px);
+    aspect-ratio: 1080 / 1920;
+    max-width: calc((100vh - 32px - 32px - 65px) * (1080 / 1920));
+  }
+  .lightbox-frame.size-1920 iframe {
+    width: 1080px;
+    height: 1920px;
+    transform: scale(var(--lb-scale, 1));
+    transform-origin: top left;
+  }
+  /* Square hyperframes: fit to viewport */
+  .lightbox-frame.size-1080 {
+    width: auto;
+    height: calc(100vh - 32px - 32px - 65px);
+    aspect-ratio: 1 / 1;
+    max-width: calc(100vh - 32px - 32px - 65px);
+  }
+  .lightbox-frame.size-1080 iframe {
+    width: 1080px;
+    height: 1080px;
+    transform: scale(var(--lb-scale, 1));
+    transform-origin: top left;
+  }
+  /* Carousel: tall, scrollable — show at 1080 wide, height auto */
+  .lightbox-frame.size-auto {
+    width: 1080px;
+    height: 13500px;
+    max-width: 100%;
+  }
+  .lightbox-frame.size-auto iframe {
+    width: 1080px;
+    height: 13500px;
+    transform: none;
+  }
+
+  .lightbox-hint {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
   @media (max-width: 1100px) {
     .grid { grid-template-columns: repeat(2, 1fr); }
   }
@@ -171,6 +354,9 @@
     .prompt-list { grid-template-columns: 1fr; }
     body { padding: 20px 14px 48px; }
     h1 { font-size: 22px; }
+    .lightbox-body { padding: 16px; }
+    .lightbox-frame.size-auto { width: 100%; height: auto; aspect-ratio: 1080 / 13500; }
+    .lightbox-frame.size-auto iframe { width: 100%; height: 100%; }
   }
 </style>
 </head>
@@ -191,26 +377,78 @@
 <!-- CARROSSEL: 1080x13500 (10 slides stacked) scaled to 270x3375px -->
 <section class="tab-panel active" id="panel-carousel">
   <div class="grid">
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Pi</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/pi/carousel.html" data-cli="Pi" data-type="Carrossel">
+      <div class="card-header">
+        <span class="cli-name">Pi</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-auto">
         <iframe src="bench-content/pi/carousel.html" loading="eager" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Claude Code</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/claude/carousel.html" data-cli="Claude Code" data-type="Carrossel">
+      <div class="card-header">
+        <span class="cli-name">Claude Code</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-auto">
         <iframe src="bench-content/claude/carousel.html" loading="eager" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Codex</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/codex/carousel.html" data-cli="Codex" data-type="Carrossel">
+      <div class="card-header">
+        <span class="cli-name">Codex</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-auto">
         <iframe src="bench-content/codex/carousel.html" loading="eager" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">OpenCode</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/opencode/carousel.html" data-cli="OpenCode" data-type="Carrossel">
+      <div class="card-header">
+        <span class="cli-name">OpenCode</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-auto">
         <iframe src="bench-content/opencode/carousel.html" loading="eager" scrolling="no"></iframe>
       </div>
@@ -221,26 +459,78 @@
 <!-- REEL: 1080x1920 portrait -->
 <section class="tab-panel" id="panel-reel">
   <div class="grid">
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Pi</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/pi/reel.html" data-cli="Pi" data-type="Reel">
+      <div class="card-header">
+        <span class="cli-name">Pi</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1920">
         <iframe src="bench-content/pi/reel.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Claude Code</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/claude/reel.html" data-cli="Claude Code" data-type="Reel">
+      <div class="card-header">
+        <span class="cli-name">Claude Code</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1920">
         <iframe src="bench-content/claude/reel.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Codex</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/codex/reel.html" data-cli="Codex" data-type="Reel">
+      <div class="card-header">
+        <span class="cli-name">Codex</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1920">
         <iframe src="bench-content/codex/reel.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">OpenCode</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/opencode/reel.html" data-cli="OpenCode" data-type="Reel">
+      <div class="card-header">
+        <span class="cli-name">OpenCode</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1920">
         <iframe src="bench-content/opencode/reel.html" loading="lazy" scrolling="no"></iframe>
       </div>
@@ -251,26 +541,78 @@
 <!-- HYPERFRAMES: 1080x1080 square -->
 <section class="tab-panel" id="panel-hyperframes">
   <div class="grid">
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Pi</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/pi/animations/hyperframes.html" data-cli="Pi" data-type="Hyperframes">
+      <div class="card-header">
+        <span class="cli-name">Pi</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1080">
         <iframe src="bench-content/pi/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Claude Code</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/claude/animations/hyperframes.html" data-cli="Claude Code" data-type="Hyperframes">
+      <div class="card-header">
+        <span class="cli-name">Claude Code</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1080">
         <iframe src="bench-content/claude/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Codex</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/codex/animations/hyperframes.html" data-cli="Codex" data-type="Hyperframes">
+      <div class="card-header">
+        <span class="cli-name">Codex</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1080">
         <iframe src="bench-content/codex/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">OpenCode</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/opencode/animations/hyperframes.html" data-cli="OpenCode" data-type="Hyperframes">
+      <div class="card-header">
+        <span class="cli-name">OpenCode</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1080">
         <iframe src="bench-content/opencode/animations/hyperframes.html" loading="lazy" scrolling="no"></iframe>
       </div>
@@ -281,32 +623,105 @@
 <!-- REMOTION: 1080x1920 portrait -->
 <section class="tab-panel" id="panel-remotion">
   <div class="grid">
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Pi</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/pi/animations/remotion.html" data-cli="Pi" data-type="Remotion">
+      <div class="card-header">
+        <span class="cli-name">Pi</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1920">
         <iframe src="bench-content/pi/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Claude Code</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/claude/animations/remotion.html" data-cli="Claude Code" data-type="Remotion">
+      <div class="card-header">
+        <span class="cli-name">Claude Code</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1920">
         <iframe src="bench-content/claude/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">Codex</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/codex/animations/remotion.html" data-cli="Codex" data-type="Remotion">
+      <div class="card-header">
+        <span class="cli-name">Codex</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1920">
         <iframe src="bench-content/codex/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="cli-name">OpenCode</span><span class="badge">MiniMax-M3</span></div>
+    <div class="card" data-src="bench-content/opencode/animations/remotion.html" data-cli="OpenCode" data-type="Remotion">
+      <div class="card-header">
+        <span class="cli-name">OpenCode</span>
+        <div class="header-actions">
+          <span class="badge">MiniMax-M3</span>
+          <button class="icon-btn" data-action="newtab" title="Abrir numa nova aba">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            New tab
+          </button>
+          <button class="icon-btn" data-action="view" title="Ver em grande">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Ver em grande
+          </button>
+        </div>
+      </div>
       <div class="frame-wrap size-1920">
         <iframe src="bench-content/opencode/animations/remotion.html" loading="lazy" scrolling="no"></iframe>
       </div>
     </div>
   </div>
 </section>
+
+<!-- LIGHTBOX / MODAL -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-title">
+  <div class="lightbox-header">
+    <div class="lightbox-title" id="lightbox-title">
+      <span class="cli-name" id="lb-cli">—</span>
+      <span class="sep">·</span>
+      <span class="type" id="lb-type">—</span>
+      <span class="badge">MiniMax-M3</span>
+    </div>
+    <button class="lightbox-close" id="lb-close" aria-label="Fechar (ESC)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="lightbox-body" id="lb-body">
+    <div class="lightbox-frame" id="lb-frame">
+      <iframe id="lb-iframe" src="about:blank" allow="autoplay; fullscreen"></iframe>
+    </div>
+  </div>
+  <div class="lightbox-hint">ESC ou clica fora para fechar</div>
+</div>
 
 <footer>
   <h3>Prompts Utilizados</h3>
@@ -323,23 +738,116 @@
 </footer>
 
 <script>
-  const tabs = document.querySelectorAll('.tab');
-  const panels = document.querySelectorAll('.tab-panel');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.dataset.tab;
-      tabs.forEach(t => t.classList.toggle('active', t === tab));
-      panels.forEach(p => p.classList.toggle('active', p.id === 'panel-' + target));
-      // Force reload of iframes in the newly activated panel so animations restart
-      document.querySelectorAll('#panel-' + target + ' iframe').forEach(f => {
-        const src = f.getAttribute('src');
-        if (f.src && f.src !== 'about:blank') {
-          f.src = 'about:blank';
-          setTimeout(() => { f.src = src; }, 30);
-        }
+  (function () {
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.tab-panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.tab;
+        tabs.forEach(t => t.classList.toggle('active', t === tab));
+        panels.forEach(p => p.classList.toggle('active', p.id === 'panel-' + target));
+        // Force reload of iframes in the newly activated panel so animations restart
+        document.querySelectorAll('#panel-' + target + ' iframe').forEach(f => {
+          const src = f.getAttribute('src');
+          if (f.src && f.src !== 'about:blank') {
+            f.src = 'about:blank';
+            setTimeout(() => { f.src = src; }, 30);
+          }
+        });
       });
     });
-  });
+
+    // ============================================
+    // LIGHTBOX
+    // ============================================
+    const lightbox = document.getElementById('lightbox');
+    const lbBody = document.getElementById('lb-body');
+    const lbFrame = document.getElementById('lb-frame');
+    const lbIframe = document.getElementById('lb-iframe');
+    const lbCli = document.getElementById('lb-cli');
+    const lbType = document.getElementById('lb-type');
+    const lbClose = document.getElementById('lb-close');
+
+    function sizeClassForType(type) {
+      const t = (type || '').toLowerCase();
+      if (t === 'carrossel' || t === 'carousel') return 'size-auto';
+      if (t === 'hyperframes') return 'size-1080';
+      return 'size-1920'; // reel, remotion
+    }
+
+    function applyLightboxScale() {
+      // For square + portrait frames, scale the 1080-wide inner iframe
+      // down to fit the visible wrapper without stretching layout.
+      const isAuto = lbFrame.classList.contains('size-auto');
+      if (isAuto) {
+        lbFrame.style.removeProperty('--lb-scale');
+        return;
+      }
+      const rect = lbFrame.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      if (!w || !h) return;
+      const scale = Math.min(w / 1080, h / (lbFrame.classList.contains('size-1080') ? 1080 : 1920));
+      lbFrame.style.setProperty('--lb-scale', String(scale));
+    }
+
+    function openLightbox(src, cli, type) {
+      lbCli.textContent = cli || '—';
+      lbType.textContent = type || '—';
+      // Reset classes
+      lbFrame.classList.remove('size-1080', 'size-1920', 'size-auto');
+      lbFrame.classList.add(sizeClassForType(type));
+      // Toggle fit-viewport for centered square/portrait
+      const fit = (type || '').toLowerCase() !== 'carrossel' && (type || '').toLowerCase() !== 'carousel';
+      lbBody.classList.toggle('fit-viewport', fit);
+      // Load iframe (with cache-bust so animations restart)
+      const bust = (src.indexOf('?') === -1 ? '?' : '&') + '_ts=' + Date.now();
+      lbIframe.src = 'about:blank';
+      setTimeout(() => { lbIframe.src = src + bust; }, 30);
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      // Compute scale after layout settles
+      requestAnimationFrame(() => requestAnimationFrame(applyLightboxScale));
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+      lbIframe.src = 'about:blank';
+    }
+
+    // Wire up card clicks + per-card buttons
+    document.querySelectorAll('.card').forEach(card => {
+      const src = card.dataset.src;
+      const cli = card.dataset.cli;
+      const type = card.dataset.type;
+      card.addEventListener('click', (e) => {
+        // Ignore clicks that originated on the action buttons
+        if (e.target.closest('[data-action]')) return;
+        if (!src) return;
+        openLightbox(src, cli, type);
+      });
+      card.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const action = btn.dataset.action;
+          if (action === 'view') openLightbox(src, cli, type);
+          else if (action === 'newtab') window.open(src, '_blank', 'noopener');
+        });
+      });
+    });
+
+    lbClose.addEventListener('click', closeLightbox);
+    lbBody.addEventListener('click', (e) => {
+      if (e.target === lbBody) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+    });
+    window.addEventListener('resize', () => {
+      if (lightbox.classList.contains('open')) applyLightboxScale();
+    });
+  })();
 </script>
 
 </body>
