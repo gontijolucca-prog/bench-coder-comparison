@@ -1,0 +1,50 @@
+[
+  {
+    "slide": 1,
+    "headline": "Treinar não chega.",
+    "body": "A ciência mostra que existe uma forma mais eficiente de ativar o corpo em apenas 20 minutos por semana.",
+    "visual_prompt": "Dark charcoal studio background (#1a1a1a), a single athlete silhouette standing on a minimalist platform, wearing a WB-EMS training suit with subtle electrode nodes visible on major muscle groups, dramatic side lighting casting long defined shadows, soft orange accent glow (#d4773b) outlining the figure, cinematic editorial photography style, high contrast, shallow depth of field, clean composition with negative space for text",
+    "text_overlay": "TREINAR NÃO CHEGA.",
+    "pagination": "1/6"
+  },
+  {
+    "slide": 2,
+    "headline": "O que é o EMS?",
+    "body": "Estimulação Elétrica Muscular: impulsos elétricos que ativam diretamente as fibras musculares, recrutando mais músculo por contração do que o treino convencional.",
+    "visual_prompt": "Dark editorial close-up of an athlete's torso wearing the WB-EMS electrode vest, subtle electrical pulse visualization glowing in soft orange (#d4773b) along the muscle contours, defined shadows, technical and scientific aesthetic, high contrast studio lighting, shallow depth of field on fabric texture",
+    "text_overlay": "O QUE É O EMS?",
+    "pagination": "2/6"
+  },
+  {
+    "slide": 3,
+    "headline": "Recrutamento de fibras.",
+    "body": "No treino convencional, o corpo ativa cerca de 30 a 40% das fibras musculares. Com WB-EMS, esse recrutamento pode chegar aos 85 a 90%.",
+    "visual_prompt": "Split composition on dark charcoal background: left side showing a barbell with subtle muscle fiber wireframe diagram, right side showing the same athlete in WB-EMS gear with full fiber activation visualization in soft orange glow (#d4773b), data-driven editorial style, defined shadows, scientific infographic feel, high contrast",
+    "text_overlay": "30–40% VS 85–90%",
+    "pagination": "3/6"
+  },
+  {
+    "slide": 4,
+    "headline": "20 minutos. Corpo inteiro.",
+    "body": "Uma sessão WB-EMS típica dura 20 a 25 minutos. Ativa simultaneamente vários grupos musculares com baixo impacto articular.",
+    "visual_prompt": "Wide editorial shot of athlete in full WB-EMS suit standing in a dark studio, multiple muscle group zones subtly highlighted with soft orange (#d4773b) electric pulses, minimalist composition, dramatic overhead lighting with defined cast shadows, scientific yet human aesthetic, high contrast",
+    "text_overlay": "20 MINUTOS. CORPO INTEIRO.",
+    "pagination": "4/6"
+  },
+  {
+    "slide": 5,
+    "headline": "Frequência inteligente.",
+    "body": "O protocolo recomendado varia entre 1 e 3 sessões por semana. Equipamento com certificação médica, fabricado na Alemanha.",
+    "visual_prompt": "Dark charcoal editorial scene featuring a sleek German-engineered WB-EMS control unit on a minimal surface, subtle technical schematic lines in soft orange (#d4773b) overlaying the device, defined studio shadows, premium industrial design aesthetic, cinematic close-up, high contrast",
+    "text_overlay": "1 A 3 SESSÕES POR SEMANA",
+    "pagination": "5/6"
+  },
+  {
+    "slide": 6,
+    "headline": "Marca a tua sessão experimental.",
+    "body": "Dá o próximo passo no TechBody U. A primeira sessão aproxima-te de um treino com a ciência como base.",
+    "visual_prompt": "Dark charcoal studio hero shot, athlete in WB-EMS gear in a confident standing pose facing camera, soft orange (#d4773b) accent rim lighting from behind, minimal negative space for text overlay, cinematic portrait composition, defined shadows, high contrast, premium fitness editorial style",
+    "text_overlay": "MARCA A TUA SESSÃO EXPERIMENTAL",
+    "pagination": "6/6"
+  }
+]

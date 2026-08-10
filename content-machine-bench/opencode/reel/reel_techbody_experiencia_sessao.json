@@ -1,0 +1,50 @@
+[
+  {
+    "scene": 1,
+    "timestamp": "0-5s",
+    "visual_description": "Cinematic wide shot entering a premium TechBody studio through a frosted glass door. Dark charcoal walls, warm soft orange (#d4773b) accent light washing across polished concrete floor. Single overhead spotlight on an empty training platform. Editorial high-contrast lighting with deep shadows.",
+    "voiceover": "Vinte e cinco minutos. Um estúdio. Um método que muda o treino.",
+    "text_overlay": "25 MIN · TREINO COMPLETO",
+    "camera_movement": "Slow dolly push-in through doorway, low angle, ending on medium framing of the studio platform."
+  },
+  {
+    "scene": 2,
+    "timestamp": "5-10s",
+    "visual_description": "Extreme close-up of black WB-EMS suit being worn. Hands adjusting chest straps and electrode connectors. Soft orange rim light traces the seams of the suit against dark backdrop. Shallow depth of field isolates the German-engineered hardware detail.",
+    "voiceover": "O equipamento certificado activa múltiplos grupos musculares em simultâneo.",
+    "text_overlay": "CERTIFICADO MÉDICO · MADE IN GERMANY",
+    "camera_movement": "Macro focus pull on the chest connector, slow lateral slide revealing the full suit detail."
+  },
+  {
+    "scene": 3,
+    "timestamp": "10-15s",
+    "visual_description": "Two-shot inside the studio: trainer in dark athletic wear gestures toward the platform, client steps into position under soft overhead light. Warm orange backlight separates both figures from the charcoal background. Clean composition, controlled shadows.",
+    "voiceover": "O treinador ajusta cada impulso ao objectivo. A sessão começa.",
+    "text_overlay": "1 A 3 VEZES POR SEMANA",
+    "camera_movement": "Static medium two-shot with subtle rack focus from trainer to client as the client steps onto the platform."
+  },
+  {
+    "scene": 4,
+    "timestamp": "15-20s",
+    "visual_description": "Tight mid-shot of the client's torso during contraction. Visible muscle engagement under the suit fabric, suit LEDs pulsing softly in orange. Controlled breath, sweat catching the light. Editorial high-contrast cinematography, dark frame with one strong rim light defining the silhouette.",
+    "voiceover": "Até oitenta e cinco por cento das fibras musculares activas. Sem impacto articular.",
+    "text_overlay": "ATÉ 85% FIBRAS ACTIVAS · BAIXO IMPACTO",
+    "camera_movement": "Slow lateral tracking shot on torso with mild handheld micro-shake to convey active energy."
+  },
+  {
+    "scene": 5,
+    "timestamp": "20-25s",
+    "visual_description": "Client steps off the platform with controlled composure, no exhaustion posture. Editorial portrait lighting sculpts muscle definition on arms and shoulders. Warm orange light fills the side of the face, dark charcoal negative space surrounds the subject. Calm energy after effort.",
+    "voiceover": "O treino termina. A sensação de trabalho completo fica.",
+    "text_overlay": "20 A 25 MIN POR SESSÃO",
+    "camera_movement": "Slow pull-back at low angle transitioning from medium portrait to wide silhouette."
+  },
+  {
+    "scene": 6,
+    "timestamp": "25-30s",
+    "visual_description": "Full studio wide shot, clean and atmospheric. Centre frame holds on the empty TechBody platform with single overhead orange accent light. Studio brand mark appears centred on lower third. Dark charcoal negative space dominates the composition.",
+    "voiceover": "Marca a tua sessão experimental.",
+    "text_overlay": "MARCA A TUA SESSÃO EXPERIMENTAL · LINK NA BIO",
+    "camera_movement": "Locked static wide shot, subtle fade-in of brand mark and CTA lockup over the final second."
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "name": "remotion",
+  "version": "1.0.0",
+  "description": "Animation challenge Remotion project",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render src/index.tsx AnimationChallenge out.mp4",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.330",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "remotion": "4.0.330"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "typescript": "^5.0.0"
+  }
+}

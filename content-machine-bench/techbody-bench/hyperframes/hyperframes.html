@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="pt-PT" data-resolution="square">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #000;
+      }
+      body {
+        font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+      .mono {
+        font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+        font-feature-settings: "tnum";
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: transparent;
+      }
+
+      .stage {
+        position: absolute;
+        inset: 0;
+        background: #1a1a1a;
+        overflow: hidden;
+      }
+      .stage::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(120% 90% at 50% 0%, rgba(212, 119, 59, 0.10), transparent 60%),
+          radial-gradient(160% 120% at 50% 110%, rgba(0,0,0,0.55), transparent 70%);
+        pointer-events: none;
+      }
+      .stage::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+        background-size: 4px 4px;
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      .frame {
+        position: absolute;
+        inset: 56px;
+        border: 1px solid rgba(255,255,255,0.06);
+        pointer-events: none;
+      }
+      .corner {
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border: 1px solid #d4773b;
+      }
+      .corner.tl { top: 32px; left: 32px; border-right: 0; border-bottom: 0; }
+      .corner.tr { top: 32px; right: 32px; border-left: 0; border-bottom: 0; }
+      .corner.bl { bottom: 32px; left: 32px; border-right: 0; border-top: 0; }
+      .corner.br { bottom: 32px; right: 32px; border-left: 0; border-top: 0; }
+
+      .eyebrow {
+        position: absolute;
+        top: 96px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #d4773b;
+        font-size: 22px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        font-weight: 600;
+        will-change: transform, opacity;
+      }
+      .eyebrow .dot {
+        display: inline-block;
+        width: 6px; height: 6px;
+        background: #d4773b;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin: 0 14px 4px 14px;
+      }
+
+      .number-block {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #ffffff;
+        will-change: transform, opacity;
+      }
+      .number {
+        font-size: 280px;
+        font-weight: 200;
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+        color: #ffffff;
+      }
+      .number .pct {
+        font-size: 120px;
+        font-weight: 300;
+        vertical-align: top;
+        margin-left: 6px;
+        color: #d4773b;
+      }
+      .subline {
+        margin-top: 28px;
+        font-size: 30px;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.78);
+        will-change: transform, opacity;
+      }
+
+      .bars {
+        position: absolute;
+        left: 96px;
+        right: 96px;
+        top: 720px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        will-change: transform, opacity;
+      }
+      .bar-row { display: flex; flex-direction: column; gap: 10px; }
+      .bar-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        color: rgba(255,255,255,0.92);
+        font-size: 18px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+      .bar-label .val {
+        font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: #ffffff;
+      }
+      .bar-label.muted { color: rgba(255,255,255,0.55); }
+      .bar-label.muted .val { color: rgba(255,255,255,0.55); }
+      .bar-track {
+        position: relative;
+        height: 14px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+      .bar-fill {
+        position: absolute;
+        top: 0; left: 0; bottom: 0;
+        width: 0%;
+        background: linear-gradient(90deg, rgba(212,119,59,0.55), #d4773b 70%);
+      }
+      .bar-fill.muted {
+        background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0.35));
+      }
+      .bar-marker {
+        position: absolute;
+        top: -8px;
+        width: 2px;
+        height: 30px;
+        background: #d4773b;
+      }
+
+      .specs {
+        position: absolute;
+        bottom: 168px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: rgba(255,255,255,0.82);
+        font-size: 22px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        will-change: transform, opacity;
+      }
+      .specs .sep {
+        display: inline-block;
+        width: 4px;
+        height: 4px;
+        background: #d4773b;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin: 0 22px 4px 22px;
+      }
+
+      .brand {
+        position: absolute;
+        bottom: 96px;
+        left: 96px;
+        right: 96px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: rgba(255,255,255,0.9);
+        font-size: 18px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        font-weight: 600;
+        will-change: opacity;
+      }
+      .brand .mark {
+        color: #d4773b;
+        font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+        font-size: 20px;
+        letter-spacing: 0.18em;
+      }
+      .brand .cert {
+        color: rgba(255,255,255,0.55);
+        font-weight: 400;
+        letter-spacing: 0.22em;
+      }
+
+      .progress {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3px;
+        background: rgba(255,255,255,0.08);
+      }
+      .progress-fill {
+        position: absolute;
+        top: 0; left: 0; bottom: 0;
+        width: 0%;
+        background: #d4773b;
+        transform-origin: left center;
+      }
+
+      .ticker {
+        position: absolute;
+        top: 96px;
+        right: 96px;
+        color: rgba(255,255,255,0.45);
+        font-family: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+        font-size: 18px;
+        letter-spacing: 0.18em;
+      }
+
+      .clip { will-change: transform, opacity; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="10"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div class="stage">
+        <div class="frame"></div>
+        <span class="corner tl"></span>
+        <span class="corner tr"></span>
+        <span class="corner bl"></span>
+        <span class="corner br"></span>
+
+        <div id="eyebrow" class="clip eyebrow" data-start="0" data-duration="10" data-track-index="1">
+          Recrutamento muscular<span class="dot"></span>EMS
+        </div>
+
+        <div id="ticker" class="clip ticker mono" data-start="0" data-duration="10" data-track-index="2">
+          00:00 / 00:10
+        </div>
+
+        <div id="number-block" class="clip number-block" data-start="0" data-duration="10" data-track-index="3">
+          <div class="number mono">85&ndash;90<span class="pct">%</span></div>
+        </div>
+
+        <div id="subline" class="clip subline" data-start="0" data-duration="10" data-track-index="4">
+          das fibras musculares
+        </div>
+
+        <div id="bars" class="clip bars" data-start="0" data-duration="10" data-track-index="5">
+          <div class="bar-row">
+            <div class="bar-label muted">
+              <span>Treino convencional</span>
+              <span class="val">30&ndash;40%</span>
+            </div>
+            <div class="bar-track">
+              <div id="bar-conventional" class="bar-fill muted"></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">
+              <span>EMS</span>
+              <span class="val">85&ndash;90%</span>
+            </div>
+            <div class="bar-track">
+              <div id="bar-ems" class="bar-fill"></div>
+              <span class="bar-marker" style="left: 50%;"></span>
+              <span class="bar-marker" style="left: 85%; background: #fff;"></span>
+            </div>
+          </div>
+        </div>
+
+        <div id="specs" class="clip specs" data-start="0" data-duration="10" data-track-index="6">
+          20&ndash;25 min<span class="sep"></span>1&ndash;3&times; por semana<span class="sep"></span>baixo impacto
+        </div>
+
+        <div id="brand" class="clip brand" data-start="0" data-duration="10" data-track-index="7">
+          <span class="mark">TECHBODY</span>
+          <span class="cert">Equipamento certificado · Alemanha</span>
+        </div>
+
+        <div id="progress" class="clip progress" data-start="0" data-duration="10" data-track-index="8">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Initial states
+      gsap.set("#eyebrow", { opacity: 0, y: -16 });
+      gsap.set("#number-block", { opacity: 0, scale: 0.6 });
+      gsap.set("#subline", { opacity: 0, y: 14 });
+      gsap.set("#bars", { opacity: 0, y: 24 });
+      gsap.set("#bar-ems", { width: "0%" });
+      gsap.set("#bar-conventional", { width: "0%" });
+      gsap.set("#specs", { opacity: 0, y: 16 });
+      gsap.set("#brand", { opacity: 0 });
+      gsap.set("#progress-fill", { scaleX: 0 });
+
+      // 0.0 - 1.0: eyebrow slide+fade in
+      tl.to("#eyebrow", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.1);
+
+      // 0.6 - 2.2: number scale up
+      tl.to("#number-block", { opacity: 1, scale: 1, duration: 1.0, ease: "expo.out" }, 0.6);
+      // 1.6 - 2.6: subline rise
+      tl.to("#subline", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 1.6);
+
+      // 2.8 - 3.4: bars fade
+      tl.to("#bars", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 2.8);
+      // 3.2 - 5.2: bars fill
+      tl.to("#bar-conventional", { width: "35%", duration: 1.4, ease: "power3.inOut" }, 3.2);
+      tl.to("#bar-ems", { width: "87.5%", duration: 2.0, ease: "power3.inOut" }, 3.4);
+
+      // 5.6 - 6.4: specs rise
+      tl.to("#specs", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 5.6);
+
+      // 6.6 - 7.4: brand fade
+      tl.to("#brand", { opacity: 1, duration: 0.6, ease: "power2.out" }, 6.6);
+
+      // 0 - 10: progress bar scale x
+      tl.to("#progress-fill", { scaleX: 1, duration: 9.9, ease: "none" }, 0.05);
+
+      // Ticker driven by GSAP onUpdate (timeline-synced, deterministic)
+      const tickerEl = document.getElementById("ticker");
+      function fmtTicker(t) {
+        const total = 10;
+        const m = Math.floor(t / 60).toString().padStart(2, "0");
+        const ss = Math.floor(t % 60).toString().padStart(2, "0");
+        return m + ":" + ss + " / 00:" + total.toString().padStart(2, "0");
+      }
+      tickerEl.textContent = fmtTicker(0);
+      tl.eventCallback("onUpdate", () => {
+        tickerEl.textContent = fmtTicker(tl.time());
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<title>TechBody — Sessão EMS · Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;800;900&family=JetBrains+Mono:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1a1a1a;
+  --bg-deep: #0d0d0d;
+  --accent: #d4773b;
+  --accent-soft: rgba(212,119,59,0.18);
+  --accent-line: rgba(212,119,59,0.45);
+  --white: #ffffff;
+  --mute: #6b6b6b;
+  --line: rgba(255,255,255,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: #000;
+  min-height: 100vh;
+  font-family: 'Archivo', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.reel {
+  width: 1080px;
+  height: 1920px;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  color: var(--white);
+}
+
+/* ---------- ATMOSPHERE: grain + grid ---------- */
+.reel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.035) 1px, transparent 0);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.7;
+}
+
+.reel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(212,119,59,0.10), transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgba(212,119,59,0.06), transparent 60%);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ---------- CHROME (logo + tag) ---------- */
+.chrome {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  padding: 64px 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.chrome .logo {
+  font-family: 'Anton', sans-serif;
+  font-size: 44px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  line-height: 1;
+}
+.chrome .logo .dot {
+  display: inline-block;
+  width: 14px; height: 14px;
+  background: var(--accent);
+  margin-left: 4px;
+  transform: translateY(-2px);
+}
+.chrome .tag { color: rgba(255,255,255,0.6); }
+.chrome .tag .live {
+  color: var(--accent);
+  margin-right: 8px;
+}
+
+/* ---------- BOTTOM PROGRESS (6 segments) ---------- */
+.progress {
+  position: absolute;
+  bottom: 64px;
+  left: 80px;
+  right: 80px;
+  z-index: 100;
+  display: flex;
+  gap: 14px;
+}
+.progress .seg {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.progress .seg .fill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform-origin: left;
+  animation: fill 5s linear infinite;
+}
+.seg-1 .fill { animation-delay: 0s; }
+.seg-2 .fill { animation-delay: -4.166s; }
+.seg-3 .fill { animation-delay: -8.333s; }
+.seg-4 .fill { animation-delay: -12.5s; }
+.seg-5 .fill { animation-delay: -16.666s; }
+.seg-6 .fill { animation-delay: -20.833s; }
+
+@keyframes fill {
+  0%   { transform: scaleX(0); }
+  85%  { transform: scaleX(1); }
+  100% { transform: scaleX(1); }
+}
+
+/* ---------- SCENE BASE ---------- */
+.scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  padding: 260px 80px 200px;
+  z-index: 10;
+}
+
+.s1 { animation: scene-fade 5s linear 0s infinite; }
+.s2 { animation: scene-fade 5s linear 5s infinite; }
+.s3 { animation: scene-fade 5s linear 10s infinite; }
+.s4 { animation: scene-fade 5s linear 15s infinite; }
+.s5 { animation: scene-fade 5s linear 20s infinite; }
+.s6 { animation: scene-fade 5s linear 25s infinite; }
+
+@keyframes scene-fade {
+  0%   { opacity: 0; }
+  3%   { opacity: 1; }
+  94%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---------- TYPE PRIMITIVES ---------- */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+.eyebrow::before {
+  content: '';
+  width: 56px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.display {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: 248px;
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.display-sm {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: 180px;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.sub {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 1.32;
+  color: rgba(255,255,255,0.82);
+  max-width: 880px;
+}
+
+.sub strong {
+  font-weight: 800;
+  color: #fff;
+}
+
+.accent-line {
+  width: 200px;
+  height: 6px;
+  background: var(--accent);
+  transform-origin: left;
+}
+
+/* ---------- ELEMENT ANIMATIONS (rise / fade / slide / draw) ---------- */
+@keyframes rise {
+  0%   { opacity: 0; transform: translateY(48px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes slide-in {
+  0%   { opacity: 0; transform: translateX(-60px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes draw-line {
+  0%   { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.08); }
+}
+@keyframes count-up {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
+
+/* Each scene container starts at its scene-start time. Internal element
+   delays are absolute (scene_start + offset) so the timeline is predictable. */
+
+/* =============== SCENE 1 — HOOK =============== */
+.s1 .eyebrow   { animation: rise 0.7s 0.4s both ease-out; }
+.s1 .display-1 { animation: rise 0.9s 0.8s both cubic-bezier(.2,.7,.2,1); }
+.s1 .display-2 { animation: rise 0.9s 1.3s both cubic-bezier(.2,.7,.2,1); }
+.s1 .sub       { animation: rise 0.7s 2.4s both ease-out; }
+.s1 .accent-line { animation: draw-line 1.0s 3.2s both cubic-bezier(.6,.05,.3,1); }
+
+/* =============== SCENE 2 — O QUE É =============== */
+.s2 .eyebrow   { animation: rise 0.7s 5.4s both ease-out; }
+.s2 .stat-row  { animation: rise 0.9s 5.8s both cubic-bezier(.2,.7,.2,1); }
+.s2 .display-1 { animation: rise 0.9s 6.6s both cubic-bezier(.2,.7,.2,1); }
+.s2 .sub       { animation: rise 0.7s 7.5s both ease-out; }
+.s2 .data-box  { animation: rise 0.7s 8.4s both ease-out; }
+.s2 .bg-grid   { animation: fade 0.6s 5.2s both ease-out; }
+
+/* =============== SCENE 3 — CHEGADA =============== */
+.s3 .step-num  { animation: rise 0.9s 10.4s both cubic-bezier(.2,.7,.2,1); }
+.s3 .eyebrow   { animation: rise 0.7s 11.4s both ease-out; }
+.s3 .display-1 { animation: rise 0.9s 11.8s both cubic-bezier(.2,.7,.2,1); }
+.s3 .sub       { animation: rise 0.7s 12.8s both ease-out; }
+.s3 .check-row { animation: rise 0.6s 13.6s both ease-out; }
+.s3 .check-row-2 { animation: rise 0.6s 13.9s both ease-out; }
+.s3 .check-row-3 { animation: rise 0.6s 14.2s both ease-out; }
+
+/* =============== SCENE 4 — EQUIPAMENTO =============== */
+.s4 .step-num  { animation: rise 0.9s 15.4s both cubic-bezier(.2,.7,.2,1); }
+.s4 .eyebrow   { animation: rise 0.7s 16.4s both ease-out; }
+.s4 .display-1 { animation: rise 0.9s 16.8s both cubic-bezier(.2,.7,.2,1); }
+.s4 .display-2 { animation: rise 0.9s 17.3s both cubic-bezier(.2,.7,.2,1); }
+.s4 .sub       { animation: rise 0.7s 18.4s both ease-out; }
+.s4 .equipo    { animation: fade 0.8s 19.2s both ease-out; }
+
+/* =============== SCENE 5 — SESSÃO =============== */
+.s5 .eyebrow   { animation: rise 0.7s 20.4s both ease-out; }
+.s5 .display-1 { animation: rise 0.9s 20.8s both cubic-bezier(.2,.7,.2,1); }
+.s5 .display-2 { animation: rise 0.9s 21.4s both cubic-bezier(.2,.7,.2,1); }
+.s5 .sub       { animation: rise 0.7s 22.4s both ease-out; }
+.s5 .pulse-dot { animation: pulse 1.6s 23.2s infinite ease-in-out; }
+.s5 .bar-fill  { animation: draw-line 1.4s 23.4s both cubic-bezier(.6,.05,.3,1); }
+
+/* =============== SCENE 6 — CTA =============== */
+.s6 .eyebrow   { animation: rise 0.7s 25.4s both ease-out; }
+.s6 .display-1 { animation: rise 0.9s 25.8s both cubic-bezier(.2,.7,.2,1); }
+.s6 .display-2 { animation: rise 0.9s 26.4s both cubic-bezier(.2,.7,.2,1); }
+.s6 .sub       { animation: rise 0.7s 27.5s both ease-out; }
+.s6 .cta-btn   { animation: rise 0.8s 28.3s both cubic-bezier(.2,.7,.2,1); }
+.s6 .cta-url   { animation: rise 0.7s 28.9s both ease-out; }
+.s6 .arrow     { animation: slide-in 0.6s 29.3s both ease-out; }
+
+/* ============================================================
+   SCENE-SPECIFIC LAYOUTS
+   ============================================================ */
+
+/* ---------- SCENE 1 ---------- */
+.s1 .stack { display: flex; flex-direction: column; gap: 24px; }
+.s1 .display-1 { color: var(--white); }
+.s1 .display-2 { color: var(--accent); }
+.s1 .display-2 .period { color: var(--white); }
+.s1 .accent-line { margin-top: 56px; }
+
+/* ---------- SCENE 2 ---------- */
+.s2 .bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 96px 96px;
+  mask-image: radial-gradient(ellipse at 70% 50%, #000 30%, transparent 75%);
+}
+.s2 .stat-row {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  margin-top: 80px;
+  margin-bottom: 60px;
+}
+.s2 .stat-big {
+  font-family: 'Anton', sans-serif;
+  font-size: 380px;
+  line-height: 0.85;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.s2 .stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  font-weight: 500;
+}
+.s2 .display-1 { margin-top: 24px; }
+.s2 .data-box {
+  position: absolute;
+  bottom: 240px;
+  left: 80px;
+  right: 80px;
+  border: 2px solid var(--line);
+  padding: 32px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.4);
+}
+.s2 .data-box .left {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+}
+.s2 .data-box .right {
+  font-family: 'Anton', sans-serif;
+  font-size: 64px;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+.s2 .data-box .right .eq { color: var(--accent); margin: 0 12px; }
+
+/* ---------- SCENE 3 ---------- */
+.s3 .step-num {
+  font-family: 'Anton', sans-serif;
+  font-size: 720px;
+  line-height: 0.8;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  position: absolute;
+  top: 200px;
+  right: 40px;
+  opacity: 0.18;
+}
+.s3 .content {
+  position: relative;
+  z-index: 2;
+  margin-top: 240px;
+}
+.s3 .display-1 { margin-top: 32px; }
+.s3 .check-list {
+  margin-top: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.s3 .check-row,
+.s3 .check-row-2,
+.s3 .check-row-3 {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  color: rgba(255,255,255,0.85);
+}
+.s3 .check {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 22px;
+  color: #1a1a1a;
+}
+
+/* ---------- SCENE 4 ---------- */
+.s4 .step-num {
+  font-family: 'Anton', sans-serif;
+  font-size: 720px;
+  line-height: 0.8;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  position: absolute;
+  top: 200px;
+  right: 40px;
+  opacity: 0.18;
+}
+.s4 .content {
+  position: relative;
+  z-index: 2;
+  margin-top: 200px;
+}
+.s4 .display-1 { color: var(--white); }
+.s4 .display-2 { color: var(--accent); margin-top: 8px; }
+.s4 .sub { margin-top: 56px; }
+.s4 .equipo {
+  position: absolute;
+  bottom: 220px;
+  left: 80px;
+  right: 80px;
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+.s4 .equip-card {
+  flex: 1;
+  border: 2px solid var(--line);
+  padding: 28px 24px;
+  background: rgba(0,0,0,0.35);
+}
+.s4 .equip-card .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  font-weight: 700;
+}
+.s4 .equip-card .name {
+  font-family: 'Anton', sans-serif;
+  font-size: 40px;
+  margin-top: 14px;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- SCENE 5 ---------- */
+.s5 .stack { display: flex; flex-direction: column; gap: 16px; }
+.s5 .display-1 { color: var(--white); }
+.s5 .display-2 { color: var(--accent); margin-top: 8px; }
+.s5 .sub { margin-top: 56px; }
+.s5 .live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 40px;
+}
+.s5 .pulse-dot {
+  width: 16px; height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.s5 .bar-row {
+  position: absolute;
+  bottom: 240px;
+  left: 80px;
+  right: 80px;
+}
+.s5 .bar-row .label {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 14px;
+}
+.s5 .bar-row .label .pct { color: var(--accent); font-weight: 700; }
+.s5 .bar {
+  height: 8px;
+  background: rgba(255,255,255,0.10);
+  position: relative;
+  overflow: hidden;
+}
+.s5 .bar-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent) 0%, #f69e1e 100%);
+  transform-origin: left;
+}
+.s5 .bar-rows { display: flex; flex-direction: column; gap: 24px; }
+
+/* ---------- SCENE 6 ---------- */
+.s6 .content {
+  text-align: left;
+  margin-top: 80px;
+}
+.s6 .display-1 { color: var(--white); }
+.s6 .display-2 { color: var(--accent); margin-top: 4px; }
+.s6 .sub { margin-top: 64px; }
+.s6 .cta-btn {
+  margin-top: 80px;
+  display: inline-flex;
+  align-items: center;
+  gap: 32px;
+  padding: 40px 56px;
+  background: var(--accent);
+  color: #1a1a1a;
+  font-family: 'Anton', sans-serif;
+  font-size: 56px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.s6 .cta-url {
+  margin-top: 48px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+}
+.s6 .arrow {
+  display: inline-block;
+  font-size: 64px;
+  line-height: 0.6;
+}
+.s6 .footer-note {
+  position: absolute;
+  bottom: 180px;
+  left: 80px;
+  right: 80px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+}
+.s6 .footer-note .right { color: var(--accent); }
+
+/* ---------- Static hint (browser preview only) ---------- */
+.hint {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+<div class="reel">
+
+  <!-- CHROME -->
+  <div class="chrome">
+    <div class="logo">TECHBODY<span class="dot"></span></div>
+    <div class="tag"><span class="live">●</span> REEL · 30s</div>
+  </div>
+
+  <!-- ============================================
+       SCENE 1 — HOOK (0:00–0:05)
+       ============================================ -->
+  <div class="scene s1">
+    <div class="stack">
+      <div class="eyebrow">Sessão EMS · 20 min</div>
+      <div class="display display-1">Vinte</div>
+      <div class="display display-2">minutos<span class="period">.</span></div>
+      <div class="sub">que o ginásio tradicional <strong>não te dá em duas horas.</strong></div>
+      <div class="accent-line"></div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCENE 2 — O QUE É (0:05–0:10)
+       ============================================ -->
+  <div class="scene s2">
+    <div class="bg-grid"></div>
+    <div class="eyebrow">O que é EMS</div>
+    <div class="stat-row">
+      <div class="stat-big">9</div>
+      <div class="stat-label">Grupos musculares<br>em simultâneo</div>
+    </div>
+    <div class="display display-1">Estimulação elétrica</div>
+    <div class="sub">Ativa até <strong>80% das fibras musculares</strong> numa única sessão. Sem carga articular. Sem impacto.</div>
+    <div class="data-box">
+      <div class="left">Equivalência</div>
+      <div class="right">20 min <span class="eq">≡</span> 90 min</div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCENE 3 — CHEGADA (0:10–0:15)
+       ============================================ -->
+  <div class="scene s3">
+    <div class="step-num">01</div>
+    <div class="content">
+      <div class="eyebrow">Passo 01 · A chegada</div>
+      <div class="display display-1">Chegas.</div>
+      <div class="sub">Sem filas. Sem balcão. Marcas no pulso, escolhes o cacifo.</div>
+      <div class="check-list">
+        <div class="check-row"><span class="check">✓</span> Pulseira digital</div>
+        <div class="check-row-2"><span class="check">✓</span> Cacifo reservado</div>
+        <div class="check-row-3"><span class="check">✓</span> Toalha e água incluídos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCENE 4 — EQUIPAMENTO (0:15–0:20)
+       ============================================ -->
+  <div class="scene s4">
+    <div class="step-num">02</div>
+    <div class="content">
+      <div class="eyebrow">Passo 02 · Preparação</div>
+      <div class="display display-1">O colete.</div>
+      <div class="display display-2">Os elétrodos.</div>
+      <div class="sub">Personal trainer coloca tudo em menos de <strong>90 segundos</strong>. Ajuste feito à medida do corpo.</div>
+    </div>
+    <div class="equipo">
+      <div class="equip-card">
+        <div class="num">01</div>
+        <div class="name">Colete</div>
+      </div>
+      <div class="equip-card">
+        <div class="num">02</div>
+        <div class="name">Elétrodos</div>
+      </div>
+      <div class="equip-card">
+        <div class="num">03</div>
+        <div class="name">Ajustes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCENE 5 — SESSÃO (0:20–0:25)
+       ============================================ -->
+  <div class="scene s5">
+    <div class="live-tag"><span class="pulse-dot"></span> Em curso · 20:00</div>
+    <div class="stack">
+      <div class="eyebrow">Passo 03 · A sessão</div>
+      <div class="display display-1">Contração</div>
+      <div class="display display-2">profunda.</div>
+      <div class="sub">Treino guiado, com carga, em posição funcional. Mais resultado em <strong>menos tempo.</strong></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-rows">
+        <div>
+          <div class="label"><span>Ativação muscular</span><span class="pct">80%</span></div>
+          <div class="bar"><div class="bar-fill"></div></div>
+        </div>
+        <div>
+          <div class="label"><span>Tempo total</span><span class="pct">20 MIN</span></div>
+          <div class="bar"><div class="bar-fill" style="transform: scaleX(0.22);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCENE 6 — CTA (0:25–0:30)
+       ============================================ -->
+  <div class="scene s6">
+    <div class="content">
+      <div class="eyebrow">Próximo passo</div>
+      <div class="display display-1">Marca a tua</div>
+      <div class="display display-2">sessão experimental.</div>
+      <div class="sub">Primeira sessão inclui <strong>avaliação corporal completa</strong> e plano personalizado.</div>
+      <div class="cta-btn">AGENDAR <span class="arrow">→</span></div>
+      <div class="cta-url">techbody.pt / experimental</div>
+    </div>
+    <div class="footer-note">
+      <span>WB-EMS · Treino assistido</span>
+      <span class="right">#FITSLOW · #TECHTRAIN</span>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress">
+    <div class="seg seg-1"><div class="fill"></div></div>
+    <div class="seg seg-2"><div class="fill"></div></div>
+    <div class="seg seg-3"><div class="fill"></div></div>
+    <div class="seg seg-4"><div class="fill"></div></div>
+    <div class="seg seg-5"><div class="fill"></div></div>
+    <div class="seg seg-6"><div class="fill"></div></div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+[
+  {
+    "scene": 1,
+    "timestamp": "0-5s",
+    "visual_description": "A client enters a refined EMS studio through a dark charcoal doorway. Warm soft orange practical lights reveal clean architectural lines, premium textures, defined shadows, and a calm editorial atmosphere.",
+    "voiceover": "Uma nova forma de viver o treino começa no momento da entrada.",
+    "text_overlay": "A EXPERIÊNCIA COMEÇA AQUI",
+    "camera_movement": "Slow forward dolly from the studio entrance, with a subtle low-angle rise as the client walks into frame."
+  },
+  {
+    "scene": 2,
+    "timestamp": "5-10s",
+    "visual_description": "Detailed close-up of a client putting on the black EMS suit. Textured fabric, secure electrodes, and precise fastening are shown against a dark charcoal background with soft orange highlights.",
+    "voiceover": "O fato EMS ajusta-se ao corpo para uma sessão orientada e precisa.",
+    "text_overlay": "FATO EMS · AJUSTE PRECISO",
+    "camera_movement": "Macro lateral tracking shot across the suit, cutting to a smooth close-up of the fastening being secured."
+  },
+  {
+    "scene": 3,
+    "timestamp": "10-15s",
+    "visual_description": "A qualified trainer calmly explains the session beside the client. The client stands in a balanced athletic position while the trainer checks the suit controls. High-contrast studio lighting keeps faces and equipment clearly visible.",
+    "voiceover": "Com acompanhamento próximo, cada movimento encontra a posição certa.",
+    "text_overlay": "ACOMPANHAMENTO PRÓXIMO",
+    "camera_movement": "Controlled shoulder-level orbit around trainer and client, ending on the trainer's hand checking the controls."
+  },
+  {
+    "scene": 4,
+    "timestamp": "15-20s",
+    "visual_description": "The EMS session reaches its active phase. Close-ups show controlled movement, visible muscle contraction, and subtle suit indicators pulsing in soft orange. The mood is dynamic, focused, and cinematic without exaggeration.",
+    "voiceover": "A WB-EMS ativa simultaneamente vários grupos musculares, com baixo impacto articular.",
+    "text_overlay": "ATIVAÇÃO SIMULTÂNEA · BAIXO IMPACTO",
+    "camera_movement": "Dynamic push-in with a brief controlled slow-motion detail on the contraction, followed by a crisp cut back to the full movement."
+  },
+  {
+    "scene": 5,
+    "timestamp": "20-25s",
+    "visual_description": "The client finishes the session, removes the EMS suit, and stands tall with a composed, satisfied expression. The studio remains dark charcoal with a soft orange rim light and clean white highlights.",
+    "voiceover": "Em 20 a 25 minutos, fica a sensação de um treino completo e acompanhado.",
+    "text_overlay": "20–25 MINUTOS DE SESSÃO",
+    "camera_movement": "Gentle arc around the client, moving from a close-up of the suit release to a confident medium portrait."
+  },
+  {
+    "scene": 6,
+    "timestamp": "25-30s",
+    "visual_description": "Minimal final studio frame: the TechBody wordmark sits in white on a dark charcoal background, framed by a soft orange vertical light and defined shadows. The EMS suit rests neatly in the background.",
+    "voiceover": "Marca a tua sessão experimental.",
+    "text_overlay": "MARCA A TUA SESSÃO EXPERIMENTAL",
+    "camera_movement": "Slow static-to-close push toward the TechBody wordmark, holding the final frame cleanly for the call to action."
+  }
+]

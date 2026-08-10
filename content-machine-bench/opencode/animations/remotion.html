@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>TechBody — Experiência de sessão EMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200;9..144,300;9..144,500;9..144,800;9..144,900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    background: #050505;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', Georgia, serif;
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Animated second counter for timecode */
+  @property --sec {
+    syntax: '<integer>';
+    initial-value: 0;
+    inherits: false;
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: #1a1a1a;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Atmosphere base */
+  .stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 35%, rgba(212, 119, 59, 0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 70% 50% at 50% 90%, rgba(212, 119, 59, 0.06) 0%, transparent 60%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .stage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+    opacity: 0.16;
+    mix-blend-mode: overlay;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Frame */
+  .frame {
+    position: absolute;
+    inset: 64px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 4;
+    pointer-events: none;
+  }
+  .tick {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid #d4773b;
+    z-index: 5;
+  }
+  .tick.tl { top: 64px; left: 64px; border-right: none; border-bottom: none; }
+  .tick.tr { top: 64px; right: 64px; border-left: none; border-bottom: none; }
+  .tick.bl { bottom: 64px; left: 64px; border-right: none; border-top: none; }
+  .tick.br { bottom: 64px; right: 64px; border-left: none; border-top: none; }
+
+  /* Header — persistent */
+  .header {
+    position: absolute;
+    top: 110px;
+    left: 110px;
+    right: 110px;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .header .live { display: flex; align-items: center; }
+  .header .live .dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    background: #d4773b;
+    border-radius: 50%;
+    margin-right: 16px;
+    animation: pulse 1.6s infinite;
+  }
+  .header .right { color: #d4773b; }
+
+  /* Footer — persistent */
+  .footer {
+    position: absolute;
+    bottom: 110px;
+    left: 110px;
+    right: 110px;
+    z-index: 10;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer .right { color: #d4773b; }
+
+  /* Progress bar — persistent */
+  .progress-track {
+    position: absolute;
+    bottom: 80px;
+    left: 110px;
+    right: 110px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    z-index: 11;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #d4773b 0%, #f0a060 100%);
+    animation: fillBar 30s linear infinite;
+  }
+
+  /* Timecode — persistent */
+  .timecode {
+    position: absolute;
+    bottom: 50px;
+    left: 110px;
+    right: 110px;
+    z-index: 11;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.35);
+  }
+  .timecode .now {
+    color: #d4773b;
+    font-weight: 700;
+  }
+  .timecode .now::after {
+    counter-reset: sec var(--sec);
+    content: "00:" counter(sec, decimal-leading-zero);
+    animation: tick 30s linear infinite;
+  }
+
+  /* === SCENES === */
+
+  .scene {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    opacity: 0;
+    --base: 0s;
+  }
+  .scene-1 { --base: 0s;  animation: sceneShow 5s var(--base) infinite cubic-bezier(0.65, 0, 0.35, 1); }
+  .scene-2 { --base: 5s;  animation: sceneShow 5s var(--base) infinite cubic-bezier(0.65, 0, 0.35, 1); }
+  .scene-3 { --base: 10s; animation: sceneShow 5s var(--base) infinite cubic-bezier(0.65, 0, 0.35, 1); }
+  .scene-4 { --base: 15s; animation: sceneShow 5s var(--base) infinite cubic-bezier(0.65, 0, 0.35, 1); }
+  .scene-5 { --base: 20s; animation: sceneShow 5s var(--base) infinite cubic-bezier(0.65, 0, 0.35, 1); }
+  .scene-6 { --base: 25s; animation: sceneShow 5s var(--base) infinite cubic-bezier(0.65, 0, 0.35, 1); }
+
+  /* Scene inner layout */
+  .scene-inner {
+    position: absolute;
+    top: 230px;
+    left: 110px;
+    right: 110px;
+    bottom: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Scene number — top right tag */
+  .scene-tag {
+    position: absolute;
+    top: 220px;
+    right: 110px;
+    z-index: 8;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    opacity: 0;
+    animation: fadeIn 0.5s calc(var(--base) + 0.3s) infinite;
+  }
+  .scene-tag .num { color: #d4773b; }
+
+  /* === SCENE 1: Hook === */
+  .s1 .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: #d4773b;
+    margin-bottom: 36px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: enter 0.7s calc(var(--base) + 0.4s) infinite cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s1 .hook-1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 200;
+    font-size: 230px;
+    line-height: 0.88;
+    color: #ffffff;
+    letter-spacing: -0.04em;
+    font-variation-settings: "opsz" 144;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: enter 0.9s calc(var(--base) + 0.7s) infinite cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s1 .hook-1 .accent { color: #d4773b; font-weight: 800; }
+  .s1 .hook-2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 70px;
+    line-height: 1.05;
+    color: rgba(255, 255, 255, 0.92);
+    margin-top: 38px;
+    letter-spacing: -0.015em;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: enter 0.8s calc(var(--base) + 1.3s) infinite cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s1 .hook-2 em {
+    font-style: normal;
+    font-weight: 800;
+    color: #d4773b;
+  }
+  .s1 .line {
+    width: 0;
+    height: 2px;
+    background: #d4773b;
+    margin-top: 60px;
+    animation: drawLine 1.4s calc(var(--base) + 2.4s) infinite cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  /* === SCENE 2: Stats comparison === */
+  .s2 .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 26px;
+    opacity: 0;
+    animation: fadeIn 0.5s calc(var(--base) + 0.3s) infinite;
+  }
+  .s2 .row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 8px;
+  }
+  .s2 .row + .row { margin-top: 56px; }
+  .s2 .num {
+    font-family: 'Fraunces', serif;
+    font-weight: 200;
+    font-size: 280px;
+    line-height: 0.88;
+    letter-spacing: -0.05em;
+    font-variation-settings: "opsz" 144;
+    color: rgba(255, 255, 255, 0.32);
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: enterLeft 0.9s calc(var(--base) + 0.5s) infinite cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s2 .num-ems {
+    color: #ffffff;
+    opacity: 0;
+    transform: translateX(20px);
+    animation: enterRight 1.0s calc(var(--base) + 1.0s) infinite cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s2 .num .pct {
+    font-size: 0.42em;
+    vertical-align: top;
+    font-weight: 800;
+    margin-left: 0.05em;
+  }
+  .s2 .num-ems .pct { color: #d4773b; }
+  .s2 .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    margin-top: 14px;
+    opacity: 0;
+    animation: fadeIn 0.5s calc(var(--base) + 1.4s) infinite;
+  }
+  .s2 .tag-ems { color: #d4773b; }
+  .s2 .mult {
+    margin-top: 78px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    opacity: 0;
+    animation: fadeIn 0.6s calc(var(--base) + 2.5s) infinite;
+  }
+  .s2 .mult .big {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 80px;
+    line-height: 1;
+    color: #d4773b;
+    letter-spacing: -0.03em;
+  }
+  .s2 .mult .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    text-align: right;
+    max-width: 280px;
+    line-height: 1.5;
+  }
+
+  /* === SCENE 3: Protocol — time + frequency === */
+  .s3 .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: end;
+  }
+  .s3 .stat {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 28px;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .s3 .stat-1 { animation: enter 0.8s calc(var(--base) + 0.4s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s3 .stat-2 { animation: enter 0.8s calc(var(--base) + 0.9s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s3 .stat .n {
+    font-family: 'Fraunces', serif;
+    font-weight: 200;
+    font-size: 240px;
+    line-height: 0.88;
+    letter-spacing: -0.05em;
+    color: #ffffff;
+    font-variation-settings: "opsz" 144;
+  }
+  .s3 .stat-2 .n { color: #d4773b; font-weight: 800; }
+  .s3 .stat .unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 18px;
+  }
+  .s3 .stat .sub {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 28px;
+    line-height: 1.3;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 14px;
+  }
+  .s3 .summary {
+    margin-top: 70px;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.88);
+    opacity: 0;
+    animation: fadeIn 0.7s calc(var(--base) + 2.6s) infinite;
+  }
+  .s3 .summary strong { font-weight: 800; color: #ffffff; }
+
+  /* === SCENE 4: Low impact + certification === */
+  .s4 .card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 44px 36px;
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  .s4 .card-1 { animation: enterLeft 0.8s calc(var(--base) + 0.4s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s4 .card-2 { animation: enterLeft 0.8s calc(var(--base) + 1.4s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s4 .card .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #d4773b;
+    margin-bottom: 18px;
+  }
+  .s4 .card .h {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 56px;
+    line-height: 1.05;
+    color: #ffffff;
+    letter-spacing: -0.015em;
+  }
+  .s4 .card .p {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 26px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 18px;
+  }
+  .s4 .seal {
+    position: absolute;
+    bottom: 230px;
+    right: 110px;
+    width: 132px;
+    height: 132px;
+    border-radius: 50%;
+    border: 2px solid #d4773b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #d4773b;
+    text-align: center;
+    line-height: 1.3;
+    opacity: 0;
+    animation: scaleIn 0.7s calc(var(--base) + 2.6s) infinite cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s4 .seal .big { font-size: 22px; font-weight: 800; }
+
+  /* === SCENE 5: Full session — muscle groups === */
+  .s5 .h {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 78px;
+    line-height: 1.0;
+    color: rgba(255, 255, 255, 0.92);
+    letter-spacing: -0.025em;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: enter 0.8s calc(var(--base) + 0.4s) infinite cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s5 .h strong { font-weight: 800; color: #ffffff; }
+  .s5 .h em {
+    font-style: normal;
+    font-weight: 900;
+    color: #d4773b;
+  }
+  .s5 .groups {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .s5 .g {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 22px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .s5 .g-1 { animation: enter 0.6s calc(var(--base) + 1.2s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s5 .g-2 { animation: enter 0.6s calc(var(--base) + 1.3s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s5 .g-3 { animation: enter 0.6s calc(var(--base) + 1.4s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s5 .g-4 { animation: enter 0.6s calc(var(--base) + 1.5s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s5 .g-5 { animation: enter 0.6s calc(var(--base) + 1.6s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s5 .g-6 { animation: enter 0.6s calc(var(--base) + 1.7s) infinite cubic-bezier(0.22, 1, 0.36, 1); }
+  .s5 .g .name {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 32px;
+    color: #ffffff;
+  }
+  .s5 .g .pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #d4773b;
+  }
+  .s5 .total {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    opacity: 0;
+    animation: fadeIn 0.6s calc(var(--base) + 2.4s) infinite;
+  }
+  .s5 .total .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .s5 .total .big {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 90px;
+    line-height: 1;
+    color: #d4773b;
+    letter-spacing: -0.03em;
+  }
+
+  /* === SCENE 6: CTA === */
+  .s6 .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: #d4773b;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeIn 0.6s calc(var(--base) + 0.3s) infinite;
+  }
+  .s6 .h {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 110px;
+    line-height: 0.96;
+    color: #ffffff;
+    letter-spacing: -0.03em;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: enter 0.9s calc(var(--base) + 0.7s) infinite cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s6 .h strong {
+    font-weight: 800;
+    color: #d4773b;
+  }
+  .s6 .cta-box {
+    margin-top: 80px;
+    padding: 32px 36px;
+    border: 2px solid #d4773b;
+    background: rgba(212, 119, 59, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transform: scale(0.96);
+    animation: enterScale 0.7s calc(var(--base) + 2.0s) infinite cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s6 .cta-box .text {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 36px;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+  }
+  .s6 .cta-box .arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 30px;
+    font-weight: 700;
+    color: #d4773b;
+  }
+  .s6 .url {
+    margin-top: 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    opacity: 0;
+    animation: fadeIn 0.5s calc(var(--base) + 2.6s) infinite;
+  }
+
+  /* === KEYFRAMES === */
+
+  @keyframes sceneShow {
+    0%   { opacity: 0; }
+    4%   { opacity: 0; }
+    14%  { opacity: 1; }
+    82%  { opacity: 1; }
+    96%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes enterLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes enterRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes enterScale {
+    from { opacity: 0; transform: scale(0.96); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.7); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes drawLine {
+    from { width: 0; }
+    to   { width: 240px; }
+  }
+  @keyframes fillBar {
+    0%   { width: 0%; }
+    100% { width: 100%; }
+  }
+  @keyframes tick {
+    from { --sec: 0; }
+    to   { --sec: 30; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.4; transform: scale(0.85); }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <!-- Persistent UI -->
+    <div class="frame"></div>
+    <span class="tick tl"></span>
+    <span class="tick tr"></span>
+    <span class="tick bl"></span>
+    <span class="tick br"></span>
+
+    <div class="header">
+      <span class="live"><span class="dot"></span>TechBody · EMS</span>
+      <span class="right">Reel · 30s</span>
+    </div>
+
+    <div class="footer">
+      <span>Sessão experimental</span>
+      <span class="right">25 min · 1-3x / sem</span>
+    </div>
+
+    <div class="progress-track"><div class="progress-fill"></div></div>
+
+    <div class="timecode">
+      <span class="now"></span>
+      <span>00:30 · Total</span>
+    </div>
+
+    <!-- ===== SCENE 1 ===== -->
+    <section class="scene scene-1 s1">
+      <div class="scene-tag"><span class="num">01</span> · Hook</div>
+      <div class="scene-inner">
+        <div class="eyebrow">A ciência por trás</div>
+        <div class="hook-1"><span class="accent">25</span> minutos</div>
+        <div class="hook-2">mudam <em>o treino</em> por completo.</div>
+        <div class="line"></div>
+      </div>
+    </section>
+
+    <!-- ===== SCENE 2 ===== -->
+    <section class="scene scene-2 s2">
+      <div class="scene-tag"><span class="num">02</span> · Recrutamento</div>
+      <div class="scene-inner">
+        <div class="label">Recrutamento de fibras · comparação</div>
+        <div class="row">
+          <div>
+            <div class="num">30-40<span class="pct">%</span></div>
+            <div class="tag">Treino convencional</div>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <div class="num num-ems">85-90<span class="pct">%</span></div>
+            <div class="tag tag-ems">Electroestimulação · WB-EMS</div>
+          </div>
+        </div>
+        <div class="mult">
+          <div class="big">~2.4×</div>
+          <div class="lbl">Mais fibras activadas por sessão</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SCENE 3 ===== -->
+    <section class="scene scene-3 s3">
+      <div class="scene-tag"><span class="num">03</span> · Protocolo</div>
+      <div class="scene-inner">
+        <div class="grid">
+          <div class="stat stat-1">
+            <div class="n">20-25</div>
+            <div class="unit">Minutos por sessão</div>
+            <div class="sub">Curto, intenso, sem janelas mortas.</div>
+          </div>
+          <div class="stat stat-2">
+            <div class="n">1-3<span style="font-size:0.6em;vertical-align:top;margin-left:0.04em">x</span></div>
+            <div class="unit">Por semana</div>
+            <div class="sub">Frequência ajustada ao objectivo.</div>
+          </div>
+        </div>
+        <div class="summary">
+          Três sessões curtas por semana <strong>substituem horas</strong> de treino convencional.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SCENE 4 ===== -->
+    <section class="scene scene-4 s4">
+      <div class="scene-tag"><span class="num">04</span> · Segurança</div>
+      <div class="scene-inner">
+        <div class="card card-1">
+          <div class="tag">01 · Impacto</div>
+          <div class="h">Baixo impacto articular</div>
+          <div class="p">Sem carga sobre joelhos, ancas ou coluna. Treino inteiro em pé ou deitado.</div>
+        </div>
+        <div class="card card-2">
+          <div class="tag">02 · Equipamento</div>
+          <div class="h">Certificação médica alemã</div>
+          <div class="p">Tecnologia WB-EMS com origem em Munique, validada em contexto clínico.</div>
+        </div>
+      </div>
+      <div class="seal">
+        <span>Cert.</span>
+        <span class="big">DE</span>
+        <span>Médica</span>
+      </div>
+    </section>
+
+    <!-- ===== SCENE 5 ===== -->
+    <section class="scene scene-5 s5">
+      <div class="scene-tag"><span class="num">05</span> · Corpo inteiro</div>
+      <div class="scene-inner">
+        <div class="h">Uma sessão activa <strong>o corpo</strong> <em>inteiro</em>.</div>
+        <div class="groups">
+          <div class="g g-1"><span class="name">Quadríceps</span><span class="pct">88%</span></div>
+          <div class="g g-2"><span class="name">Isquiotibiais</span><span class="pct">86%</span></div>
+          <div class="g g-3"><span class="name">Glúteos</span><span class="pct">91%</span></div>
+          <div class="g g-4"><span class="name">Dorsais</span><span class="pct">87%</span></div>
+          <div class="g g-5"><span class="name">Abdominais</span><span class="pct">85%</span></div>
+          <div class="g g-6"><span class="name">Peitorais</span><span class="pct">84%</span></div>
+        </div>
+        <div class="total">
+          <span class="lbl">Em 25 minutos</span>
+          <span class="big">+300</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SCENE 6 ===== -->
+    <section class="scene scene-6 s6">
+      <div class="scene-tag"><span class="num">06</span> · Acção</div>
+      <div class="scene-inner">
+        <div class="eyebrow">Próximo passo</div>
+        <div class="h">Marca a tua <strong>sessão experimental</strong>.</div>
+        <div class="cta-box">
+          <span class="text">pontofinal.site</span>
+          <span class="arrow">→</span>
+        </div>
+        <div class="url">WB-EMS · 25 min · Corpo inteiro</div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+[
+  {
+    "scene": 1,
+    "timestamp": "0-5s",
+    "visual_description": "Premium TechBody studio entrance with dark charcoal walls, soft orange accent lighting, white signage, high-contrast editorial illumination and defined cinematic shadows; a client enters with calm confidence.",
+    "voiceover": "Tudo começa num estúdio preparado para uma experiência diferente.",
+    "text_overlay": "Uma experiência diferente",
+    "camera_movement": "Smooth forward tracking shot through the entrance, ending with a subtle push-in toward the training area."
+  },
+  {
+    "scene": 2,
+    "timestamp": "5-10s",
+    "visual_description": "Detailed close-ups of the client putting on the EMS suit while a trainer adjusts the electrodes; premium medical-certified equipment manufactured in Germany, dark charcoal background, soft orange highlights, crisp white details and dramatic shadows.",
+    "voiceover": "O fato EMS é ajustado ao corpo com equipamento certificado médico, fabricado na Alemanha.",
+    "text_overlay": "Fato EMS ajustado ao corpo",
+    "camera_movement": "Fast cinematic macro cuts across fabric, electrodes and fastening points, followed by a controlled side slide."
+  },
+  {
+    "scene": 3,
+    "timestamp": "10-15s",
+    "visual_description": "The trainer calmly explains the session while the client adopts a stable exercise position; the EMS control system is visible, with premium studio lighting, dark charcoal surfaces, soft orange accents and strong editorial contrast.",
+    "voiceover": "Com orientação próxima, cada posição e intensidade são ajustadas antes de começar.",
+    "text_overlay": "Orientação em cada movimento",
+    "camera_movement": "Over-the-shoulder shot toward the control system, then a slow arc around the client into the starting position."
+  },
+  {
+    "scene": 4,
+    "timestamp": "15-20s",
+    "visual_description": "Peak WB-EMS training moment: the client performs a controlled squat as impulses activate, with visible full-body muscular tension and simultaneous engagement of multiple muscle groups; high-contrast studio lighting, soft orange rim light and defined shadows.",
+    "voiceover": "Os impulsos ativam vários grupos musculares em simultâneo, com baixo impacto articular.",
+    "text_overlay": "Ativação muscular simultânea",
+    "camera_movement": "Dynamic low-angle orbit around the squat, intercut with tight shots of controlled muscle contraction and the EMS indicators."
+  },
+  {
+    "scene": 5,
+    "timestamp": "20-25s",
+    "visual_description": "The session ends and the client stands upright, breathing steadily with a satisfied expression and a clear sense of having completed a full workout; premium TechBody studio, dark charcoal palette, soft orange light and clean white highlights.",
+    "voiceover": "Em cerca de 20 a 25 minutos, fica a sensação de um treino completo.",
+    "text_overlay": "20 a 25 minutos",
+    "camera_movement": "Slow pull-back from a close portrait to reveal the full studio, with a gentle rise for a composed finish."
+  },
+  {
+    "scene": 6,
+    "timestamp": "25-30s",
+    "visual_description": "Minimal premium end frame with the TechBody identity on a dark charcoal background, soft orange accent line, white typography, high contrast and defined editorial shadows; the client and trainer appear subtly in the background.",
+    "voiceover": "Descobre a experiência TechBody. Marca a tua sessão experimental.",
+    "text_overlay": "Marca a tua sessão experimental",
+    "camera_movement": "Subtle cinematic push-in toward the centered call to action, ending on a perfectly still brand frame."
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "slide": 1,
+    "headline": "Vinte e cinco minutos mudam o treino.",
+    "body": "A eletroestimulação WB-EMS recruta até 85% das fibras musculares numa sessão curta, com baixo impacto articular.",
+    "visual_prompt": "Dark charcoal studio interior, single WB-EMS suit on a minimal mannequin under dramatic editorial lighting, soft orange accent rim light from the right, deep shadows, high contrast, TechBody logo top-left, professional photography style, 1080x1350 vertical format",
+    "text_overlay": "25 minutos. Até 85% das fibras recrutadas.",
+    "pagination": "1/6"
+  },
+  {
+    "slide": 2,
+    "headline": "Mais fibras em menos tempo.",
+    "body": "O treino convencional activa entre 30% e 40% das fibras musculares. A eletroestimulação WB-EMS pode chegar aos 85% a 90%, com estímulos eléctricos controlados que atravessam o músculo em profundidade.",
+    "visual_prompt": "Abstract anatomical illustration of muscle fiber recruitment, split comparison: left side conventional training showing partial activation in muted gray, right side WB-EMS showing dense full activation glowing in soft orange against dark charcoal background, editorial medical visualization style, 1080x1350",
+    "text_overlay": "Convencional: 30-40% das fibras. WB-EMS: até 85-90%.",
+    "pagination": "2/6"
+  },
+  {
+    "slide": 3,
+    "headline": "Corpo todo num só movimento.",
+    "body": "Os eléctrodos distribuídos pelo fato activam em simultâneo vários grupos musculares, sem sobrecarga numa só articulação. O estímulo chega onde o exercício isolado, por vezes, não chega.",
+    "visual_prompt": "Silhouette of human body with glowing orange electrode zones highlighting major muscle groups simultaneously activated, dark charcoal background with subtle anatomical grid lines, editorial lighting, high contrast, 1080x1350",
+    "text_overlay": "Activação simultânea de múltiplos grupos musculares.",
+    "pagination": "3/6"
+  },
+  {
+    "slide": 4,
+    "headline": "Vinte minutos, uma a três vezes por semana.",
+    "body": "A sessão típica de WB-EMS dura entre 20 e 25 minutos. A frequência recomendada situa-se entre uma e três sessões semanais, consoante o objectivo e a recuperação individual.",
+    "visual_prompt": "Minimalist clock face showing twenty-five minutes, surrounded by three small calendar week markers in soft orange, dark charcoal background, editorial product photography aesthetic, clean negative space, 1080x1350",
+    "text_overlay": "20-25 min por sessão. 1 a 3 vezes por semana.",
+    "pagination": "4/6"
+  },
+  {
+    "slide": 5,
+    "headline": "Baixo impacto articular, equipamento certificado.",
+    "body": "O movimento é leve, sem cargas pesadas sobre as articulações. O equipamento utilizado é certificado para uso médico, fabricado na Alemanha, com parâmetros ajustados a cada pessoa.",
+    "visual_prompt": "Close-up of WB-EMS suit fabric texture with subtle certification mark, dramatic side lighting casting long shadows, dark charcoal background with soft orange accent glow on equipment detail, editorial luxury product photography, 1080x1350",
+    "text_overlay": "Baixo impacto articular. Equipamento certificado, fabricado na Alemanha.",
+    "pagination": "5/6"
+  },
+  {
+    "slide": 6,
+    "headline": "Marca a tua sessão experimental.",
+    "body": "A experiência começa no estúdio. Sessão inicial com avaliação, ajuste de parâmetros e acompanhamento técnico individual.",
+    "visual_prompt": "Dark charcoal studio environment with a single chair and a WB-EMS suit neatly placed, warm soft orange accent lighting creating welcoming editorial atmosphere, deep shadows, high contrast, TechBody logo top-left, 1080x1350",
+    "text_overlay": "Marca a tua sessão experimental.",
+    "pagination": "6/6"
+  }
+]

@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-ink-950 text-bone-50 font-sans antialiased;
+    font-feature-settings: 'ss01', 'cv11';
+  }
+  ::selection {
+    background-color: #FF6B2C;
+    color: #07060D;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .grain {
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(255, 107, 44, 0.18), transparent 45%),
+      radial-gradient(circle at 80% 60%, rgba(255, 182, 39, 0.10), transparent 50%),
+      radial-gradient(circle at 50% 100%, rgba(124, 58, 237, 0.12), transparent 55%);
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(216, 208, 189, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(216, 208, 189, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: -1px -1px;
+  }
+  .ring-amber {
+    box-shadow:
+      0 0 0 1px rgba(255, 107, 44, 0.4),
+      0 24px 60px -20px rgba(255, 107, 44, 0.45);
+  }
+}

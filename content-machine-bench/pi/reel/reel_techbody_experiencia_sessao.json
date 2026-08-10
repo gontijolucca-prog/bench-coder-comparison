@@ -1,0 +1,50 @@
+[
+  {
+    "scene": 1,
+    "timestamp": "0-5s",
+    "visual_description": "Wide cinematic shot of a premium dark fitness studio. Charcoal walls with subtle copper rim lighting along the floor and equipment edges. EMS machine visible in the background, softly lit. A client walks in from the foreground, becoming a silhouette against the studio light. Atmospheric haze, slow-motion feel.",
+    "voiceover": "Todo o corpo a treinar em simultâneo. Em vinte e cinco minutos bastam.",
+    "text_overlay": "25 min · corpo inteiro",
+    "camera_movement": "Slow dolly forward, slight downward tilt, rack focus from foreground to studio depth"
+  },
+  {
+    "scene": 2,
+    "timestamp": "5-10s",
+    "visual_description": "Close-up detail of a black EMS vest being adjusted on a client. Hands fastening neoprene straps and positioning textile electrodes on shoulder and torso. Texture of technical fabric and copper-toned electrode connectors visible. Soft directional light highlights the equipment.",
+    "voiceover": "O colete ajusta-se. Os elétrodos posicionam-se sobre os principais grupos musculares.",
+    "text_overlay": "Até 85% fibras",
+    "camera_movement": "Macro push-in with shallow depth of field, subtle parallax slide"
+  },
+  {
+    "scene": 3,
+    "timestamp": "10-15s",
+    "visual_description": "Medium two-shot. Trainer in dark athletic wear stands beside client, tablet in hand, gesturing to the equipment with calm authority. Client stands upright in position, attentive. Studio background softly blurred with copper bokeh highlights. Professional, premium atmosphere.",
+    "voiceover": "O treinador programa a intensidade. Cada sessão é adaptada ao objetivo.",
+    "text_overlay": "intensidade adaptada",
+    "camera_movement": "Static medium shot with gentle handheld micro-movements"
+  },
+  {
+    "scene": 4,
+    "timestamp": "15-20s",
+    "visual_description": "Close-up to medium close of muscle contractions under EMS stimulation. Visible contractions across quadriceps, abdominals and shoulders. Lighting pulses subtly in sync with the stimulation rhythm, copper highlights catching on skin texture. Dynamic, intense, scientific mood.",
+    "voiceover": "Os músculos contraem além do esforço voluntário. O recrutamento ultrapassa o convencional.",
+    "text_overlay": "até 90% recrutamento",
+    "camera_movement": "Handheld micro-movements with occasional slow push-in, dynamic framing"
+  },
+  {
+    "scene": 5,
+    "timestamp": "20-25s",
+    "visual_description": "Client steps out of training position, slight breath, controlled posture. Trainer approaches with confident demeanor. EMS vest being unclipped. Studio lights in warm copper tones. Sense of accomplishment and completion.",
+    "voiceover": "O treino terminou. Músculos ativados. Articulações protegidas.",
+    "text_overlay": "baixo impacto articular",
+    "camera_movement": "Steadicam slow orbit around subject, slight pull back"
+  },
+  {
+    "scene": 6,
+    "timestamp": "25-30s",
+    "visual_description": "Clean studio hero shot. Dark charcoal background, copper light accents framing the composition. TechBody logo and brand mark centered, premium and confident. Atmospheric depth with subtle light rays.",
+    "voiceover": "Marca a tua sessão experimental.",
+    "text_overlay": "MARCA A TUA SESSÃO EXPERIMENTAL",
+    "camera_movement": "Static wide shot with very slow zoom in toward logo"
+  }
+]

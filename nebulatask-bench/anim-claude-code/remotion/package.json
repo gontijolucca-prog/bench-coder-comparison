@@ -1,0 +1,22 @@
+{
+  "name": "animation-challenge-remotion",
+  "version": "1.0.0",
+  "description": "Remotion Animation Challenge — same visual style as Hyperframes HTML.",
+  "private": true,
+  "scripts": {
+    "start": "remotion studio src/index.tsx",
+    "render": "remotion render src/index.tsx AnimationChallenge output.mp4",
+    "build": "remotion render src/index.tsx AnimationChallenge output.mp4"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.200"
+  },
+  "devDependencies": {
+    "@remotion/cli": "^4.0.200",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.4"
+  }
+}

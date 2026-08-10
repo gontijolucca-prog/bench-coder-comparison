@@ -1,0 +1,50 @@
+[
+  {
+    "slide": 1,
+    "headline": "90% das fibras musculares activas em 20 minutos.",
+    "body": "A ciência por trás do treino EMS nos estúdios TechBody.",
+    "visual_prompt": "Editorial dark charcoal gym scene, athlete in fitted EMS training suit mid-squat, dramatic chiaroscuro lighting, single orange rim light, deep shadows, no people in the background, cinematic composition",
+    "text_overlay": "90% · fibras activas →",
+    "pagination": "1/6"
+  },
+  {
+    "slide": 2,
+    "headline": "Treino convencional recruta só parte das fibras.",
+    "body": "Estudos de electromiografia indicam 30 a 40% de recrutamento em séries tradicionais com carga.",
+    "visual_prompt": "Side-by-side composition, left athlete lifting conventional barbell in chalk dust, right athlete in EMS suit with subtle orange accents, dark stage, soft orange line dividing the two scenes, editorial lighting",
+    "text_overlay": "30-40% · recrutamento clássico →",
+    "pagination": "2/6"
+  },
+  {
+    "slide": 3,
+    "headline": "EMS activa múltiplos grupos musculares em simultâneo.",
+    "body": "Os impulsos eléctricos chegam ao músculo e contornam as limitações do recrutamento voluntário.",
+    "visual_prompt": "Editorial photograph, athlete in EMS suit with orange glow tracing major muscle groups, dark studio, clean negative space, sharp contrast, fashion-editorial composition",
+    "text_overlay": "Activação simultânea · glúteo · core · pernas →",
+    "pagination": "3/6"
+  },
+  {
+    "slide": 4,
+    "headline": "20 a 25 minutos, uma a três vezes por semana.",
+    "body": "Duração típica de uma sessão WB-EMS e frequência recomendada em protocolo.",
+    "visual_prompt": "Minimalist editorial still life, stopwatch centered on dark steel surface, orange second hand, single dramatic spotlight, moody atmosphere, wide negative space",
+    "text_overlay": "20-25 MIN · 1-3x por semana →",
+    "pagination": "4/6"
+  },
+  {
+    "slide": 5,
+    "headline": "Equipamento certificado, fabricado na Alemanha.",
+    "body": "Treino de baixo impacto articular, com a segurança de um dispositivo com classificação médica.",
+    "visual_prompt": "Premium product macro photograph, EMS device console detail with small orange accent indicator, dark charcoal surface, shallow depth of field, controlled studio lighting, subtle surface reflection",
+    "text_overlay": "Baixo impacto · certificação médica →",
+    "pagination": "5/6"
+  },
+  {
+    "slide": 6,
+    "headline": "Marca a tua sessão experimental.",
+    "body": "O primeiro passo começa no estúdio TechBody mais perto de ti.",
+    "visual_prompt": "Wide editorial shot, athlete seated in EMS suit inside dark studio, orange TechBody logo projected as light beam on the back wall, high contrast, cinematic atmosphere, ready-to-train posture",
+    "text_overlay": "Marca a tua sessão experimental",
+    "pagination": "6/6"
+  }
+]

@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  body { margin: 0; background: #08080A; color: #E8E2D5; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 300; letter-spacing: -0.02em; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+}
+.gradient-mesh { background: radial-gradient(at 20% 30%, #2D1B4E 0px, transparent 50%), radial-gradient(at 80% 0%, #B06D35 0px, transparent 50%), radial-gradient(at 0% 100%, #1E3A5F 0px, transparent 50%), #08080A; }

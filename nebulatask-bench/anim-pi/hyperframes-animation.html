@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hyperframes Animation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    min-height: 100vh;
+    background: #050505;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  }
+
+  .stage {
+    position: relative;
+    width: 800px;
+    height: 400px;
+    background: #0a0a0a;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 30px 80px rgba(0, 0, 0, 0.6);
+  }
+
+  .title {
+    position: absolute;
+    top: 28px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #f5f5f5;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    z-index: 10;
+    opacity: 0;
+    animation: titleIn 1.2s ease-out 0.2s forwards;
+  }
+
+  .title .accent {
+    color: #FF6B5B;
+  }
+
+  .circle {
+    position: absolute;
+    bottom: 70px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    filter: drop-shadow(0 8px 24px currentColor);
+    opacity: 0;
+    animation-duration: 2.6s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    will-change: transform, opacity;
+  }
+
+  .circle-1 {
+    left: 120px;
+    background: #FF6B5B;
+    color: #FF6B5B;
+    animation-name: bounce1;
+    animation-delay: 0.2s;
+  }
+
+  .circle-2 {
+    left: 368px;
+    background: #4ADE80;
+    color: #4ADE80;
+    animation-name: bounce2;
+    animation-delay: 0.7s;
+  }
+
+  .circle-3 {
+    left: 616px;
+    background: #60A5FA;
+    color: #60A5FA;
+    animation-name: bounce3;
+    animation-delay: 1.2s;
+  }
+
+  @keyframes titleIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce1 {
+    0%   { transform: translateY(0)    scale(1);    opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { transform: translateY(-220px) scale(1.15); opacity: 1; }
+    55%  { transform: translateY(-220px) scale(0.92); }
+    70%  { transform: translateY(-40px)  scale(1.05); }
+    85%  { transform: translateY(-180px) scale(1.1); }
+    100% { transform: translateY(0)    scale(1);    opacity: 1; }
+  }
+
+  @keyframes bounce2 {
+    0%   { transform: translateY(0)    scale(1);    opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { transform: translateY(-240px) scale(1.15); opacity: 1; }
+    55%  { transform: translateY(-240px) scale(0.92); }
+    70%  { transform: translateY(-50px)  scale(1.05); }
+    85%  { transform: translateY(-200px) scale(1.1); }
+    100% { transform: translateY(0)    scale(1);    opacity: 1; }
+  }
+
+  @keyframes bounce3 {
+    0%   { transform: translateY(0)    scale(1);    opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { transform: translateY(-200px) scale(1.15); opacity: 1; }
+    55%  { transform: translateY(-200px) scale(0.92); }
+    70%  { transform: translateY(-30px)  scale(1.05); }
+    85%  { transform: translateY(-160px) scale(1.1); }
+    100% { transform: translateY(0)    scale(1);    opacity: 1; }
+  }
+
+  .ground {
+    position: absolute;
+    bottom: 70px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%);
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">Hyperframes <span class="accent">Animation</span></div>
+    <div class="ground"></div>
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
+</body>
+</html>

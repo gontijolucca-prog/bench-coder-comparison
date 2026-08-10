@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>TechBody — A ciência por trás de 25 minutos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200;9..144,300;9..144,800;9..144,900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    background: #050505;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', Georgia, serif;
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1080px;
+    background: #1a1a1a;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Atmosphere: deep warm radial */
+  .stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 45%, rgba(212, 119, 59, 0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 100% 80% at 50% 100%, rgba(212, 119, 59, 0.05) 0%, transparent 60%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Grain */
+  .stage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+    opacity: 0.18;
+    mix-blend-mode: overlay;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Frame grid */
+  .grid {
+    position: absolute;
+    inset: 56px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    animation: frameIn 0.9s 0.2s forwards, frameOut 0.6s 9.2s forwards;
+  }
+
+  /* Corner ticks */
+  .tick {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #d4773b;
+    z-index: 4;
+    opacity: 0;
+    animation: fadeIn 0.6s 0.5s forwards, fadeOut 0.5s 9.3s forwards;
+  }
+  .tick.tl { top: 56px; left: 56px; border-right: none; border-bottom: none; }
+  .tick.tr { top: 56px; right: 56px; border-left: none; border-bottom: none; }
+  .tick.bl { bottom: 56px; left: 56px; border-right: none; border-top: none; }
+  .tick.br { bottom: 56px; right: 56px; border-left: none; border-top: none; }
+
+  /* Eyebrow header */
+  .eyebrow {
+    position: absolute;
+    top: 96px;
+    left: 96px;
+    right: 96px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    opacity: 0;
+    animation: fadeIn 0.8s 0.6s forwards, fadeOut 0.6s 9.2s forwards;
+  }
+  .eyebrow .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #d4773b;
+    border-radius: 50%;
+    margin-right: 14px;
+    vertical-align: middle;
+    animation: pulse 1.6s 1.4s infinite;
+  }
+  .eyebrow .live {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Eyebrow centre headline */
+  .pre-title {
+    position: absolute;
+    top: 158px;
+    left: 96px;
+    right: 96px;
+    z-index: 5;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: #d4773b;
+    opacity: 0;
+    animation: fadeIn 0.7s 0.9s forwards, fadeOut 0.5s 9.2s forwards;
+  }
+
+  /* Hero — the giant 85-90% */
+  .hero {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    text-align: center;
+    opacity: 0;
+    animation: heroCycle 10s 0s infinite cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .number {
+    font-family: 'Fraunces', serif;
+    font-weight: 200;
+    font-size: 320px;
+    line-height: 0.86;
+    color: #ffffff;
+    letter-spacing: -0.06em;
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: "opsz" 144, "SOFT" 0;
+    white-space: nowrap;
+  }
+  .number .pct {
+    font-weight: 300;
+    font-size: 0.52em;
+    vertical-align: top;
+    margin-left: 0.04em;
+    color: #d4773b;
+    font-weight: 800;
+  }
+
+  .number-glitch {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 7;
+    font-family: 'Fraunces', serif;
+    font-weight: 200;
+    font-size: 320px;
+    line-height: 0.86;
+    color: #d4773b;
+    letter-spacing: -0.06em;
+    opacity: 0;
+    pointer-events: none;
+    animation: glitch 10s 0s infinite steps(1);
+  }
+
+  .unit {
+    margin-top: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.78);
+  }
+  .unit em {
+    font-style: normal;
+    color: #d4773b;
+  }
+
+  /* Bars — muscle recruitment */
+  .bars-wrap {
+    position: absolute;
+    bottom: 220px;
+    left: 96px;
+    right: 96px;
+    z-index: 5;
+    opacity: 0;
+    animation: fadeIn 0.7s 2.8s forwards, fadeOut 0.6s 9s forwards;
+  }
+
+  .bars {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 8px;
+    height: 140px;
+    align-items: end;
+  }
+
+  .bar {
+    position: relative;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+  }
+  .bar::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+    background: linear-gradient(180deg, #d4773b 0%, #b85a1f 100%);
+    animation: barRise 3.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  /* Final heights 84–93% range — all above 85% to back the claim */
+  .bar:nth-child(1)::before { animation-delay: 2.9s; --h: 84%; }
+  .bar:nth-child(2)::before { animation-delay: 3.0s; --h: 91%; }
+  .bar:nth-child(3)::before { animation-delay: 3.1s; --h: 87%; }
+  .bar:nth-child(4)::before { animation-delay: 3.2s; --h: 93%; }
+  .bar:nth-child(5)::before { animation-delay: 3.3s; --h: 88%; }
+  .bar:nth-child(6)::before { animation-delay: 3.4s; --h: 90%; }
+  .bar:nth-child(7)::before { animation-delay: 3.5s; --h: 85%; }
+  .bar:nth-child(8)::before { animation-delay: 3.6s; --h: 92%; }
+  .bar:nth-child(9)::before { animation-delay: 3.7s; --h: 86%; }
+  .bar:nth-child(10)::before { animation-delay: 3.8s; --h: 89%; }
+
+  .bar-label {
+    position: absolute;
+    bottom: -28px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.4);
+  }
+  .bar-val {
+    position: absolute;
+    top: -22px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #d4773b;
+    opacity: 0;
+    animation: fadeIn 0.4s forwards;
+  }
+  .bar:nth-child(1) .bar-val { animation-delay: 6.0s; }
+  .bar:nth-child(2) .bar-val { animation-delay: 6.1s; }
+  .bar:nth-child(3) .bar-val { animation-delay: 6.2s; }
+  .bar:nth-child(4) .bar-val { animation-delay: 6.3s; }
+  .bar:nth-child(5) .bar-val { animation-delay: 6.4s; }
+  .bar:nth-child(6) .bar-val { animation-delay: 6.5s; }
+  .bar:nth-child(7) .bar-val { animation-delay: 6.6s; }
+  .bar:nth-child(8) .bar-val { animation-delay: 6.7s; }
+  .bar:nth-child(9) .bar-val { animation-delay: 6.8s; }
+  .bar:nth-child(10) .bar-val { animation-delay: 6.9s; }
+
+  /* Caption */
+  .caption {
+    position: absolute;
+    bottom: 116px;
+    left: 96px;
+    right: 96px;
+    z-index: 5;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.7s 5.0s forwards, fadeOut 0.6s 9.0s forwards;
+  }
+  .caption .lead {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 26px;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.92);
+    letter-spacing: -0.005em;
+  }
+  .caption .lead strong {
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  /* Bottom row — protocol */
+  .protocol {
+    position: absolute;
+    bottom: 92px;
+    left: 96px;
+    right: 96px;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 14px;
+    opacity: 0;
+    animation: fadeIn 0.7s 7.4s forwards, fadeOut 0.5s 9.2s forwards;
+  }
+  .protocol span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .protocol span.accent { color: #d4773b; }
+
+  /* Bottom progress bar */
+  .progress-track {
+    position: absolute;
+    bottom: 64px;
+    left: 96px;
+    right: 96px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    z-index: 5;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #d4773b 0%, #f0a060 100%);
+    animation: fillBar 10s 0s infinite cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .foot {
+    position: absolute;
+    bottom: 38px;
+    left: 96px;
+    right: 96px;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+    opacity: 0;
+    animation: fadeIn 0.6s 0.8s forwards, fadeOut 0.5s 9.4s forwards;
+  }
+
+  /* Keyframes */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  @keyframes frameIn {
+    from { opacity: 0; transform: scale(0.985); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+  @keyframes barRise {
+    0% { height: 0; }
+    100% { height: var(--h); }
+  }
+  @keyframes fillBar {
+    0% { width: 0%; }
+    92% { width: 100%; }
+    100% { width: 100%; }
+  }
+  @keyframes heroCycle {
+    0% { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+    8% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    18% { transform: translate(-50%, -50%) scale(1); }
+    85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    95% { opacity: 0; transform: translate(-50%, -52%) scale(0.98); }
+    100% { opacity: 0; transform: translate(-50%, -52%) scale(0.98); }
+  }
+  @keyframes glitch {
+    0%, 7% { opacity: 0; transform: translate(-50%, -50%) translate(0, 0); }
+    8% { opacity: 0.6; transform: translate(-50%, -50%) translate(4px, 0); }
+    9% { opacity: 0; transform: translate(-50%, -50%) translate(0, 0); }
+    25% { opacity: 0; transform: translate(-50%, -50%) translate(0, 0); }
+    26% { opacity: 0.5; transform: translate(-50%, -50%) translate(-3px, 1px); }
+    27% { opacity: 0; transform: translate(-50%, -50%) translate(0, 0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) translate(0, 0); }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <!-- Frame + corner ticks -->
+    <div class="grid"></div>
+    <span class="tick tl"></span>
+    <span class="tick tr"></span>
+    <span class="tick bl"></span>
+    <span class="tick br"></span>
+
+    <!-- Eyebrow header -->
+    <div class="eyebrow">
+      <span class="live"><span class="dot"></span>EMS · WB-EMS</span>
+      <span>Protocolo 01 / Recrutamento</span>
+    </div>
+
+    <!-- Pre-title -->
+    <div class="pre-title">A ciência por trás de 25 minutos</div>
+
+    <!-- Hero number -->
+    <div class="number-glitch" aria-hidden="true">85-90<span class="pct">%</span></div>
+    <div class="hero">
+      <div class="number">85-90<span class="pct">%</span></div>
+      <div class="unit">das fibras musculares <em>recrutadas</em></div>
+    </div>
+
+    <!-- Bars -->
+    <div class="bars-wrap">
+      <div class="bars">
+        <div class="bar"><span class="bar-val">84%</span><span class="bar-label">Q</span></div>
+        <div class="bar"><span class="bar-val">91%</span><span class="bar-label">I</span></div>
+        <div class="bar"><span class="bar-val">87%</span><span class="bar-label">P</span></div>
+        <div class="bar"><span class="bar-val">93%</span><span class="bar-label">D</span></div>
+        <div class="bar"><span class="bar-val">88%</span><span class="bar-label">G</span></div>
+        <div class="bar"><span class="bar-val">90%</span><span class="bar-label">A</span></div>
+        <div class="bar"><span class="bar-val">85%</span><span class="bar-label">B</span></div>
+        <div class="bar"><span class="bar-val">92%</span><span class="bar-label">T</span></div>
+        <div class="bar"><span class="bar-val">86%</span><span class="bar-label">L</span></div>
+        <div class="bar"><span class="bar-val">89%</span><span class="bar-label">P</span></div>
+      </div>
+    </div>
+
+    <!-- Caption -->
+    <div class="caption">
+      <p class="lead">
+        O treino convencional activa <strong>30-40%</strong> das fibras.<br>
+        A electroestimulação recruta até <strong>85-90%</strong> — em 25 minutos.
+      </p>
+    </div>
+
+    <!-- Protocol -->
+    <div class="protocol">
+      <span class="accent">EMS</span>
+      <span>25 min · 1-3x / semana</span>
+      <span>Corpo inteiro</span>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-track"><div class="progress-fill"></div></div>
+
+    <!-- Footer -->
+    <div class="foot">
+      <span>TechBody · Electroestimulação</span>
+      <span>10s · Loop</span>
+    </div>
+  </div>
+</body>
+</html>
